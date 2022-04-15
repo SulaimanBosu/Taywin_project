@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:taywin_project/measurement_results.dart';
 
-
 class OpenCamera extends StatefulWidget {
   const OpenCamera({
     Key? key,
@@ -38,16 +37,16 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.resumed) {
-  //     _controller != null ? _initcontroler = _controller.initialize() : null;
-  //   }
-  //   if (!mounted) return;
-  //   setState(() {
-  //     isCameraReady = true;
-  //   });
-  // }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _controller != null ? _initcontroler = _controller.initialize() : null;
+    }
+    if (!mounted) return;
+    setState(() {
+      isCameraReady = true;
+    });
+  }
 
   Widget _cameraWidget(context) {
     final screenwidth = MediaQuery.of(context).size.width;
