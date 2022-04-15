@@ -50,7 +50,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
 
   Widget _cameraWidget(context) {
     final screenwidth = MediaQuery.of(context).size.width;
-    // final screenheight = MediaQuery.of(context).size.height;
+    final screenheight = MediaQuery.of(context).size.height;
     var camera = _controller.value;
     final size = MediaQuery.of(context).size;
     var scale = size.aspectRatio * camera.aspectRatio;
