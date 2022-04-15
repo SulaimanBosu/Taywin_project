@@ -33,14 +33,6 @@ class _MeasurementResultsState extends State<MeasurementResults> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               appbar(),
-              // Container(
-              //   child: IconButton(
-              //     icon: const Icon(Icons.info_outline),
-              //     onPressed: () {},
-              //     alignment: Alignment.topLeft,
-              //     color: Colors.black54,
-              //   ),
-              // ),
             ],
           )),
       backgroundColor: Colors.white,
@@ -124,14 +116,6 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   Widget appbar() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-        //  Container(
-            // child: IconButton(
-            //   icon: const Icon(Icons.arrow_back_ios_outlined),
-            //   onPressed: () {},
-            //   alignment: Alignment.topLeft,
-            //   color: Colors.black54,
-            // ),
-        //  ),
           Image.asset(
             'images/logo2.png',
             width: 85,
