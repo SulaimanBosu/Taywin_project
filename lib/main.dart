@@ -1,4 +1,4 @@
-// @dart=2.9
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:taywin_project/home.dart';
@@ -9,6 +9,7 @@ Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
   } on CameraException catch (e) {
+    // ignore: avoid_print
     print('Error in fetching the cameras: $e');
   }
   final firstCamera = cameras.first;
@@ -16,36 +17,19 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      // theme: ThemeData.dark(),
+     theme: ThemeData(
+  //  brightness: Brightness.dark,
+    primaryColor: const Color.fromRGBO(30, 29, 89, 1),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            onPrimary: Colors.white,
+            primary: const Color.fromRGBO(30, 29, 89, 1),
+          ),
+        ),
+    ),
       home: MyHome(
         camera: firstCamera,
       ),
     ),
   );
 }
-// Future<void> main() async {
-//     try {
-//     WidgetsFlutterBinding.ensureInitialized();
-//     cameras = await availableCameras();
-//   } on CameraException catch (e) {
-//     print('Error in fetching the cameras: $e');
-//   }
-//   runApp(const MyApp());
-// }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key key}) : super(key: key);
-
-//   // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: 'Flutter Demo',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: const MyHome(),
-//     );
-//   }
-// }

@@ -1,9 +1,12 @@
-// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace
+// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, prefer_typing_uninitialized_variables
 
+import 'dart:ffi';
 import 'dart:io';
 
+import 'package:arrow_path/arrow_path.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 
 class MeasurementResults extends StatefulWidget {
   final XFile image;
@@ -15,6 +18,10 @@ class MeasurementResults extends StatefulWidget {
 
 class _MeasurementResultsState extends State<MeasurementResults> {
   late XFile imagefile;
+  late double screenwidth;
+  late double screenheight;
+  late Path path;
+  final moreControler = TextEditingController();
 
   @override
   void initState() {
@@ -24,6 +31,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
 
   @override
   Widget build(BuildContext context) {
+    screenwidth = MediaQuery.of(context).size.width;
+    screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
@@ -41,8 +50,6 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   }
 
   Widget content() {
-    final screenwidth = MediaQuery.of(context).size.width;
-    final screenheight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Container(
         child: SingleChildScrollView(
@@ -51,20 +58,62 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               const SizedBox(
                 height: 30,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  SizedBox(
+                    width: 60,
+                  ),
+                  Text('10 cm'),
+                ],
+              ),
               Container(
-                child: Image.asset(
-                  'images/image3.png',
-                  width: screenwidth * 0.6,
-                  height: screenheight * 0.3,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      width: 60,
+                    ),
+                    Image.asset(
+                      'images/Line5.png',
+                      width: screenwidth * 0.4,
+                      height: screenheight * 0.01,
+                    ),
+                  ],
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'images/image3.png',
+                    width: screenwidth * 0.6,
+                    height: screenheight * 0.3,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    child: Image.asset(
+                      'images/Line6.png',
+                      width: screenwidth * 0.01,
+                      //  height: screenheight * 0.8,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  const Text('25 cm')
+                ],
+              ),
+
               const SizedBox(
                 height: 15,
               ),
               const Padding(
-                padding: EdgeInsets.only(left: 10, right: 10),
+                padding: EdgeInsets.only(left: 30, right: 30),
                 child: Text(
-                  'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง จะแสดงเพียงภาพจำลองเท่านั้น',
+                  'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง แสดงเพียงภาพจำลองเท่านั้น',
                   style: TextStyle(
                       color: Colors.redAccent,
                       fontSize: 12,
@@ -90,28 +139,123 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                       'เบอร์รองเท้าของท่านคือเบอร์ 39\n(EU) (US : 8 , UK : 6)',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Color.fromARGB(255, 31, 30, 30),
-                          fontSize: 16,
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontFamily: 'FC-Minimal-Regular',
                           fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
               ),
-              Center(
-                child: Container(
-                  width: screenheight * 0.5,
-                  height: screenheight * 0.5,
-                  child: Image.file(
-                    File(imagefile.path),
-                  ),
-                ),
-              ),
+              more(),
+              groupbutton(),
+
+              // Center(
+              //   child: Container(
+              //     width: screenheight * 0.5,
+              //     height: screenheight * 0.5,
+              //     child: Image.file(
+              //       File(imagefile.path),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
       ),
     );
   }
+
+  Widget more() {
+    return Card(
+      // semanticContainer: true,
+      elevation: 5,
+      margin: const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      color: Colors.white,
+      child: TextField(
+        cursorColor: Colors.black54,
+        controller: moreControler,
+        style: const TextStyle(
+          fontSize: 18.0,
+          color: Colors.black45,
+          fontFamily: 'FC-Minimal-Regular',
+        ),
+        decoration: const InputDecoration(
+          prefixIcon: Icon(
+            Icons.more_vert_sharp,
+            color: Colors.black54,
+          ),
+          labelText: 'เพิ่มเติม...',
+          labelStyle: TextStyle(color: Colors.black54),
+          border: InputBorder.none,
+          // enabledBorder: OutlineInputBorder(
+          //   borderSide: BorderSide(color: Colors.black54),
+          // ),
+          // focusedBorder: OutlineInputBorder(
+          //   borderSide: BorderSide(color: Colors.redAccent),
+          // ),
+        ),
+      ),
+    );
+  }
+
+  Widget groupbutton() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.share,
+                  color: Colors.black54,
+                )),
+          ),
+          Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                // width: screenwidth * 0.2,
+                //color: const Color.fromRGBO(30, 29, 89, 1),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    shadowColor: const Color.fromRGBO(30, 29, 89, 1),
+                  ),
+                  icon: const Icon(Icons.camera_alt),
+                  label: const Text(
+                    'ถ่ายใหม่',
+                  ),
+                ),
+              ),
+              // const SizedBox(
+              //   width: 3,
+              // ),
+              Container(
+                margin: const EdgeInsets.only(left: 10.0, right: 10.0),
+                // width: screenwidth * 0.2,
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  icon: const Icon(Icons.save_alt),
+                  label: const Text('บันทึก'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
 
   Widget appbar() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

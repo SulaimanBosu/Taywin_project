@@ -1,8 +1,9 @@
-// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison
+// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, avoid_unnecessary_containers, camel_case_types, avoid_print
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:taywin_project/measurement_results.dart';
+import 'dart:math' as math;
 
 class OpenCamera extends StatefulWidget {
   const OpenCamera({
@@ -22,6 +23,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
 
   var isCameraReady = false;
   late XFile imagefile;
+  late double screenwidth;
+  late double screenheight;
 
   @override
   void initState() {
@@ -49,23 +52,30 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   }
 
   Widget _cameraWidget(context) {
-    final screenwidth = MediaQuery.of(context).size.width;
-    final screenheight = MediaQuery.of(context).size.height;
     var camera = _controller.value;
     final size = MediaQuery.of(context).size;
     var scale = size.aspectRatio * camera.aspectRatio;
     if (scale < 1) scale = 1 / scale;
 
-    return Container(
-      color: Colors.black,
-      width: screenwidth,
-      height: screenwidth,
-      child: Center(
+    return Transform.scale(
+      scale: scale,
+      child: CameraPreview(_controller),
+    );
+  }
+
+  Widget _camera(context) {
+    var camera = _controller.value;
+    final size = MediaQuery.of(context).size;
+    var scale = size.aspectRatio * camera.aspectRatio;
+    if (scale < 1) scale = 1 / scale;
+
+    return Center(
+      child: Container(
+        width: screenwidth * 0.5,
+        height: screenheight * 0.5,
         child: Transform.scale(
           scale: scale,
-          child: Center(
-            child: CameraPreview(_controller),
-          ),
+          child: CameraPreview(_controller),
         ),
       ),
     );
@@ -73,31 +83,36 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    screenwidth = MediaQuery.of(context).size.width;
+    screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: FutureBuilder(
           future: _initcontroler,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Container(
-                color: Colors.black,
-                width: double.infinity,
-                height: double.infinity,
+                // color: Colors.black,
+                width: screenwidth,
+                height: screenheight,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Stack(
-                      alignment: AlignmentDirectional.center,
+                      alignment: AlignmentDirectional.topCenter,
                       children: [
-                        _cameraWidget(context),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 55,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        iconCamera(),
+                        Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            _cameraWidget(context),
+                            iconCamera(),
+                          ],
+                        ),
+                        line2(
+                            screenwidth: screenwidth,
+                            screenheight: screenheight),
+                        line(
+                            screenwidth: screenwidth,
+                            screenheight: screenheight),
                       ],
                     ),
                   ],
@@ -146,5 +161,168 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     setState(() {
       isCameraReady = true;
     });
+  }
+}
+
+class line extends StatelessWidget {
+  const line({
+    Key? key,
+    required this.screenwidth,
+    required this.screenheight,
+  }) : super(key: key);
+
+  final double screenwidth;
+  final double screenheight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // const SizedBox(
+            //   width: 83,
+            // ),
+            Row(
+              children: [
+                const SizedBox(
+                  width: 45,
+                ),
+                Image.asset(
+                  'images/Line1.png',
+                  width: screenwidth * 0.01,
+                  height: screenheight * 0.6,
+                ),
+              ],
+            ),
+
+            Image.asset(
+              'images/Line2.png',
+              height: screenwidth * 0.01,
+              width: screenheight * 0.8,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class line2 extends StatefulWidget {
+  const line2({
+    Key? key,
+    required this.screenwidth,
+    required this.screenheight,
+  }) : super(key: key);
+
+  final double screenwidth;
+  final double screenheight;
+
+  @override
+  State<line2> createState() => _line2State();
+}
+
+class _line2State extends State<line2> {
+  double alignment_a = 0.7;
+  double alignment_b = -0.9999999999999999;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: Alignment(alignment_a, alignment_b),
+              children: [
+                Column(
+                  children: [
+                    // const SizedBox(
+                    //   height: 10,
+                    // ),
+                    Image.asset(
+                      'images/Line3.png',
+                      width: widget.screenwidth * 0.8,
+                      height: widget.screenheight * 0.01,
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    // const SizedBox(
+                    //   height: 30,
+                    // ),
+                    Image.asset(
+                      'images/Line4.png',
+                      width: widget.screenwidth * 0.01,
+                      height: widget.screenwidth * 1.2,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FloatingActionButton(
+                  child: const Icon(Icons.add_circle_outline),
+                  onPressed: () {
+                    if (alignment_a >= 0.7 ||
+                        alignment_b >= -0.9999999999999999) {
+                      setState(() {
+                        alignment_a += 0.1;
+                        alignment_b -= 0.1;
+                        print(
+                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+                        // width += 0.1;
+                        // height += 0.001;
+                      });
+                    } else {
+                      print(
+                          'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+                    }
+                  },
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                FloatingActionButton(
+                  child: const Icon(Icons.remove_circle_outline),
+                  onPressed: () {
+                    if (alignment_a <= -0.19999999999999998 ||
+                        alignment_b <= -0.10000000000000003) {
+                      setState(() {
+                        alignment_a -= 0.1;
+                        alignment_b += 0.1;
+                        print(
+                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+                        // width -= 0.01;
+                        // height -= 0.001;
+                      });
+                    } else {
+                      print(
+                          'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

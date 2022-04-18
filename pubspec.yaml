@@ -38,6 +38,9 @@ dependencies:
   camera: any
   path: any
   gallery_saver: any
+  arrow_path: ^2.0.0
+  line_awesome_flutter: ^2.0.0
+  
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +63,26 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: FC-Minimal-Bold-Italic
+      fonts:
+        - asset: fonts/FC-Minimal-Bold-Italic.ttf
+        - asset: fonts/FC-Minimal-Bold-Italic.otf
+          style: italic
+    - family: FC-Minimal-Italic
+      fonts:
+        - asset: fonts/FC-Minimal-Italic.ttf
+        - asset: fonts/FC-Minimal-Italic.otf
+          style: italic
+    - family: FC-Minimal-Regular
+      fonts:
+        - asset: fonts/FC-Minimal-Regular.ttf
+        - asset: fonts/FC-Minimal-Regular.otf
+
+    - family: FC-Minimal-Bold
+      fonts:
+        - asset: fonts/FC-Minimal-Bold.otf
+        - asset: fonts/FC-Minimal-Bold.ttf
 
   # To add assets to your application, add an assets section, like this:
   assets:
