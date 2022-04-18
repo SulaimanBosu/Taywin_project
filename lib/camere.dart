@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, avoid_unnecessary_containers, camel_case_types, avoid_print
+// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, avoid_unnecessary_containers, camel_case_types, avoid_print, sized_box_for_whitespace, unused_element
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
