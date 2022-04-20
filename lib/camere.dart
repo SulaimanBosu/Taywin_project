@@ -158,27 +158,27 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                   // color: Colors.black,
                   width: screenwidth,
                   height: screenheight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  child:
+                      // Column(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      Stack(
+                    // alignment: Alignment(screenwidth * 0.0002, screenheight * 0.0002),
                     children: [
                       Stack(
-                        alignment: AlignmentDirectional.topCenter,
+                        alignment: Alignment(0, screenheight * 0.0014),
                         children: [
-                          Stack(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            children: [
-                              _cameraWidget(context),
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 20),
-                                child: iconCamerabutton(),
-                              ),
-                            ],
-                          ),
+                          _cameraWidget(context),
                           line(),
+                          groupButton(),
+                          //  iconCamerabutton(),
                         ],
                       ),
+                      // line(),
                     ],
                   ),
+                  //   ],
+                  //  ),
                 );
               } else {
                 return const Center(
@@ -257,8 +257,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                 ),
                                 Image.asset(
                                   'images/Line1.png',
-                                  // width: screenwidth * 0.01,
-                                  // height: screenwidth * 1.23,
+                                  //width: screenwidth * 0.05,
+                                  height: screenheight * 0.70,
                                 )
                               ],
                             ),
@@ -280,7 +280,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                 ),
                             Image.asset(
                               'images/Line2.png',
-                              // width: screenwidth * 0.01,
+                              width: screenwidth * 0.725,
                               // height: screenwidth * 1.23,
                             )
                           ],
@@ -297,14 +297,15 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       children: [
                         Container(
                           margin: EdgeInsets.only(
-                              right: screenwidth * 0.0005,
-                              top: screenwidth / alignmentValue_b),
+                            right: screenwidth * 0.0005,
+                            top: screenwidth / alignmentValue_b,
+                          ),
                           // alignment: Alignment(alignmentValue_a, alignmentValue_b),
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius:
                                   BorderRadiusDirectional.circular(5)),
-                          width: screenwidth * 0.18,
+                          width: screenwidth * 0.25,
                           height: screenheight * 0.03,
 
                           child: Row(
@@ -345,9 +346,12 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                             isimage
                                 ? Image.asset(
                                     'images/Line3.png',
+                                    width: screenwidth * 0.725,
+                                    // height: screenwidth * 1.23,
                                   )
                                 : Image.asset(
                                     'images/Line2.png',
+                                    width: screenwidth * 0.725,
                                   )
                           ],
                         ),
@@ -367,11 +371,12 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                             isimage
                                 ? Image.asset(
                                     'images/Line4.png',
-                                    // width: screenwidth * 0.01,
-                                    // height: screenwidth * 1.23,
+                                    //  width: screenwidth * 0.01,
+                                    height: screenheight * 0.71,
                                   )
                                 : Image.asset(
                                     'images/Line1.png',
+                                    height: screenheight * 0.71,
                                   )
                           ],
                         ),
@@ -384,7 +389,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             const SizedBox(
               height: 30,
             ),
-            groupButton(),
+            // groupButton(),
           ],
         ),
       ],
@@ -420,100 +425,112 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     );
   }
 
-  Row groupButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+  Widget groupButton() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        ElevatedButton.icon(
-          onPressed: () {
-            if (alignment_a >= 0.7 && alignment_b >= -0.9999999999999999) {
-              MyStyle().showBasicsFlash(
-                  context: context,
-                  text: 'เพิ่มขนาดสูงสุดแล้ว',
-                  flashStyle: FlashBehavior.fixed,
-                  duration: const Duration(seconds: 2));
-              print(
-                  'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
-            } else {
-              setState(
-                () {
-                  alignmentValue_a += 0.002;
-                  // alignmentValue_b -= 1;
-                  alignment_a += 0.05;
-                  alignment_b -= 0.05;
-                  alignment_c -= 0.05;
-                  alignment_d += 0.05;
-                  alignment_e -= 0.05;
-                  alignment_f += 0.05;
-                  sizewidth += 1;
-                  sizeheight += 1;
-                  sizeTH += 1;
-                  sizeUS += 0.5;
-                  sizeUK += 0.5;
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () {
+                if (alignment_a >= 0.7 && alignment_b >= -0.9999999999999999) {
+                  MyStyle().showBasicsFlash(
+                      context: context,
+                      text: 'เพิ่มขนาดสูงสุดแล้ว',
+                      flashStyle: FlashBehavior.fixed,
+                      duration: const Duration(seconds: 2));
                   print(
-                      'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
-                },
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+                      'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+                } else {
+                  setState(
+                    () {
+                      alignmentValue_a += 0.002;
+                      // alignmentValue_b -= 1;
+                      alignment_a += 0.05;
+                      alignment_b -= 0.05;
+                      alignment_c -= 0.05;
+                      alignment_d += 0.05;
+                      alignment_e -= 0.05;
+                      alignment_f += 0.05;
+                      sizewidth += 1;
+                      sizeheight += 1;
+                      sizeTH += 1;
+                      sizeUS += 0.5;
+                      sizeUK += 0.5;
+                      print(
+                          'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+                    },
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(screenwidth * 0.002, screenheight * 0.0003),
+                fixedSize: Size(screenwidth * 0.3, screenheight * 0.045),
+                //maximumSize: Size(screenwidth * 0.3, screenheight * 0.9),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
+              ),
+              icon: const Icon(Icons.add_circle_outline),
+              label: const Text(
+                'เพิ่มขนาด',
+              ),
             ),
-            //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
-          ),
-          icon: const Icon(Icons.add_circle_outline),
-          label: const Text(
-            'เพิ่มขนาด',
-          ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        ElevatedButton.icon(
-          onPressed: () {
-            if (alignment_a <= 0.1999999999999999 &&
-                alignment_b <= -0.4999999999999995) {
-              MyStyle().showBasicsFlash(
-                  context: context,
-                  text: 'ลดขนาดต่ำสุดแล้ว',
-                  flashStyle: FlashBehavior.fixed,
-                  duration: const Duration(seconds: 2));
-              print(
-                  'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
-            } else {
-              setState(
-                () {
-                  alignmentValue_a -= 0.002;
-                  // alignmentValue_b += 1;
-                  alignment_a -= 0.05;
-                  alignment_b += 0.05;
-                  alignment_c += 0.05;
-                  alignment_d -= 0.05;
-                  alignment_e += 0.05;
-                  alignment_f -= 0.05;
-                  sizewidth -= 1;
-                  sizeheight -= 1;
-                  sizeTH -= 1;
-                  sizeUS -= 0.5;
-                  sizeUK -= 0.5;
+            const SizedBox(
+              width: 10,
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                if (alignment_a <= 0.1999999999999999 &&
+                    alignment_b <= -0.4999999999999995) {
+                  MyStyle().showBasicsFlash(
+                      context: context,
+                      text: 'ลดขนาดต่ำสุดแล้ว',
+                      flashStyle: FlashBehavior.fixed,
+                      duration: const Duration(seconds: 2));
                   print(
-                      'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
-                },
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+                      'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+                } else {
+                  setState(
+                    () {
+                      alignmentValue_a -= 0.002;
+                      // alignmentValue_b += 1;
+                      alignment_a -= 0.05;
+                      alignment_b += 0.05;
+                      alignment_c += 0.05;
+                      alignment_d -= 0.05;
+                      alignment_e += 0.05;
+                      alignment_f -= 0.05;
+                      sizewidth -= 1;
+                      sizeheight -= 1;
+                      sizeTH -= 1;
+                      sizeUS -= 0.5;
+                      sizeUK -= 0.5;
+                      print(
+                          'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+                    },
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(screenwidth * 0.002, screenheight * 0.0003),
+                fixedSize: Size(screenwidth * 0.3, screenheight * 0.045),
+                //maximumSize: Size(screenwidth * 0.3, screenheight * 0.9),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
+              ),
+              icon: const Icon(Icons.remove_circle_outline),
+              label: const Text(
+                'ลดขนาด',
+              ),
             ),
-            //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
-          ),
-          icon: const Icon(Icons.remove_circle_outline),
-          label: const Text(
-            'ลดขนาด',
-          ),
+          ],
         ),
+        iconCamerabutton(),
       ],
     );
   }
@@ -530,7 +547,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             ),
             onPressed: () {
               captureImage(context);
-             
             },
           ),
         ],
@@ -555,7 +571,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               ),
             )),
             (route) => true);
-            
       }
     });
   }
