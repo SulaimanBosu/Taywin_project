@@ -1,44 +1,40 @@
-// ignore_for_file: sized_box_for_whitespace, unnecessary_string_interpolations, avoid_unnecessary_containers
+// ignore_for_file: sized_box_for_whitespace, unnecessary_string_interpolations, avoid_unnecessary_containers, unused_element
 
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 
 class MyStyle {
   Color darkColor = Colors.blue.shade900;
-  Color primaryColor = Colors.green.shade400;
+  Color primaryColor = const Color.fromRGBO(30, 29, 89, 1);
   Color redColor = Colors.red;
   Color appbarColor = Colors.red;
-
-
-    Text textdetail_1(String title) => Text(
+  String detail1 =
+      '1. ให้กล้องห่างจากเท้าในระยะ 30 CM หรือ 12 นิ้ว เท่านั้น\n2. ให้ปลายส้นเท้าซ้ายหรือขวา(เพียงด้านเดียว) และด้านข้างของเท้าอยู่ชิดติดเส้นสีแดงทั้งแนวตั้งและแนวนอน\n3. เลื่อนเส้นที่เหลืองชิดขอบอีกด้านของเท้าลูกค้า เพื่อวัดความกว้างของเท้า\n4. ระบบจะแสดงเส้นสีเขียวอัตโนมัติ พร้อมแสดงไซส์ขนาดรองเท้าของเท้าโดยเพื่อความสบายในการใส่ ลูกค้าสามารถกดค้างเส้นสีเขียว เลื่อนไปมาเพื่อเลือกไซส์ที่ท่านต้องการ เมื่อถูกต้องให้กดถ่าย';
+  String detail2 =
+      '1. ห้ามใส่เสื้อคลุมหรือใส่ชุดที่จะทำให้การวัดขนาดของเอวท่านไม่ตรงกับความเป็นจริง\n2. ให้กล้องห่างจากเอวในระยะ 30 CM หรือ 12 นิ้ว เท่านั้น\n3. ให้ขยับกล้องขึ้นลงเพื่อให้แกนสีแดงสีส้มตรงกับตำแหน่งของการใส่เข็มขัดจริงของคุณลูกค้า ระบบจะแสดงรอบเอวขั้นต้นออกมาอัตโนมัติ(เพื่อป้องกันข้อมูลคลาดเคลื่อน กรุณาให้เส้นแดงและเหลืองอยู่ในระดับที่ใส่เข็มขัดจริงเท่านั้น)\n4. ลูกค้าสามารถใช้นิ้วกดค้างที่เส้นสีเขียวเพื่อเลื่อนตำแหน่งเข้า-ออก เพื่อให้แสดงข้อมูลของการวัดที่ถูกต้องที่สุด เมื่อถูกต้องให้กดถ่าย';
+  String imageWaistline = 'images/image2.jpg';
+  String imageFootmeasure = 'images/image.jpg';
+  String waistline = 'waistline';
+  String footmeasure = 'footmeasure';
+  Text textdetail(String title) => Text(
         title,
-        // ignore: prefer_const_constructors
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16.0,
           color: Colors.black45,
           fontFamily: 'FC-Minimal-Regular',
         ),
       );
 
-          Text text1(String title) => Text(
+  Text text(String title) => Text(
         title,
-        // ignore: prefer_const_constructors
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16.0,
-          color:Colors.black45,
+          color: Colors.black45,
           fontFamily: 'FC-Minimal-Regular',
         ),
       );
 
-  Widget showProgress() {
-    return const Center(
-      child: CircularProgressIndicator(
-        backgroundColor: Colors.white,
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-      ),
-    );
-  }
-
-  Widget showProgress2(String text) {
+  Widget showProgress(String text) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -62,45 +58,38 @@ class MyStyle {
     );
   }
 
-  TextStyle mainTitle = const TextStyle(
-    fontSize: 16.0,
-    fontWeight: FontWeight.bold,
-    color: Colors.black54,
-  );
-
-  TextStyle mainH2Title = const TextStyle(
-    fontSize: 14.0,
-    // fontWeight: FontWeight.bold,
-    color: Colors.black45,
-    // fontStyle: FontStyle.italic,
-    fontFamily: 'FC-Minimal-Regular',
-  );
-
-    TextStyle text2 = const TextStyle(
+  TextStyle textStyle = const TextStyle(
     fontSize: 18.0,
     // fontWeight: FontWeight.bold,
     color: Colors.black45,
     // fontStyle: FontStyle.italic,
     fontFamily: 'FC-Minimal-Regular',
   );
-      Text showtext_1(String title) => Text(
-        title,
-        style: mainH2Title,
-      );
 
-    Text showtext_2(String title) => Text(
-        title,
-        style: text2,
-      );
-
-        Text showTitle_2(String title) => Text(
+  Text showtext_1(String title) => Text(
         title,
         style: const TextStyle(
-                  fontSize: 24.0,
-                 // fontWeight: FontWeight.bold,
-                  color: Colors.black45,
-                  fontFamily: 'FC-Minimal-Regular',
-                ),
+          fontSize: 14.0,
+          // fontWeight: FontWeight.bold,
+          color: Colors.black45,
+          // fontStyle: FontStyle.italic,
+          fontFamily: 'FC-Minimal-Regular',
+        ),
+      );
+
+  Text showtext_2(String title) => Text(
+        title,
+        style: textStyle,
+      );
+
+  Text showTitle_2(String title) => Text(
+        title,
+        style: const TextStyle(
+          fontSize: 24.0,
+          // fontWeight: FontWeight.bold,
+          color: Colors.black45,
+          fontFamily: 'FC-Minimal-Regular',
+        ),
       );
 
   SizedBox mySizebox() => const SizedBox(
@@ -123,65 +112,49 @@ class MyStyle {
     );
   }
 
-  Text showText(String title) => Text(
-        title,
-        style: const TextStyle(
-          color: Colors.black54,
-          fontStyle: FontStyle.italic,
-        ),
-      );
-
   Text showTitle(String title) => Text(
         title,
         style: const TextStyle(
-    fontSize: 32.0,
-    // fontWeight: FontWeight.bold,
-    color: Colors.black54,
-    // fontStyle: FontStyle.italic,
-    fontFamily: 'FC-Minimal-Regular',
-  ),
+          fontSize: 32.0,
+          // fontWeight: FontWeight.bold,
+          color: Colors.black54,
+          // fontStyle: FontStyle.italic,
+          fontFamily: 'FC-Minimal-Regular',
+        ),
       );
 
-  Text showTitleH2(String title) => Text(
-        title,
-        style: const TextStyle(
-                  fontSize: 24.0,
-                 // fontWeight: FontWeight.bold,
-                  color: Colors.black45,
-                  fontFamily: 'FC-Minimal-Regular',
+  showBasicsFlash({
+    BuildContext? context,
+    String? text,
+    Duration? duration,
+    flashStyle = FlashBehavior.floating,
+  }) {
+    showFlash(
+      context: context!,
+      duration: duration,
+      builder: (context, controller) {
+        return Flash(
+          controller: controller,
+          behavior: flashStyle,
+          position: FlashPosition.bottom,
+          boxShadows: kElevationToShadow[4],
+          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          child: FlashBar(
+            content: Row(
+              children: [
+                const Icon(
+                  Icons.info_outline,
+                  color: Colors.redAccent,
                 ),
-      );
-
-  Text showTitleH2white(String title) => Text(
-        title,
-        style: const TextStyle(
-          fontSize: 14.0,
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
-        ),
-      );
-
-  Text showTitleCart(String title) => Text(
-        title,
-        style: const TextStyle(
-    fontSize: 18.0,
-    fontWeight: FontWeight.bold,
-    color: Colors.black45,
-    // fontStyle: FontStyle.italic,
-    fontFamily: 'FC-Minimal-Regular',
-  ),
-      );
-
-  Text showTitleH3(String title) => Text(
-        title,
-        style: TextStyle(
-          fontSize: 16.0,
-          color: Colors.blue.shade300,
-          fontWeight: FontWeight.bold,
-        ),
-      );
-
-
+                MyStyle().mySizebox(),
+                Text(text!),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   confirmDialog2(
     BuildContext context,
@@ -276,21 +249,22 @@ class MyStyle {
     );
   }
 
-  Container showlogo() {
-    return Container(
-      width: 120.0,
-      child: Image.asset('images/logo.png'),
+  Image showlogo(double screenwidth) {
+    return Image.asset(
+      'images/logo.png',
+      width: screenwidth * 0.6,
+      height: screenwidth * 0.6,
     );
   }
 
-  BoxDecoration myBoxDecoration(String namePic) {
-    return BoxDecoration(
-      image: DecorationImage(
-          image: AssetImage('images/$namePic'), fit: BoxFit.cover),
-    );
-  }
+  // BoxDecoration myBoxDecoration(String namePic) {
+  //   return BoxDecoration(
+  //     image: DecorationImage(
+  //         image: AssetImage('images/$namePic'), fit: BoxFit.cover),
+  //   );
+  // }
 
-    Widget progress(BuildContext context) {
+  Widget progress(BuildContext context) {
     return Container(
         child: Stack(
       children: <Widget>[
@@ -311,7 +285,7 @@ class MyStyle {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Center(
-                  child:SizedBox(
+                  child: SizedBox(
                     height: MediaQuery.of(context).size.width * 0.1,
                     width: MediaQuery.of(context).size.width * 0.1,
                     child: const CircularProgressIndicator(

@@ -1,17 +1,23 @@
-// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, avoid_unnecessary_containers, camel_case_types, avoid_print, sized_box_for_whitespace, unused_element
+// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, avoid_unnecessary_containers, camel_case_types, avoid_print, unused_element, sized_box_for_whitespace
+
+import 'dart:async';
 
 import 'package:camera/camera.dart';
+import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:taywin_project/measurement_results.dart';
-import 'dart:math' as math;
+import 'package:taywin_project/utility/my_style.dart';
 
 class OpenCamera extends StatefulWidget {
   const OpenCamera({
     Key? key,
     required this.cameras,
+    required this.type,
   }) : super(key: key);
 
   final CameraDescription cameras;
+  final String type;
 
   @override
   State<OpenCamera> createState() => _OpenCameraState();
@@ -21,22 +27,74 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late CameraController _controller;
   late Future<void> _initcontroler;
 
-  var isCameraReady = false;
+  var isCameraReady = true;
   late XFile imagefile;
   late double screenwidth;
   late double screenheight;
+  double alignment_a = 0.7;
+  double alignment_b = -0.9999999999999999;
+  double alignment_c = -1.155;
+  double alignment_d = 0.9999999999999998;
+  double alignment_e = -1.3;
+  double alignment_f = 1.3;
+  int sizewidth = 10;
+  int sizeheight = 25;
+  late int sizeTH = 39;
+  late double sizeUS = 8;
+  late double sizeUK = 6;
+  bool isBasicsFlash = true;
+  bool isdialog = false;
+  bool isimage = false;
+  bool isType = false;
+  late Timer timer;
+
+  double alignmentValue_a = 4;
+  double alignmentValue_b = 7.5;
 
   @override
   void initState() {
+    cameraType();
+    timer = Timer.periodic(
+      const Duration(milliseconds: 100),
+      (Timer t) => setState(
+        () {
+          if (isimage == true) {
+            isimage = false;
+          } else {
+            isimage = true;
+          }
+        },
+      ),
+    );
     initCamera();
     WidgetsBinding.instance!.addObserver(this);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     super.initState();
   }
+
+  void cameraType() {
+    if (widget.type == 'footmeasure') {
+      setState(() {
+        isType = true;
+      });
+    } else {}
+  }
+
+  // void _ondelay() {
+  //   Future.delayed(const Duration(milliseconds: 50), () {
+  //     setState(() {
+  //       isimage = true;
+  //     });
+  //   });
+  // }
 
   @override
   void dispose() {
     WidgetsBinding.instance?.removeObserver(this);
     _controller.dispose();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
 
@@ -86,56 +144,396 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     screenwidth = MediaQuery.of(context).size.width;
     screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: FutureBuilder(
-          future: _initcontroler,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Container(
-                // color: Colors.black,
-                width: screenwidth,
-                height: screenheight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+      body: newContent(),
+    );
+  }
+
+  FutureBuilder<void> newContent() {
+    return isType
+        ? FutureBuilder(
+            future: _initcontroler,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Container(
+                  // color: Colors.black,
+                  width: screenwidth,
+                  height: screenheight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Stack(
+                        alignment: AlignmentDirectional.topCenter,
+                        children: [
+                          Stack(
+                            alignment: AlignmentDirectional.bottomCenter,
+                            children: [
+                              _cameraWidget(context),
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 20),
+                                child: iconCamerabutton(),
+                              ),
+                            ],
+                          ),
+                          line(),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          )
+        : FutureBuilder(
+            future: _initcontroler,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Container(
+                  // color: Colors.black,
+                  width: screenwidth,
+                  height: screenheight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Stack(
+                        alignment: AlignmentDirectional.topCenter,
+                        children: [
+                          Stack(
+                            alignment: AlignmentDirectional.bottomCenter,
+                            children: [
+                              _cameraWidget(context),
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 20),
+                                child: iconCamerabutton(),
+                              ),
+                            ],
+                          ),
+                          //  line(),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          );
+  }
+
+  Widget line() {
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Stack(
+                  alignment: Alignment(alignment_c, alignment_d),
                   children: [
+                    const SizedBox(
+                      height: 8,
+                    ),
                     Stack(
-                      alignment: AlignmentDirectional.topCenter,
+                      alignment: const Alignment(9, 5),
                       children: [
-                        Stack(
-                          alignment: AlignmentDirectional.bottomCenter,
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            _cameraWidget(context),
-                            iconCamera(),
+                            const SizedBox(
+                              width: 85,
+                            ),
+                            Column(
+                              children: [
+                                const SizedBox(
+                                  height: 85,
+                                ),
+                                Image.asset(
+                                  'images/Line1.png',
+                                  // width: screenwidth * 0.01,
+                                  // height: screenwidth * 1.23,
+                                )
+                              ],
+                            ),
                           ],
                         ),
-                        line2(
-                            screenwidth: screenwidth,
-                            screenheight: screenheight),
-                        line(
-                            screenwidth: screenwidth,
-                            screenheight: screenheight),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(
+                          width: 65,
+                        ),
+                        Column(
+                          children: [
+                            const SizedBox(
+                                //height: 8,
+                                ),
+                            Image.asset(
+                              'images/Line2.png',
+                              // width: screenwidth * 0.01,
+                              // height: screenwidth * 1.23,
+                            )
+                          ],
+                        ),
                       ],
                     ),
                   ],
                 ),
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
+                Stack(
+                  alignment: Alignment(alignment_a, alignment_b),
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                              right: screenwidth * 0.0005,
+                              top: screenwidth / alignmentValue_b),
+                          // alignment: Alignment(alignmentValue_a, alignmentValue_b),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadiusDirectional.circular(5)),
+                          width: screenwidth * 0.18,
+                          height: screenheight * 0.03,
+
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '$sizewidth CM',
+                                style: const TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 14.0,
+                                  fontFamily: 'FC-Minimal-Regular',
+                                ),
+                              ),
+                              const Text(' | '),
+                              Text(
+                                '$sizeheight CM',
+                                style: const TextStyle(
+                                  color: Colors.orange,
+                                  fontSize: 14.0,
+                                  fontFamily: 'FC-Minimal-Regular',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 80,
+                        ),
+                        Row(
+                          children: [
+                            const SizedBox(
+                              width: 63,
+                            ),
+                            isimage
+                                ? Image.asset(
+                                    'images/Line3.png',
+                                  )
+                                : Image.asset(
+                                    'images/Line2.png',
+                                  )
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(
+                          width: 85,
+                        ),
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 80,
+                            ),
+                            isimage
+                                ? Image.asset(
+                                    'images/Line4.png',
+                                    // width: screenwidth * 0.01,
+                                    // height: screenwidth * 1.23,
+                                  )
+                                : Image.asset(
+                                    'images/Line1.png',
+                                  )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            groupButton(),
+          ],
+        ),
+      ],
     );
   }
 
-  IconButton iconCamera() => IconButton(
-        onPressed: () {
-          captureImage(context);
-        },
-        icon: const Icon(
-          Icons.camera_rounded,
-          color: Colors.white,
+  void _showBasicsFlash({
+    String? text,
+    Duration? duration,
+    flashStyle = FlashBehavior.floating,
+  }) {
+    showFlash(
+      context: context,
+      duration: duration,
+      builder: (context, controller) {
+        return Flash(
+          controller: controller,
+          behavior: flashStyle,
+          position: FlashPosition.bottom,
+          boxShadows: kElevationToShadow[4],
+          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
+          child: FlashBar(
+            content: Row(
+              children: [
+                const Icon(Icons.info_outline),
+                MyStyle().mySizebox(),
+                Text(text!),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Row groupButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton.icon(
+          onPressed: () {
+            if (alignment_a >= 0.7 && alignment_b >= -0.9999999999999999) {
+              MyStyle().showBasicsFlash(
+                  context: context,
+                  text: 'เพิ่มขนาดสูงสุดแล้ว',
+                  flashStyle: FlashBehavior.fixed,
+                  duration: const Duration(seconds: 2));
+              print(
+                  'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+            } else {
+              setState(
+                () {
+                  alignmentValue_a += 0.002;
+                  // alignmentValue_b -= 1;
+                  alignment_a += 0.05;
+                  alignment_b -= 0.05;
+                  alignment_c -= 0.05;
+                  alignment_d += 0.05;
+                  alignment_e -= 0.05;
+                  alignment_f += 0.05;
+                  sizewidth += 1;
+                  sizeheight += 1;
+                  sizeTH += 1;
+                  sizeUS += 0.5;
+                  sizeUK += 0.5;
+                  print(
+                      'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+                },
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
+          ),
+          icon: const Icon(Icons.add_circle_outline),
+          label: const Text(
+            'เพิ่มขนาด',
+          ),
         ),
-        iconSize: 40,
+        const SizedBox(
+          width: 10,
+        ),
+        ElevatedButton.icon(
+          onPressed: () {
+            if (alignment_a <= 0.1999999999999999 &&
+                alignment_b <= -0.4999999999999995) {
+              MyStyle().showBasicsFlash(
+                  context: context,
+                  text: 'ลดขนาดต่ำสุดแล้ว',
+                  flashStyle: FlashBehavior.fixed,
+                  duration: const Duration(seconds: 2));
+              print(
+                  'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+            } else {
+              setState(
+                () {
+                  alignmentValue_a -= 0.002;
+                  // alignmentValue_b += 1;
+                  alignment_a -= 0.05;
+                  alignment_b += 0.05;
+                  alignment_c += 0.05;
+                  alignment_d -= 0.05;
+                  alignment_e += 0.05;
+                  alignment_f -= 0.05;
+                  sizewidth -= 1;
+                  sizeheight -= 1;
+                  sizeTH -= 1;
+                  sizeUS -= 0.5;
+                  sizeUK -= 0.5;
+                  print(
+                      'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+                },
+              );
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
+          ),
+          icon: const Icon(Icons.remove_circle_outline),
+          label: const Text(
+            'ลดขนาด',
+          ),
+        ),
+      ],
+    );
+  }
+
+  Stack iconCamerabutton() => Stack(
+        alignment: Alignment(alignment_a, alignment_b),
+        children: [
+          FloatingActionButton(
+            backgroundColor: Colors.white,
+            child: const Icon(
+              Icons.circle_outlined,
+              color: Colors.black45,
+              size: 55,
+            ),
+            onPressed: () {
+              captureImage(context);
+             
+            },
+          ),
+        ],
       );
 
   captureImage(BuildContext context) {
@@ -147,8 +545,17 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
         Navigator.pushAndRemoveUntil(
             context,
             (MaterialPageRoute(
-                builder: (context) => MeasurementResults(image: imagefile))),
+              builder: (context) => MeasurementResults(
+                image: imagefile,
+                width: sizewidth,
+                height: sizeheight,
+                sizeTH: sizeTH,
+                sizeUS: sizeUS,
+                sizeUK: sizeUK,
+              ),
+            )),
             (route) => true);
+            
       }
     });
   }
@@ -161,168 +568,5 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     setState(() {
       isCameraReady = true;
     });
-  }
-}
-
-class line extends StatelessWidget {
-  const line({
-    Key? key,
-    required this.screenwidth,
-    required this.screenheight,
-  }) : super(key: key);
-
-  final double screenwidth;
-  final double screenheight;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.topCenter,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // const SizedBox(
-            //   width: 83,
-            // ),
-            Row(
-              children: [
-                const SizedBox(
-                  width: 45,
-                ),
-                Image.asset(
-                  'images/Line1.png',
-                  width: screenwidth * 0.01,
-                  height: screenheight * 0.6,
-                ),
-              ],
-            ),
-
-            Image.asset(
-              'images/Line2.png',
-              height: screenwidth * 0.01,
-              width: screenheight * 0.8,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class line2 extends StatefulWidget {
-  const line2({
-    Key? key,
-    required this.screenwidth,
-    required this.screenheight,
-  }) : super(key: key);
-
-  final double screenwidth;
-  final double screenheight;
-
-  @override
-  State<line2> createState() => _line2State();
-}
-
-class _line2State extends State<line2> {
-  double alignment_a = 0.7;
-  double alignment_b = -0.9999999999999999;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.topCenter,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Stack(
-              alignment: Alignment(alignment_a, alignment_b),
-              children: [
-                Column(
-                  children: [
-                    // const SizedBox(
-                    //   height: 10,
-                    // ),
-                    Image.asset(
-                      'images/Line3.png',
-                      width: widget.screenwidth * 0.8,
-                      height: widget.screenheight * 0.01,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    // const SizedBox(
-                    //   height: 30,
-                    // ),
-                    Image.asset(
-                      'images/Line4.png',
-                      width: widget.screenwidth * 0.01,
-                      height: widget.screenwidth * 1.2,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FloatingActionButton(
-                  child: const Icon(Icons.add_circle_outline),
-                  onPressed: () {
-                    if (alignment_a >= 0.7 ||
-                        alignment_b >= -0.9999999999999999) {
-                      setState(() {
-                        alignment_a += 0.1;
-                        alignment_b -= 0.1;
-                        print(
-                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
-                        // width += 0.1;
-                        // height += 0.001;
-                      });
-                    } else {
-                      print(
-                          'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
-                    }
-                  },
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                FloatingActionButton(
-                  child: const Icon(Icons.remove_circle_outline),
-                  onPressed: () {
-                    if (alignment_a <= -0.19999999999999998 ||
-                        alignment_b <= -0.10000000000000003) {
-                      setState(() {
-                        alignment_a -= 0.1;
-                        alignment_b += 0.1;
-                        print(
-                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
-                        // width -= 0.01;
-                        // height -= 0.001;
-                      });
-                    } else {
-                      print(
-                          'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
   }
 }

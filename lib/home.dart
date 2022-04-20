@@ -2,6 +2,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:taywin_project/camere.dart';
+import 'package:taywin_project/utility/my_style.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({
@@ -18,6 +19,8 @@ class MyHome extends StatefulWidget {
 class _MyHomeState extends State<MyHome> {
   late double screenwidth;
   late double screenheight;
+  // late Widget waistline = OpenCamera(cameras: widget.camera,type: 'waistline',);
+  // late Widget footmeasure = OpenCamera(cameras: widget.camera, type: 'footmeasure',);
 
   @override
   void initState() {
@@ -39,16 +42,11 @@ class _MyHomeState extends State<MyHome> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'images/logo.png',
-                width: screenwidth * 0.6,
-                height: screenwidth * 0.6,
-              ),
+              MyStyle().showlogo(screenwidth),
               FloatingActionButton.extended(
                 backgroundColor: Colors.white,
-                onPressed: () {
-                  dialog('images/image.jpg',
-                      '1. ให้กล้องห่างจากเท้าในระยะ 30 CM หรือ 12 นิ้ว เท่านั้น\n2. ให้ปลายส้นเท้าซ้ายหรือขวา(เพียงด้านเดียว) และด้านข้างของเท้าอยู่ชิดติดเส้นสีแดงทั้งแนวตั้งและแนวนอน\n3. เลื่อนเส้นที่เหลืองชิดขอบอีกด้านของเท้าลูกค้า เพื่อวัดความกว้างของเท้า\n4. ระบบจะแสดงเส้นสีเขียวอัตโนมัติ พร้อมแสดงไซส์ขนาดรองเท้าของเท้าโดยเพื่อความสบายในการใส่ ลูกค้าสามารถกดค้างเส้นสีเขียว เลื่อนไปมาเพื่อเลือกไซส์ที่ท่านต้องการ เมื่อถูกต้องให้กดถ่าย');
+                onPressed: () async {
+                  dialog( MyStyle().imageFootmeasure, MyStyle().detail1,MyStyle().footmeasure);
                 },
                 label: const Text(
                   'วัดขนาดเท้า',
@@ -61,10 +59,8 @@ class _MyHomeState extends State<MyHome> {
               ),
               FloatingActionButton.extended(
                 backgroundColor: Colors.white,
-                onPressed: () {
-                  dialog('images/image2.jpg',
-                      '1. ห้ามใส่เสื้อคลุมหรือใส่ชุดที่จะทำให้การวัดขนาดของเอวท่านไม่ตรงกับความเป็นจริง\n2. ให้กล้องห่างจากเอวในระยะ 30 CM หรือ 12 นิ้ว เท่านั้น\n3. ให้ขยับกล้องขึ้นลงเพื่อให้แกนสีแดงสีส้มตรงกับตำแหน่งของการใส่เข็มขัดจริงของคุณลูกค้า ระบบจะแสดงรอบเอวขั้นต้นออกมาอัตโนมัติ(เพื่อป้องกันข้อมูลคลาดเคลื่อน กรุณาให้เส้นแดงและเหลืองอยู่ในระดับที่ใส่เข็มขัดจริงเท่านั้น)\n4. ลูกค้าสามารถใช้นิ้วกดค้างที่เส้นสีเขียวเพื่อเลื่อนตำแหน่งเข้า-ออก เพื่อให้แสดงข้อมูลของการวัดที่ถูกต้องที่สุด เมื่อถูกต้องให้กดถ่าย');
-                  // _showPicker(context);
+                onPressed: () async {
+                  dialog( MyStyle().imageWaistline, MyStyle().detail2,MyStyle().waistline);
                 },
                 label: const Text(
                   'วัดขนาดรอบเอว',
@@ -79,7 +75,7 @@ class _MyHomeState extends State<MyHome> {
     );
   }
 
-  Future<void> dialog(String image, String message) async {
+  Future<void> dialog(String image, String message, String text) async {
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -129,7 +125,7 @@ class _MyHomeState extends State<MyHome> {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => OpenCamera(
-                            cameras: widget.camera,
+                            cameras: widget.camera,type: text,
                           ),
                         ),
                       );

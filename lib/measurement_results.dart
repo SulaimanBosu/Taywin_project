@@ -1,16 +1,24 @@
 // ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, prefer_typing_uninitialized_variables
 
-import 'dart:ffi';
-import 'dart:io';
-
-import 'package:arrow_path/arrow_path.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 class MeasurementResults extends StatefulWidget {
   final XFile image;
-  const MeasurementResults({Key? key, required this.image}) : super(key: key);
+  final int width;
+  final int height;
+  final int sizeTH;
+  final double sizeUS;
+  final double sizeUK;
+  const MeasurementResults(
+      {Key? key,
+      required this.image,
+      required this.width,
+      required this.height,
+      required this.sizeTH,
+      required this.sizeUS,
+      required this.sizeUK})
+      : super(key: key);
 
   @override
   State<MeasurementResults> createState() => _MeasurementResultsState();
@@ -20,12 +28,28 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   late XFile imagefile;
   late double screenwidth;
   late double screenheight;
-  late Path path;
+  late int sizewidth;
+  late int sizeheight;
+  late int sizeTH;
+  late double sizeUS;
+  late double sizeUK;
+
   final moreControler = TextEditingController();
+
+  void size() async {
+    if (sizewidth == 10 && sizeheight == 25) {
+      setState(() {});
+    } else {}
+  }
 
   @override
   void initState() {
     imagefile = widget.image;
+    sizewidth = widget.width;
+    sizeheight = widget.height;
+    sizeTH = widget.sizeTH;
+    sizeUS = widget.sizeUS;
+    sizeUK = widget.sizeUK;
     super.initState();
   }
 
@@ -60,11 +84,11 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  SizedBox(
+                children: [
+                  const SizedBox(
                     width: 60,
                   ),
-                  Text('10 cm'),
+                  Text('${sizewidth.toString()} cm'),
                 ],
               ),
               Container(
@@ -103,7 +127,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                   const SizedBox(
                     width: 5,
                   ),
-                  const Text('25 cm')
+                  Text('${sizeheight.toString()} cm')
                 ],
               ),
 
@@ -134,11 +158,11 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                 child: Container(
                   width: screenwidth * 0.85,
                   height: screenwidth * 0.25,
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      'เบอร์รองเท้าของท่านคือเบอร์ 39\n(EU) (US : 8 , UK : 6)',
+                      'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()}\n(EU) (US : ${sizeUS.toString()} , UK : ${sizeUK.toString()})',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
                           fontFamily: 'FC-Minimal-Regular',
