@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:taywin_project/home.dart';
+import 'package:taywin_project/measure_foot_size.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -30,7 +31,9 @@ Future<void> main() async {
             ),
           ),
         ),
-        home: MyHome(
+        home: 
+        //const MeasureFootSize()
+        MyHome(
           camera: firstCamera,
         ),
       ),

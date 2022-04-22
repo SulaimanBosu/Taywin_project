@@ -16,6 +16,7 @@ class MyStyle {
   String imageFootmeasure = 'images/image.jpg';
   String waistline = 'waistline';
   String footmeasure = 'footmeasure';
+  
   Text textdetail(String title) => Text(
         title,
         style: const TextStyle(
