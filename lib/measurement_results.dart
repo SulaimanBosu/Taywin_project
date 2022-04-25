@@ -34,6 +34,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   late double waistwidth;
   late double inch;
   bool isType = false;
+  bool isMen = true;
 
   final moreControler = TextEditingController();
 
@@ -51,14 +52,25 @@ class _MeasurementResultsState extends State<MeasurementResults> {
 
   void size() {
     if (widget.type == MyStyle().footmeasure) {
-      setState(() {
-        sizeTH = SizeMen().sizeTH(sizeheight);
-        print('เกิดผิดพลาด ==== $sizeTH');
-        print('sizeheight ==== $sizeheight');
-        // sizeTH = (15.5 + sizeheight);
-        sizeUS = (sizeheight - 18);
-        sizeUK = (sizeheight - 19);
-      });
+      if (isMen) {
+        setState(() {
+          sizeTH = Size().sizeman(sizeheight);
+          print('เกิดผิดพลาด ==== $sizeTH');
+          print('sizeheight ==== $sizeheight');
+          
+          sizeUS = (sizeheight - 18);
+          sizeUK = (sizeheight - 19);
+        });
+      } else {
+        setState(() {
+          sizeTH = Size().sizewoman(sizeheight);
+          print('เกิดผิดพลาด ==== $sizeTH');
+          print('sizeheight ==== $sizeheight');
+          
+          sizeUS = (sizeheight - 18);
+          sizeUK = (sizeheight - 19);
+        });
+      }
     } else if (widget.type == MyStyle().waistline) {
       setState(() {
         waistwidth = sizewidth * 3;
@@ -170,6 +182,39 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                             fontSize: 12,
                             fontWeight: FontWeight.bold),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                sizeTH = Size().sizewoman(sizeheight);
+                                isMen = false;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.woman_outlined,
+                              size: 50,
+                            )),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                sizeTH = Size().sizeman(sizeheight);
+                                isMen = true;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.man_outlined,
+                              size: 50,
+                            )),
+                      ],
                     ),
                     const SizedBox(
                       height: 15,
