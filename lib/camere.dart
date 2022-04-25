@@ -38,8 +38,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   double alignment_d = 0.9999999999999998;
   double alignment_e = 3;
   double alignment_f = 20;
-  double sizewidth = 10;
-  double sizeheight = 29.5;
+  late double sizewidth;
+  late double sizeheight;
   bool showFocusCircle = false;
   bool isBasicsFlash = true;
   bool isdialog = false;
@@ -50,11 +50,12 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   double alignmentValue_a = 4;
   double alignmentValue_b = 7.5;
 
-  double startDXPoint = 0.895;
-  double startDYPoint = 1;
+  late double startDXPoint;
+  late double startDYPoint;
+  double alignmentwidth = 0.87;
 
-  double waistwidth = 30;
-   double inch = 12;
+  double waistwidth = 60;
+  double inch = 24;
 
   @override
   void initState() {
@@ -84,7 +85,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     if (widget.type == MyStyle().footmeasure) {
       setState(() {
         sizewidth = 10;
-        sizeheight = 29.5;
+        sizeheight = 28.5;
       });
     } else if (widget.type == MyStyle().waistline) {
       setState(() {
@@ -204,36 +205,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                         ),
                       ],
                     ),
-                    isType
-                        ? line()
-                        : Stack(
-                            alignment: Alignment(startDXPoint, 0.35),
-                            
-                            children: [
-                              line(),
-                              GestureDetector(
-                                // onHorizontalDragStart:
-                                //     _onHorizontalDragStartHandler,
-                                onHorizontalDragUpdate: _onDragUpdateHandler,
-                                child: Container(
-                                  //color: Colors.pink,
-                                  width: screenwidth * 0.3,
-                                  height: screenheight * 0.22,
-                                  // alignment: AlignmentDirectional.bottomCenter,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      _textcontainer(),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      line2(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
+                    isType ? line() : _isline(),
+                    isType ? Container() : groupButton(),
                   ],
                 ),
               ],
@@ -248,27 +221,98 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     );
   }
 
+  Widget _isline() {
+    return Stack(
+      alignment: Alignment(alignmentwidth, 0.35),
+      //  alignment: Alignment(alignmentwidth, -10),
+      children: [
+        line(),
+        GestureDetector(
+          // onHorizontalDragStart: _onHorizontalDragStartHandler,
+          // onHorizontalDragUpdate: _onDragUpdateHandler,
+          onTap: () {
+            setState(() {
+              //  startDXPoint = startDXPoint;
+            });
+          },
+          child: Container(
+            // color: Colors.pink,
+            width: screenwidth * 0.3,
+            height: screenheight * 0.22,
+            // alignment: Alignment(startDXPoint, 0.35),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _textcontainer(),
+                const SizedBox(
+                  height: 8,
+                ),
+                Stack(
+                  //  alignment: Alignment(alignmentwidth, 0.35),
+                  children: [
+                    isimage
+                        ? Image.asset(
+                            'images/Line9.png',
+                            //height: 40,
+                          )
+                        : Image.asset(
+                            'images/Line7.png',
+                            // height: 40,
+                          ),
+                    // _textcontainer(),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   // /// Track current point of a gesture
-  // void _onHorizontalDragStartHandler(DragStartDetails details) {
-  //   setState(() {
-  //     // startDXPoint = details.localPosition.dx.floorToDouble();
-  //     startDXPoint = details.localPosition.dx.floorToDouble() * 0.01;
-  //     //startDXPoint = details.globalPosition.dx.floorToDouble();
-  //     startDXPoint -= 0.1;
-  //     print('Dx ==> ' + startDXPoint.toString());
-  //     print('Dy ==> ' + startDYPoint.toString());
-  //   });
-  // }
+  void _onHorizontalDragStartHandler(DragStartDetails details) {
+    setState(() {
+      startDXPoint = details.localPosition.dx.floorToDouble() * 0.005;
+      startDXPoint = startDXPoint;
+      print('StartHandler Dx ==> ' + startDXPoint.toString());
+      print('StartHandler Dy ==> ' + startDYPoint.toString());
+    });
+    if (startDXPoint <= 0.855) {
+    } else {}
+  }
 
   /// Track current point of a gesture
   void _onDragUpdateHandler(DragUpdateDetails details) {
     setState(() {
-      startDXPoint = details.localPosition.dx.floorToDouble() * 0.005;
-        waistwidth =  waistwidth - startDXPoint;
-        inch = waistwidth / 2.5;
-      //startDYPoint = details.globalPosition.dy.floorToDouble();
-      print('Dx ==> ' + startDXPoint.toString());
-      print('Dy ==> ' + startDYPoint.toString());
+      startDXPoint = details.localPosition.dx.floorToDouble();
+      double dx = startDXPoint * 0.005;
+
+      // if (dx <= 0) {
+      //   inch = waistwidth / 2.5;
+      //   MyStyle().showBasicsFlash(
+      //       context: context,
+      //       text: 'ลดขนาดสูงสุดแล้ว',
+      //       flashStyle: FlashBehavior.fixed,
+      //       duration: const Duration(seconds: 2));
+      // } else if (dx >= 0.87) {
+      //   inch = waistwidth / 2.5;
+      //   MyStyle().showBasicsFlash(
+      //       context: context,
+      //       text: 'เพิ่มขนาดสูงสุดแล้ว',
+      //       flashStyle: FlashBehavior.fixed,
+      //       duration: const Duration(seconds: 2));
+      // } else {
+      //   waistwidth = dx * 30;
+      //   alignmentwidth = dx;
+      // }
+      waistwidth = dx * 30;
+      inch = waistwidth / 2.5;
+      alignmentwidth = dx;
+      print('UpdateHandler Dx ==> ' + dx.toString());
+      print('startDXPoint ==> ' + alignmentwidth.toString());
+      print('waistwidth ==> ' + waistwidth.toString());
+      print('=====================================');
     });
   }
 
@@ -280,16 +324,17 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  const SizedBox(
+                    height: 60,
+                  ),
+                  _textcontainer(),
                   Stack(
                     children: [
                       Stack(
                         alignment: Alignment(alignment_c, alignment_d),
                         children: [
-                          const SizedBox(
-                            height: 8,
-                          ),
                           Stack(
-                            alignment: const Alignment(9, 5),
+                            alignment: const Alignment(9, 22),
                             children: [
                               Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -300,7 +345,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                   Column(
                                     children: [
                                       const SizedBox(
-                                        height: 85,
+                                        height: 10,
                                       ),
                                       Image.asset(
                                         'images/Line1.png',
@@ -323,8 +368,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                               Column(
                                 children: [
                                   const SizedBox(
-                                      //height: 8,
-                                      ),
+                                    height: 8,
+                                  ),
                                   Image.asset(
                                     'images/Line2.png',
                                     // width: screenwidth * 0.01,
@@ -339,11 +384,11 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       Stack(
                         alignment: Alignment(alignment_a, alignment_b),
                         children: [
-                          _textcontainer(),
+                          // _textcontainer(),
                           Column(
                             children: [
                               const SizedBox(
-                                height: 80,
+                                height: 10,
                               ),
                               Row(
                                 children: [
@@ -370,7 +415,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                               Column(
                                 children: [
                                   const SizedBox(
-                                    height: 80,
+                                    height: 10,
                                   ),
                                   isimage
                                       ? Image.asset(
@@ -406,10 +451,11 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           // _textcontainer(),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            //   mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
                                 'images/Line7.png',
@@ -423,33 +469,37 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                               )
                             ],
                           ),
+                          // const SizedBox(
+                          //   height: 50,
+                          // ),
+                          // groupButton(),
                         ],
                       ),
                     ],
                   ),
                 ],
               ),
-              //  line2(),
             ],
           );
   }
 
-  Widget line2() {
-    return Stack(
-      children: [
-        isimage
-            ? Image.asset(
-                'images/Line9.png',
-                //height: 40,
-              )
-            : Image.asset(
-                'images/Line7.png',
-                // height: 40,
-              ),
-        // _textcontainer(),
-      ],
-    );
-  }
+  // Widget line2() {
+  //   return Stack(
+  //     alignment: Alignment(alignmentwidth, 0.35),
+  //     children: [
+  //       isimage
+  //           ? Image.asset(
+  //               'images/Line9.png',
+  //               //height: 40,
+  //             )
+  //           : Image.asset(
+  //               'images/Line7.png',
+  //               // height: 40,
+  //             ),
+  //       // _textcontainer(),
+  //     ],
+  //   );
+  // }
 
   Widget _textcontainer() {
     return Container(
@@ -463,8 +513,10 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(isType ? '${sizewidth.toStringAsFixed(0)} Cm' :
-            '${waistwidth.toStringAsFixed(0)} ซม.',
+          Text(
+            isType
+                ? '${sizewidth.toStringAsFixed(0)} Cm'
+                : '${waistwidth.toStringAsFixed(0)} ซม.',
             style: const TextStyle(
               color: Colors.green,
               fontSize: 14.0,
@@ -472,8 +524,10 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             ),
           ),
           const Text(' | '),
-          Text(isType ? '${sizeheight.toStringAsFixed(1)} Cm' :
-            '${inch.toStringAsFixed(1)} นิ้ว',
+          Text(
+            isType
+                ? '${sizeheight.toStringAsFixed(1)} Cm'
+                : '${inch.toStringAsFixed(1)} นิ้ว',
             style: const TextStyle(
               color: Colors.orange,
               fontSize: 14.0,
@@ -515,95 +569,153 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   }
 
   Row groupButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton.icon(
-          onPressed: () {
-            if (alignment_a >= 0.7 && alignment_b >= -0.9999999999999999) {
-              MyStyle().showBasicsFlash(
-                  context: context,
-                  text: 'เพิ่มขนาดสูงสุดแล้ว',
-                  flashStyle: FlashBehavior.fixed,
-                  duration: const Duration(seconds: 2));
-              print(
-                  'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
-            } else {
-              setState(
-                () {
-                  alignmentValue_a += 0.002;
-                  // alignmentValue_b -= 1;
-                  alignment_a += 0.05;
-                  alignment_b -= 0.05;
-                  alignment_c -= 0.05;
-                  alignment_d += 0.05;
-                  alignment_e -= 0.05;
-                  alignment_f += 0.05;
-                  sizewidth += 0.5;
-                  sizeheight += 0.5;
-                  print(
-                      'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+    return isType
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  if (alignment_a >= 0.7 &&
+                      alignment_b >= -0.9999999999999999) {
+                    MyStyle().showBasicsFlash(
+                        context: context,
+                        text: 'เพิ่มขนาดสูงสุดแล้ว',
+                        flashStyle: FlashBehavior.fixed,
+                        duration: const Duration(seconds: 2));
+                    print(
+                        'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+                  } else {
+                    setState(
+                      () {
+                        alignmentValue_a += 0.002;
+                        // alignmentValue_b -= 1;
+                        alignment_a += 0.03;
+                        alignment_b -= 0.03;
+                        alignment_c -= 0.03;
+                        alignment_d += 0.03;
+                        sizewidth += 0.5;
+                        sizeheight += 0.5;
+                        print(
+                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+                      },
+                    );
+                  }
                 },
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
-          ),
-          icon: const Icon(Icons.add_circle_outline),
-          label: const Text(
-            'เพิ่มขนาด',
-          ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        ElevatedButton.icon(
-          onPressed: () {
-            if (alignment_a <= 0.1999999999999999 &&
-                alignment_b <= -0.4999999999999995) {
-              MyStyle().showBasicsFlash(
-                  context: context,
-                  text: 'ลดขนาดต่ำสุดแล้ว',
-                  flashStyle: FlashBehavior.fixed,
-                  duration: const Duration(seconds: 2));
-              print(
-                  'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
-            } else {
-              setState(
-                () {
-                  alignmentValue_a -= 0.002;
-                  // alignmentValue_b += 1;
-                  alignment_a -= 0.05;
-                  alignment_b += 0.05;
-                  alignment_c += 0.05;
-                  alignment_d -= 0.05;
-                  alignment_e += 0.05;
-                  alignment_f -= 0.05;
-                  sizewidth -= 0.5;
-                  sizeheight -= 0.5;
-                  print(
-                      'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
+                ),
+                icon: const Icon(Icons.add_circle_outline),
+                label: const Text(
+                  'เพิ่มขนาด',
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  if (alignment_a <= 0.09999999999999959 &&
+                      alignment_b <= -0.39999999999999936) {
+                    MyStyle().showBasicsFlash(
+                        context: context,
+                        text: 'ลดขนาดต่ำสุดแล้ว',
+                        flashStyle: FlashBehavior.fixed,
+                        duration: const Duration(seconds: 2));
+                    print(
+                        'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b');
+                  } else {
+                    setState(
+                      () {
+                        alignmentValue_a -= 0.002;
+                        // alignmentValue_b += 1;
+                        alignment_a -= 0.03;
+                        alignment_b += 0.03;
+                        alignment_c += 0.03;
+                        alignment_d -= 0.03;
+      
+                        sizewidth -= 0.5;
+                        sizeheight -= 0.5;
+                        print(
+                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+                      },
+                    );
+                  }
                 },
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
-          ),
-          icon: const Icon(Icons.remove_circle_outline),
-          label: const Text(
-            'ลดขนาด',
-          ),
-        ),
-      ],
-    );
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
+                ),
+                icon: const Icon(Icons.remove_circle_outline),
+                label: const Text(
+                  'ลดขนาด',
+                ),
+              ),
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                padding: const EdgeInsets.only(top: 25.0, left: 30),
+                onPressed: () {
+                  if (alignmentwidth <= 0.00) {
+                    MyStyle().showBasicsFlash(
+                        context: context,
+                        text: 'ลดขนาดต่ำสุดแล้ว',
+                        flashStyle: FlashBehavior.fixed,
+                        duration: const Duration(seconds: 2));
+                    print('alignmentwidth ===> $alignmentwidth');
+                  } else {
+                    setState(
+                      () {
+                        alignmentwidth -= 0.01;
+                        waistwidth = alignmentwidth * 60;
+                        inch = waistwidth / 2.5;
+                        print('alignmentwidth ===> $alignmentwidth');
+                      },
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.remove_circle_outline,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+              IconButton(
+                padding: const EdgeInsets.only(top: 25.0, right: 30),
+                onPressed: () {
+                  if (alignmentwidth >= 0.87) {
+                    MyStyle().showBasicsFlash(
+                        context: context,
+                        text: 'เพิ่มขนาดสูงสุดแล้ว',
+                        flashStyle: FlashBehavior.fixed,
+                        duration: const Duration(seconds: 2));
+                    print('alignmentwidth ===> $alignmentwidth');
+                  } else {
+                    setState(
+                      () {
+                        alignmentwidth += 0.01;
+                        waistwidth = alignmentwidth * 60;
+                        inch = waistwidth / 2.5;
+                        print('alignmentwidth ===> $alignmentwidth');
+                      },
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.add_circle_outline,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ],
+          );
   }
 
   Stack iconCamerabutton() => Stack(

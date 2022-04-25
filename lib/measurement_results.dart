@@ -3,6 +3,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:taywin_project/utility/my_style.dart';
+import 'package:taywin_project/utility/size/size_men.dart';
 
 class MeasurementResults extends StatefulWidget {
   final XFile image;
@@ -51,7 +52,10 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   void size() {
     if (widget.type == MyStyle().footmeasure) {
       setState(() {
-        sizeTH = (15.5 + sizeheight);
+        sizeTH = SizeMen().sizeTH(sizeheight);
+        print('เกิดผิดพลาด ==== $sizeTH');
+        print('sizeheight ==== $sizeheight');
+        // sizeTH = (15.5 + sizeheight);
         sizeUS = (sizeheight - 18);
         sizeUK = (sizeheight - 19);
       });
