@@ -17,15 +17,6 @@ class MyStyle {
   String waistline = 'waistline';
   String footmeasure = 'footmeasure';
 
-
-
-
-
-
-
-
-
-
   Text textdetail(String title) => Text(
         title,
         style: const TextStyle(

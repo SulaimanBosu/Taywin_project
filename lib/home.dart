@@ -1,10 +1,11 @@
-// ignore_for_file: avoid_unnecessary_containers, deprecated_member_use
+// ignore_for_file: avoid_unnecessary_containers, deprecated_member_use, avoid_print
 import 'dart:developer';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:taywin_project/camere.dart';
+import 'package:taywin_project/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 
 class MyHome extends StatefulWidget {
@@ -20,13 +21,23 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
-  late double screenwidth;
-  late double screenheight;
+  late double screenwidth = MediaQuery.of(context).size.width;
+  late double screenheight = MediaQuery.of(context).size.height;
   bool _isCameraPermissionGranted = false;
+  String device = '';
   // late Widget waistline = OpenCamera(cameras: widget.camera,type: 'waistline',);
   // late Widget footmeasure = OpenCamera(cameras: widget.camera, type: 'footmeasure',);
 
-  getPermissionStatus() async {
+
+
+  @override
+  void initState() {
+    getPermissionStatus();
+    super.initState();
+    
+  }
+
+    getPermissionStatus() async {
     await Permission.camera.request();
     var status = await Permission.camera.status;
 
@@ -42,90 +53,98 @@ class _MyHomeState extends State<MyHome> {
   }
 
   @override
-  void initState() {
-    getPermissionStatus();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    screenwidth = MediaQuery.of(context).size.width;
+        screenwidth = MediaQuery.of(context).size.width;
     screenheight = MediaQuery.of(context).size.height;
+    device = ScreenSize().screenwidth(screenwidth);
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(30, 29, 89, 1),
-      // body: Center(
-      //     child: Text(screenwidth.toString(),
-      //         style: const TextStyle(color: Colors.white))),
-      body: _isCameraPermissionGranted
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MyStyle().showlogo(screenwidth),
-                    FloatingActionButton.extended(
-                      backgroundColor: Colors.white,
-                      onPressed: () async {
-                        dialog(MyStyle().imageFootmeasure, MyStyle().detail1,
-                            MyStyle().footmeasure);
-                      },
-                      label: const Text(
-                        'วัดขนาดเท้า',
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
+        backgroundColor: const Color.fromRGBO(30, 29, 89, 1),
+        // body: Center(
+        //     child: Text(screenwidth.toString(),
+        //         style: const TextStyle(color: Colors.white))),
+        body: _isCameraPermissionGranted
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MyStyle().showlogo(screenwidth),
+                      FlatButton(
+                        minWidth: screenwidth * 0.8,
+                        color: Colors.white, // foreground
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        onPressed: () async {
+                          dialog(MyStyle().imageFootmeasure, MyStyle().detail1,
+                              MyStyle().footmeasure);
+                        },
+                        child: const Text(
+                          'วัดขนาดเท้า',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'FC-Minimal-Regular',
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    FloatingActionButton.extended(
-                      backgroundColor: Colors.white,
-                      onPressed: () async {
-                        dialog(MyStyle().imageWaistline, MyStyle().detail2,
-                            MyStyle().waistline);
-                      },
-                      label: const Text(
-                        'วัดขนาดรอบเอว',
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
+                      const SizedBox(
+                        height: 20,
                       ),
-                    )
-                  ],
-                ),
-              ],
-            )
-          : Container()
-          // Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       Row(),
-          //       const Text(
-          //         'Permission denied',
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontSize: 24,
-          //         ),
-          //       ),
-          //       const SizedBox(height: 24),
-          //       ElevatedButton(
-          //         onPressed: () {
-          //           getPermissionStatus();
-          //         },
-          //         child: const Padding(
-          //           padding: EdgeInsets.all(8.0),
-          //           child: Text(
-          //             'Give permission',
-          //             style: TextStyle(
-          //               color: Colors.white,
-          //               fontSize: 24,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-    );
+                      FlatButton(
+                        minWidth: screenwidth * 0.8,
+                        color: Colors.white, // foreground
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        onPressed: () async {
+                          dialog(MyStyle().imageWaistline, MyStyle().detail2,
+                              MyStyle().waistline);
+                        },
+                        child: const Text(
+                          'วัดขนาดรอบเอว',
+                          style: TextStyle(
+                              fontFamily: 'FC-Minimal-Regular',
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            : Container()
+        // Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       Row(),
+        //       const Text(
+        //         'Permission denied',
+        //         style: TextStyle(
+        //           color: Colors.white,
+        //           fontSize: 24,
+        //         ),
+        //       ),
+        //       const SizedBox(height: 24),
+        //       ElevatedButton(
+        //         onPressed: () {
+        //           getPermissionStatus();
+        //         },
+        //         child: const Padding(
+        //           padding: EdgeInsets.all(8.0),
+        //           child: Text(
+        //             'Give permission',
+        //             style: TextStyle(
+        //               color: Colors.white,
+        //               fontSize: 24,
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        );
   }
 
   Future<void> dialog(String image, String message, String text) async {

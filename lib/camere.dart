@@ -8,6 +8,7 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:taywin_project/measurement_results.dart';
+import 'package:taywin_project/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -28,6 +29,7 @@ class OpenCamera extends StatefulWidget {
 class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late CameraController _controller;
   late Future<void> _initcontroler;
+  String device = '';
 
   var isCameraReady = true;
   late XFile imagefile;
@@ -56,8 +58,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late double startDXPoint;
   late double startDYPoint;
   double alignmentwidth = 0.87;
-  late double waistwidth = 60;
-  late double inch = 24;
+  late double waistwidth = 120;
+  late double inch = 48;
 
   // getPermissionStatus() async {
   //   await Permission.camera.request();
@@ -76,7 +78,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
 
   @override
   void initState() {
-   // getPermissionStatus();
     type();
     // size();
     timer = Timer.periodic(
@@ -192,6 +193,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     screenwidth = MediaQuery.of(context).size.width;
     screenheight = MediaQuery.of(context).size.height;
+    device = ScreenSize().screenwidth(screenwidth);
     return Scaffold(
       body: newContent(),
     );
@@ -211,9 +213,13 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                   children: [
                     Stack(
                       //  alignment: AlignmentDirectional.center,
-                      alignment: isType
-                          ? const Alignment(0, -2)
-                          : AlignmentDirectional.center,
+                      alignment: device == 'MOBILE'
+                          ? isType
+                              ? const Alignment(0, -2)
+                              : AlignmentDirectional.center
+                          : isType
+                              ? const Alignment(0, 0)
+                              : AlignmentDirectional.center,
                       children: [
                         Stack(
                           alignment: AlignmentDirectional.bottomCenter,
@@ -272,52 +278,99 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   }
 
   Widget _isline() {
-    return Stack(
-      alignment: Alignment(alignmentwidth, 0.35),
-      //  alignment: Alignment(alignmentwidth, -10),
-      children: [
-        line(),
-        GestureDetector(
-          // onHorizontalDragStart: _onHorizontalDragStartHandler,
-          // onHorizontalDragUpdate: _onDragUpdateHandler,
-          onTap: () {
-            setState(() {
-              //  startDXPoint = startDXPoint;
-            });
-          },
-          child: Container(
-            // color: Colors.pink,
-            width: screenwidth * 0.3,
-            height: screenheight * 0.22,
-            // alignment: Alignment(startDXPoint, 0.35),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _textcontainer(),
-                const SizedBox(
-                  height: 8,
+    return device == 'MOBILE'
+        ? Stack(
+            alignment: Alignment(alignmentwidth, 0.35),
+            //  alignment: Alignment(alignmentwidth, -10),
+            children: [
+              line(),
+              GestureDetector(
+                // onHorizontalDragStart: _onHorizontalDragStartHandler,
+                // onHorizontalDragUpdate: _onDragUpdateHandler,
+                onTap: () {
+                  setState(() {
+                    //  startDXPoint = startDXPoint;
+                  });
+                },
+                child: Container(
+                  // color: Colors.pink,
+                  width: screenwidth * 0.3,
+                  height: screenheight * 0.22,
+                  // alignment: Alignment(startDXPoint, 0.35),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _textcontainer(),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Stack(
+                        //  alignment: Alignment(alignmentwidth, 0.35),
+                        children: [
+                          isimage
+                              ? Image.asset(
+                                  'images/Line9.png',
+                                  //height: 40,
+                                )
+                              : Image.asset(
+                                  'images/Line7.png',
+                                  // height: 40,
+                                ),
+                          // _textcontainer(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                Stack(
-                  //  alignment: Alignment(alignmentwidth, 0.35),
-                  children: [
-                    isimage
-                        ? Image.asset(
-                            'images/Line9.png',
-                            //height: 40,
-                          )
-                        : Image.asset(
-                            'images/Line7.png',
-                            // height: 40,
-                          ),
-                    // _textcontainer(),
-                  ],
+              ),
+            ],
+          )
+        : Stack(
+            alignment: Alignment(alignmentwidth - 0.37, 0.25),
+            //  alignment: Alignment(alignmentwidth, -10),
+            children: [
+              line(),
+              GestureDetector(
+                // onHorizontalDragStart: _onHorizontalDragStartHandler,
+                // onHorizontalDragUpdate: _onDragUpdateHandler,
+                onTap: () {
+                  setState(() {
+                    //  startDXPoint = startDXPoint;
+                  });
+                },
+                child: Container(
+                  // color: Colors.pink,
+                  width: screenwidth * 0.3,
+                  height: screenheight * 0.22,
+                  // alignment: Alignment(startDXPoint, 0.35),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _textcontainer(),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Stack(
+                        //  alignment: Alignment(alignmentwidth, 0.35),
+                        children: [
+                          isimage
+                              ? Image.asset(
+                                  'images/Line9.png',
+                                  //height: 40,
+                                )
+                              : Image.asset(
+                                  'images/Line7.png',
+                                  // height: 40,
+                                ),
+                          // _textcontainer(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+              ),
+            ],
+          );
   }
 
   // /// Track current point of a gesture
@@ -367,38 +420,62 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   }
 
   Widget line() {
-    return isType
-        ? Stack(
-            alignment: AlignmentDirectional.topCenter,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+    return device == 'MOBILE'
+        ? isType
+            ? Stack(
+                alignment: AlignmentDirectional.topCenter,
                 children: [
-                  const SizedBox(
-                    height: 60,
-                  ),
-                  _textcontainer(),
-                  Stack(
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                       SizedBox(
+                        height: screenheight * 0.08,
+                      ),
+                      _textcontainer(),
                       Stack(
-                        alignment: Alignment(alignment_c, alignment_d),
                         children: [
                           Stack(
-                            alignment: const Alignment(9, 22),
+                            alignment: Alignment(alignment_c, alignment_d),
                             children: [
+                              Stack(
+                                alignment: const Alignment(9, 22),
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                       SizedBox(
+                                        width: screenwidth * 0.18,
+                                      ),
+                                      Column(
+                                        children: [
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Image.asset(
+                                            'images/Line1.png',
+                                            // width: screenwidth * 0.01,
+                                            // height: screenwidth * 1.23,
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const SizedBox(
-                                    width: 85,
+                                   SizedBox(
+                                     width: screenwidth * 0.13,
                                   ),
                                   Column(
                                     children: [
                                       const SizedBox(
-                                        height: 10,
+                                        height: 8,
                                       ),
                                       Image.asset(
-                                        'images/Line1.png',
+                                        'images/Line2.png',
                                         // width: screenwidth * 0.01,
                                         // height: screenwidth * 1.23,
                                       )
@@ -408,21 +485,87 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
+                          Stack(
+                            alignment: Alignment(alignment_a, alignment_b),
                             children: [
-                              const SizedBox(
-                                width: 65,
-                              ),
                               Column(
                                 children: [
                                   const SizedBox(
-                                    height: 8,
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                       SizedBox(
+                                         width: screenwidth * 0.13,
+                                      ),
+                                      isimage
+                                          ? Image.asset(
+                                              'images/Line3.png',
+                                            )
+                                          : Image.asset(
+                                              'images/Line2.png',
+                                            )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: screenwidth * 0.1,
+                                  ),
+                                  Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      isimage
+                                          ? Image.asset(
+                                              'images/Line4.png',
+                                              // width: screenwidth * 0.01,
+                                              // height: screenwidth * 1.23,
+                                            )
+                                          : Image.asset(
+                                              'images/Line1.png',
+                                            ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      groupButton(),
+                    ],
+                  ),
+                ],
+              )
+            : Stack(
+                children: [
+                  Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'images/Line7.png',
+                                    // width: screenwidth * 0.01,
+                                    // height: screenwidth * 1.23,
                                   ),
                                   Image.asset(
-                                    'images/Line2.png',
-                                    // width: screenwidth * 0.01,
+                                    'images/Line8.png',
+                                    width: screenwidth * 0.6,
                                     // height: screenwidth * 1.23,
                                   )
                                 ],
@@ -431,50 +574,162 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                ],
+              )
+        : isType
+            ? Stack(
+                alignment: AlignmentDirectional.topCenter,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 60,
+                      ),
+                      _textcontainer(),
                       Stack(
-                        alignment: Alignment(alignment_a, alignment_b),
                         children: [
-                          Column(
+                          Stack(
+                            alignment: Alignment(alignment_c, alignment_d),
                             children: [
-                              const SizedBox(
-                                height: 10,
+                              Stack(
+                                alignment: const Alignment(9, 22),
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        width: screenwidth * 0.325,
+                                      ),
+                                      Column(
+                                        children: [
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          Image.asset(
+                                            'images/Line1.png',
+                                            // width: screenwidth * 0.01,
+                                            // height: screenwidth * 1.23,
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const SizedBox(
-                                    width: 63,
+                                  SizedBox(
+                                    width: screenwidth * 0.3,
                                   ),
-                                  isimage
-                                      ? Image.asset(
-                                          'images/Line3.png',
-                                        )
-                                      : Image.asset(
-                                          'images/Line2.png',
-                                        )
+                                  Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Image.asset(
+                                        'images/Line2.png',
+                                        // width: screenwidth * 0.01,
+                                        // height: screenwidth * 1.23,
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
+                          Stack(
+                            alignment:
+                                Alignment((-1.73 + alignment_a), alignment_b),
                             children: [
-                              const SizedBox(
-                                width: 85,
-                              ),
                               Column(
                                 children: [
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  isimage
-                                      ? Image.asset(
-                                          'images/Line4.png',
-                                          // width: screenwidth * 0.01,
-                                          // height: screenwidth * 1.23,
-                                        )
-                                      : Image.asset(
-                                          'images/Line1.png',
-                                        ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: screenwidth * 0.3,
+                                      ),
+                                      isimage
+                                          ? Image.asset(
+                                              'images/Line3.png',
+                                            )
+                                          : Image.asset(
+                                              'images/Line2.png',
+                                            )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    width: screenwidth * 0.69,
+                                  ),
+                                  Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      isimage
+                                          ? Image.asset(
+                                              'images/Line4.png',
+                                              // width: screenwidth * 0.01,
+                                              // height: screenwidth * 1.23,
+                                            )
+                                          : Image.asset(
+                                              'images/Line1.png',
+                                            ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      groupButton(),
+                    ],
+                  ),
+                ],
+              )
+            : Stack(
+                children: [
+                  Stack(
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: screenwidth * 0.01,
+                                  ),
+                                  Image.asset(
+                                    'images/Line7.png',
+
+                                    // width: screenwidth * 0.01,
+                                    // height: screenwidth * 1.23,
+                                  ),
+                                  Image.asset(
+                                    'images/Line8.png',
+                                    //width: screenwidth * 0.6,
+                                    // height: screenwidth * 1.23,
+                                  )
                                 ],
                               ),
                             ],
@@ -483,47 +738,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  groupButton(),
                 ],
-              ),
-            ],
-          )
-        : Stack(
-            children: [
-              Stack(
-                alignment: AlignmentDirectional.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset(
-                                'images/Line7.png',
-                                // width: screenwidth * 0.01,
-                                // height: screenwidth * 1.23,
-                              ),
-                              Image.asset(
-                                'images/Line8.png',
-                                width: screenwidth * 0.6,
-                                // height: screenwidth * 1.23,
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          );
+              );
   }
 
   // Widget line2() {
@@ -545,41 +761,77 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   // }
 
   Widget _textcontainer() {
-    return Container(
-      // alignment: Alignment(alignmentValue_a, alignmentValue_b),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadiusDirectional.circular(5)),
-      width: screenwidth * 0.25,
-      height: screenheight * 0.03,
+    return device == 'MOBILE'
+        ? Container(
+            // alignment: Alignment(alignmentValue_a, alignmentValue_b),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadiusDirectional.circular(5)),
+            width: screenwidth * 0.25,
+            height: screenheight * 0.03,
 
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            isType
-                ? '${sizewidth.toStringAsFixed(0)} Cm'
-                : '${waistwidth.toStringAsFixed(0)} ซม.',
-            style: const TextStyle(
-              color: Colors.green,
-              fontSize: 14.0,
-              fontFamily: 'FC-Minimal-Regular',
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  isType
+                      ? '${sizewidth.toStringAsFixed(0)} Cm'
+                      : '${waistwidth.toStringAsFixed(0)} ซม.',
+                  style: const TextStyle(
+                    color: Colors.green,
+                    fontSize: 14.0,
+                    fontFamily: 'FC-Minimal-Regular',
+                  ),
+                ),
+                const Text(' | '),
+                Text(
+                  isType
+                      ? '${sizeheight.toStringAsFixed(1)} Cm'
+                      : '${inch.toStringAsFixed(1)} นิ้ว',
+                  style: const TextStyle(
+                    color: Colors.orange,
+                    fontSize: 14.0,
+                    fontFamily: 'FC-Minimal-Regular',
+                  ),
+                ),
+              ],
             ),
-          ),
-          const Text(' | '),
-          Text(
-            isType
-                ? '${sizeheight.toStringAsFixed(1)} Cm'
-                : '${inch.toStringAsFixed(1)} นิ้ว',
-            style: const TextStyle(
-              color: Colors.orange,
-              fontSize: 14.0,
-              fontFamily: 'FC-Minimal-Regular',
+          )
+        : Container(
+            // alignment: Alignment(alignmentValue_a, alignmentValue_b),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadiusDirectional.circular(5)),
+            width: screenwidth * 0.2,
+            height: screenheight * 0.03,
+
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  isType
+                      ? '${sizewidth.toStringAsFixed(0)} Cm'
+                      : '${waistwidth.toStringAsFixed(0)} ซม.',
+                  style: const TextStyle(
+                    color: Colors.green,
+                    fontSize: 24.0,
+                    fontFamily: 'FC-Minimal-Regular',
+                  ),
+                ),
+                const Text(' | '),
+                Text(
+                  isType
+                      ? '${sizeheight.toStringAsFixed(1)} Cm'
+                      : '${inch.toStringAsFixed(1)} นิ้ว',
+                  style: const TextStyle(
+                    color: Colors.orange,
+                    fontSize: 24.0,
+                    fontFamily: 'FC-Minimal-Regular',
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   void _showBasicsFlash({
@@ -632,10 +884,10 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       () {
                         alignmentValue_a += 0.002;
                         // alignmentValue_b -= 1;
-                        alignment_a += 0.03;
+                        alignment_a += 0.025;
                         alignment_b -= 0.03;
                         alignment_c -= 0.03;
-                        alignment_d += 0.03;
+                        alignment_d += 0.025;
                         sizewidth += 0.2;
                         sizeheight += 0.5;
                         print(
@@ -659,7 +911,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  if (alignment_a <= 0.18999999999999959 &&
+                  if (alignment_a <= 0.2749999999999996 &&
                       alignment_b <= -0.48999999999999944) {
                     MyStyle().showBasicsFlash(
                         context: context,
@@ -673,10 +925,10 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       () {
                         alignmentValue_a -= 0.002;
                         // alignmentValue_b += 1;
-                        alignment_a -= 0.03;
+                        alignment_a -= 0.025;
                         alignment_b += 0.03;
                         alignment_c += 0.03;
-                        alignment_d -= 0.03;
+                        alignment_d -= 0.025;
 
                         sizewidth -= 0.2;
                         sizeheight -= 0.5;
@@ -699,27 +951,47 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             ],
           )
         : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment:  device == 'MOBILE' ? MainAxisAlignment.spaceBetween : MainAxisAlignment.spaceAround,
             children: [
               IconButton(
                 padding: const EdgeInsets.only(top: 25.0, left: 30),
                 onPressed: () {
-                  if (alignmentwidth <= 0.00) {
-                    MyStyle().showBasicsFlash(
-                        context: context,
-                        text: 'ลดขนาดต่ำสุดแล้ว',
-                        flashStyle: FlashBehavior.fixed,
-                        duration: const Duration(seconds: 2));
-                    print('alignmentwidth ===> $alignmentwidth');
+                  if (device == 'MOBILE') {
+                    if (alignmentwidth <= 0.00) {
+                      MyStyle().showBasicsFlash(
+                          context: context,
+                          text: 'ลดขนาดต่ำสุดแล้ว',
+                          flashStyle: FlashBehavior.fixed,
+                          duration: const Duration(seconds: 2));
+                      print('alignmentwidth ===> $alignmentwidth');
+                    } else {
+                      setState(
+                        () {
+                          alignmentwidth -= 0.01;
+                          waistwidth -= 1;
+                          inch = waistwidth / 2.5;
+                          print('alignmentwidth ===> $alignmentwidth');
+                        },
+                      );
+                    }
                   } else {
-                    setState(
-                      () {
-                        alignmentwidth -= 0.01;
-                        waistwidth -= 1;
-                        inch = waistwidth / 2.5;
-                        print('alignmentwidth ===> $alignmentwidth');
-                      },
-                    );
+                    if (alignmentwidth <= 0.26999999999999946) {
+                      MyStyle().showBasicsFlash(
+                          context: context,
+                          text: 'ลดขนาดต่ำสุดแล้ว',
+                          flashStyle: FlashBehavior.fixed,
+                          duration: const Duration(seconds: 2));
+                      print('alignmentwidth ===> $alignmentwidth');
+                    } else {
+                      setState(
+                        () {
+                          alignmentwidth -= 0.01;
+                          waistwidth -= 1;
+                          inch = waistwidth / 2.5;
+                          print('alignmentwidth ===> $alignmentwidth');
+                        },
+                      );
+                    }
                   }
                 },
                 icon: const Icon(
