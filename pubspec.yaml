@@ -41,6 +41,7 @@ dependencies:
   arrow_path: ^2.0.0
   line_awesome_flutter: ^2.0.0
   flash: ^2.0.3+2
+  permission_handler: ^9.2.0
   
 
 dev_dependencies:

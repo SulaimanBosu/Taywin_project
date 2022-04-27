@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, avoid_unnecessary_containers, camel_case_types, avoid_print, unused_element, sized_box_for_whitespace
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:camera/camera.dart';
 import 'package:flash/flash.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:taywin_project/measurement_results.dart';
 import 'package:taywin_project/utility/my_style.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class OpenCamera extends StatefulWidget {
   const OpenCamera({
@@ -38,13 +40,14 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   double alignment_d = 0.9999999999999998;
   double alignment_e = 3;
   double alignment_f = 20;
-  late double sizewidth;
-  late double sizeheight;
-  bool showFocusCircle = false;
+  late double sizewidth = 10;
+  late double sizeheight = 28.6;
+  //bool showFocusCircle = false;
   bool isBasicsFlash = true;
   bool isdialog = false;
   bool isimage = false;
   bool isType = false;
+  bool _isCameraPermissionGranted = false;
   late Timer timer;
 
   double alignmentValue_a = 4;
@@ -53,14 +56,29 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late double startDXPoint;
   late double startDYPoint;
   double alignmentwidth = 0.87;
+  late double waistwidth = 60;
+  late double inch = 24;
 
-  double waistwidth = 60;
-  double inch = 24;
+  // getPermissionStatus() async {
+  //   await Permission.camera.request();
+  //   var status = await Permission.camera.status;
+
+  //   if (status.isGranted) {
+  //     log('Camera Permission: GRANTED');
+  //     setState(() {
+  //       _isCameraPermissionGranted = true;
+  //     });
+  //     // Set and initialize the new camera
+  //   } else {
+  //     log('Camera Permission: DENIED');
+  //   }
+  // }
 
   @override
   void initState() {
+   // getPermissionStatus();
     type();
-    size();
+    // size();
     timer = Timer.periodic(
       const Duration(milliseconds: 300),
       (Timer t) => setState(
@@ -81,21 +99,23 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     super.initState();
   }
 
-  void size() {
-    if (widget.type == MyStyle().footmeasure) {
-      setState(() {
-        sizewidth = 10;
-        sizeheight = 28.5;
-      });
-    } else if (widget.type == MyStyle().waistline) {
-      setState(() {
-        // waistwidth = sizewidth * 3;
-        // inch = waistwidth / 2.5;
-      });
-    } else {
-      print('เกิดผิดพลาด');
-    }
-  }
+  // void size() {
+  //   if (widget.type == MyStyle().footmeasure) {
+  //     setState(() {
+  //       sizewidth = 10;
+  //       sizeheight = 28.6;
+  //     });
+  //   } else if (widget.type == MyStyle().waistline) {
+  //     setState(() {
+  //       sizewidth = 10;
+  //       sizeheight = 28.6;
+  //       waistwidth = sizewidth * 3;
+  //       inch = waistwidth / 2.5;
+  //     });
+  //   } else {
+  //     print('เกิดผิดพลาด');
+  //   }
+  // }
 
   void type() {
     if (widget.type == MyStyle().footmeasure) {
@@ -138,19 +158,19 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     });
   }
 
+  // Widget _cameraWidget(context) {
+  //   var camera = _controller.value;
+  //   final size = MediaQuery.of(context).size;
+  //   var scale = size.aspectRatio * camera.aspectRatio;
+  //   if (scale < 1) scale = 1 / scale;
+
+  //   return Transform.scale(
+  //     scale: scale,
+  //     child: CameraPreview(_controller),
+  //   );
+  // }
+
   Widget _cameraWidget(context) {
-    var camera = _controller.value;
-    final size = MediaQuery.of(context).size;
-    var scale = size.aspectRatio * camera.aspectRatio;
-    if (scale < 1) scale = 1 / scale;
-
-    return Transform.scale(
-      scale: scale,
-      child: CameraPreview(_controller),
-    );
-  }
-
-  Widget _camera(context) {
     var camera = _controller.value;
     final size = MediaQuery.of(context).size;
     var scale = size.aspectRatio * camera.aspectRatio;
@@ -158,8 +178,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
 
     return Center(
       child: Container(
-        width: screenwidth * 0.5,
-        height: screenheight * 0.5,
+        width: screenwidth,
+        height: screenheight * 0.967,
         child: Transform.scale(
           scale: scale,
           child: CameraPreview(_controller),
@@ -177,47 +197,77 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     );
   }
 
-  FutureBuilder<void> newContent() {
-    return FutureBuilder(
-      future: _initcontroler,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Container(
-            // color: Colors.black,
-            width: screenwidth,
-            height: screenheight,
-            child: Column(
+  Widget newContent() {
+    return SafeArea(
+      child: FutureBuilder(
+        future: _initcontroler,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Stack(
-                  //  alignment: AlignmentDirectional.center,
-                  alignment: isType
-                      ? const Alignment(0, -1.5)
-                      : AlignmentDirectional.center,
+                  alignment: AlignmentDirectional.topEnd,
                   children: [
                     Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
+                      //  alignment: AlignmentDirectional.center,
+                      alignment: isType
+                          ? const Alignment(0, -2)
+                          : AlignmentDirectional.center,
                       children: [
-                        _cameraWidget(context),
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 20),
-                          child: iconCamerabutton(),
+                        Stack(
+                          alignment: AlignmentDirectional.bottomCenter,
+                          children: [
+                            _cameraWidget(context),
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 40),
+                              child: iconCamerabutton(),
+                            ),
+                          ],
                         ),
+                        isType ? line() : _isline(),
+                        isType ? Container() : groupButton(),
                       ],
                     ),
-                    isType ? line() : _isline(),
-                    isType ? Container() : groupButton(),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        )),
                   ],
                 ),
               ],
-            ),
-          );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
+            );
+          } else {
+            return Container(
+                color: Colors.black,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const CircularProgressIndicator(
+                        backgroundColor: Colors.white,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        'Loading.....',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                )
+                // CircularProgressIndicator(),
+                );
+          }
+        },
+      ),
     );
   }
 
@@ -384,7 +434,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       Stack(
                         alignment: Alignment(alignment_a, alignment_b),
                         children: [
-                          // _textcontainer(),
                           Column(
                             children: [
                               const SizedBox(
@@ -425,7 +474,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                         )
                                       : Image.asset(
                                           'images/Line1.png',
-                                        )
+                                        ),
                                 ],
                               ),
                             ],
@@ -435,7 +484,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     ],
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   groupButton(),
                 ],
@@ -453,9 +502,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // _textcontainer(),
                           Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
                                 'images/Line7.png',
@@ -469,10 +516,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                               )
                             ],
                           ),
-                          // const SizedBox(
-                          //   height: 50,
-                          // ),
-                          // groupButton(),
                         ],
                       ),
                     ],
@@ -593,7 +636,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                         alignment_b -= 0.03;
                         alignment_c -= 0.03;
                         alignment_d += 0.03;
-                        sizewidth += 0.5;
+                        sizewidth += 0.2;
                         sizeheight += 0.5;
                         print(
                             'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
@@ -605,7 +648,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
                 ),
                 icon: const Icon(Icons.add_circle_outline),
                 label: const Text(
@@ -617,8 +659,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  if (alignment_a <= 0.09999999999999959 &&
-                      alignment_b <= -0.39999999999999936) {
+                  if (alignment_a <= 0.18999999999999959 &&
+                      alignment_b <= -0.48999999999999944) {
                     MyStyle().showBasicsFlash(
                         context: context,
                         text: 'ลดขนาดต่ำสุดแล้ว',
@@ -635,8 +677,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                         alignment_b += 0.03;
                         alignment_c += 0.03;
                         alignment_d -= 0.03;
-      
-                        sizewidth -= 0.5;
+
+                        sizewidth -= 0.2;
                         sizeheight -= 0.5;
                         print(
                             'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
@@ -648,7 +690,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  //shadowColor: const Color.fromRGBO(30, 29, 89, 1),
                 ),
                 icon: const Icon(Icons.remove_circle_outline),
                 label: const Text(
@@ -674,7 +715,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     setState(
                       () {
                         alignmentwidth -= 0.01;
-                        waistwidth = alignmentwidth * 60;
+                        waistwidth -= 1;
                         inch = waistwidth / 2.5;
                         print('alignmentwidth ===> $alignmentwidth');
                       },
@@ -701,7 +742,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     setState(
                       () {
                         alignmentwidth += 0.01;
-                        waistwidth = alignmentwidth * 60;
+                        waistwidth += 1;
                         inch = waistwidth / 2.5;
                         print('alignmentwidth ===> $alignmentwidth');
                       },
@@ -719,7 +760,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   }
 
   Stack iconCamerabutton() => Stack(
-        alignment: Alignment(alignment_a, alignment_b),
         children: [
           FloatingActionButton(
             backgroundColor: Colors.white,
@@ -746,8 +786,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             (MaterialPageRoute(
               builder: (context) => MeasurementResults(
                 image: imagefile,
-                width: sizewidth,
-                height: sizeheight,
+                width: isType ? sizewidth : waistwidth,
+                height: isType ? sizeheight : 0,
                 type: widget.type,
               ),
             )),

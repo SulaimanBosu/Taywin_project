@@ -1,9 +1,10 @@
-// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, prefer_typing_uninitialized_variables, avoid_print
+// ignore_for_file: avoid_unnecessary_containers
+import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:taywin_project/utility/my_style.dart';
-import 'package:taywin_project/utility/size/size_men.dart';
+import 'package:taywin_project/utility/size.dart';
 
 class MeasurementResults extends StatefulWidget {
   final XFile image;
@@ -28,13 +29,14 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   late double screenheight;
   late double sizewidth;
   late double sizeheight;
-  late double sizeTH;
-  late double sizeUS;
-  late double sizeUK;
+  late String sizeTH;
+  late String sizeUS;
+  late String sizeUK;
   late double waistwidth;
   late double inch;
+  late List<String> sizes = [];
   bool isType = false;
-  bool isMen = true;
+  bool isMen = false;
 
   final moreControler = TextEditingController();
 
@@ -54,30 +56,30 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     if (widget.type == MyStyle().footmeasure) {
       if (isMen) {
         setState(() {
-          sizeTH = Size().sizeman(sizeheight);
-          print('เกิดผิดพลาด ==== $sizeTH');
-          print('sizeheight ==== $sizeheight');
-          
-          sizeUS = (sizeheight - 18);
-          sizeUK = (sizeheight - 19);
+          sizes = Size().man(sizeheight);
+        //  print('sizes ==== $sizes');
+        //  print('sizeheight ==== $sizeheight');
+          sizeTH = sizes[0];
+          sizeUS = sizes[1];
+          sizeUK = sizes[2];
         });
       } else {
         setState(() {
-          sizeTH = Size().sizewoman(sizeheight);
-          print('เกิดผิดพลาด ==== $sizeTH');
-          print('sizeheight ==== $sizeheight');
-          
-          sizeUS = (sizeheight - 18);
-          sizeUK = (sizeheight - 19);
+          sizes = Size().woman(sizeheight);
+       //   print('sizes ==== $sizes');
+       //   print('sizeheight ==== $sizeheight');
+          sizeTH = sizes[0];
+          sizeUS = sizes[1];
+          sizeUK = sizes[2];
         });
       }
     } else if (widget.type == MyStyle().waistline) {
       setState(() {
-        waistwidth = sizewidth * 3;
+        waistwidth = sizewidth;
         inch = waistwidth / 2.5;
       });
     } else {
-      print('เกิดผิดพลาด');
+    //  print('เกิดผิดพลาด');
     }
   }
 
@@ -113,7 +115,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
 
   Widget content() {
     return isType
-        ? SafeArea(
+        ?  SafeArea(
             child: Container(
               child: SingleChildScrollView(
                 child: Column(
@@ -127,7 +129,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         const SizedBox(
                           width: 60,
                         ),
-                        Text('${sizewidth.toString()} cm'),
+                        Text('${sizewidth.toStringAsFixed(1)} cm'),
                       ],
                     ),
                     Container(
@@ -166,7 +168,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         const SizedBox(
                           width: 5,
                         ),
-                        Text('${sizeheight.toString()} cm')
+                        Text('${sizeheight.toStringAsFixed(1)} cm')
                       ],
                     ),
 
@@ -176,7 +178,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     const Padding(
                       padding: EdgeInsets.only(left: 30, right: 30),
                       child: Text(
-                        'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง แสดงเพียงภาพจำลองเท่านั้น',
+                        'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง จะแสดงเพียงภาพจำลองเท่านั้น',
                         style: TextStyle(
                             color: Colors.redAccent,
                             fontSize: 12,
@@ -187,37 +189,105 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                       height: 15,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                sizeTH = Size().sizewoman(sizeheight);
-                                isMen = false;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.woman_outlined,
-                              size: 50,
-                            )),
-                        const SizedBox(
-                          width: 15,
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isMen = false;
+                              size();
+                            });
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                              child: Container(
+                                width: screenwidth * 0.35,
+                                height: screenwidth * 0.12,
+                                color: isMen
+                                    ? Colors.grey.withOpacity(0.3)
+                                    : MyStyle().primaryColor,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ImageIcon(
+                                        const AssetImage('images/woman.png'),
+                                        size: 25,
+                                        color: isMen
+                                            ? const Color.fromARGB(
+                                                137, 82, 78, 78)
+                                            : Colors.white,
+                                      ),
+                                      Text(
+                                        'ไซส์รองเท้าสตรี',
+                                        style: TextStyle(
+                                          fontFamily: 'FC-Minimal-Regular',
+                                          fontSize: 18,
+                                          color: isMen
+                                              ? const Color.fromARGB(
+                                                  137, 82, 78, 78)
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                sizeTH = Size().sizeman(sizeheight);
-                                isMen = true;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.man_outlined,
-                              size: 50,
-                            )),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isMen = true;
+                              size();
+                            });
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                              child: Container(
+                                width: screenwidth * 0.35,
+                                height: screenwidth * 0.12,
+                                color: isMen
+                                    ? MyStyle().primaryColor
+                                    : Colors.grey.withOpacity(0.3),
+                                child: Center(
+                                    child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ImageIcon(
+                                      const AssetImage('images/man.png'),
+                                      size: 25,
+                                      color: isMen
+                                          ? Colors.white
+                                          : const Color.fromARGB(
+                                              137, 82, 78, 78),
+                                    ),
+                                    Text(
+                                      'ไซส์รองเท้าบุรุษ',
+                                      style: TextStyle(
+                                        fontFamily: 'FC-Minimal-Regular',
+                                        fontSize: 18,
+                                        color: isMen
+                                            ? Colors.white
+                                            : const Color.fromARGB(
+                                                137, 82, 78, 78),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(
-                      height: 15,
+                      height: 5,
                     ),
                     Card(
                       semanticContainer: true,
@@ -232,11 +302,11 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         height: screenwidth * 0.25,
                         child: Center(
                           child: Text(
-                            'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toStringAsFixed(0)}\n(EU) (US : ${sizeUS.toStringAsFixed(1)} , UK : ${sizeUK.toStringAsFixed(1)})',
+                            'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()}\n( EU ) ( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 18,
-                                color: Colors.black87,
+                                color: Colors.black54,
                                 fontFamily: 'FC-Minimal-Regular',
                                 fontWeight: FontWeight.bold),
                           ),
@@ -286,7 +356,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     const Padding(
                       padding: EdgeInsets.only(left: 30, right: 30),
                       child: Text(
-                        'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง แสดงเพียงภาพจำลองเท่านั้น',
+                        'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง จะแสดงเพียงภาพจำลองเท่านั้น',
                         style: TextStyle(
                             color: Colors.redAccent,
                             fontSize: 12,
@@ -313,7 +383,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 18,
-                                color: Colors.black87,
+                                color: Colors.black54,
                                 fontFamily: 'FC-Minimal-Regular',
                                 fontWeight: FontWeight.bold),
                           ),
@@ -364,12 +434,6 @@ class _MeasurementResultsState extends State<MeasurementResults> {
           labelText: 'เพิ่มเติม...',
           labelStyle: TextStyle(color: Colors.black54),
           border: InputBorder.none,
-          // enabledBorder: OutlineInputBorder(
-          //   borderSide: BorderSide(color: Colors.black54),
-          // ),
-          // focusedBorder: OutlineInputBorder(
-          //   borderSide: BorderSide(color: Colors.redAccent),
-          // ),
         ),
       ),
     );
@@ -390,8 +454,6 @@ class _MeasurementResultsState extends State<MeasurementResults> {
             children: [
               Container(
                 margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-                // width: screenwidth * 0.2,
-                //color: const Color.fromRGBO(30, 29, 89, 1),
                 child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pop(context);
@@ -408,12 +470,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                   ),
                 ),
               ),
-              // const SizedBox(
-              //   width: 3,
-              // ),
               Container(
                 margin: const EdgeInsets.only(left: 10.0, right: 10.0),
-                // width: screenwidth * 0.2,
                 child: ElevatedButton.icon(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(

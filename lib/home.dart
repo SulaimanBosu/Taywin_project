@@ -1,6 +1,9 @@
 // ignore_for_file: avoid_unnecessary_containers, deprecated_member_use
+import 'dart:developer';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:taywin_project/camere.dart';
 import 'package:taywin_project/utility/my_style.dart';
 
@@ -19,11 +22,28 @@ class MyHome extends StatefulWidget {
 class _MyHomeState extends State<MyHome> {
   late double screenwidth;
   late double screenheight;
+  bool _isCameraPermissionGranted = false;
   // late Widget waistline = OpenCamera(cameras: widget.camera,type: 'waistline',);
   // late Widget footmeasure = OpenCamera(cameras: widget.camera, type: 'footmeasure',);
 
+  getPermissionStatus() async {
+    await Permission.camera.request();
+    var status = await Permission.camera.status;
+
+    if (status.isGranted) {
+      log('Camera Permission: GRANTED');
+      setState(() {
+        _isCameraPermissionGranted = true;
+      });
+      // Set and initialize the new camera
+    } else {
+      log('Camera Permission: DENIED');
+    }
+  }
+
   @override
   void initState() {
+    getPermissionStatus();
     super.initState();
   }
 
@@ -36,42 +56,75 @@ class _MyHomeState extends State<MyHome> {
       // body: Center(
       //     child: Text(screenwidth.toString(),
       //         style: const TextStyle(color: Colors.white))),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MyStyle().showlogo(screenwidth),
-              FloatingActionButton.extended(
-                backgroundColor: Colors.white,
-                onPressed: () async {
-                  dialog( MyStyle().imageFootmeasure, MyStyle().detail1,MyStyle().footmeasure);
-                },
-                label: const Text(
-                  'วัดขนาดเท้า',
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
+      body: _isCameraPermissionGranted
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    MyStyle().showlogo(screenwidth),
+                    FloatingActionButton.extended(
+                      backgroundColor: Colors.white,
+                      onPressed: () async {
+                        dialog(MyStyle().imageFootmeasure, MyStyle().detail1,
+                            MyStyle().footmeasure);
+                      },
+                      label: const Text(
+                        'วัดขนาดเท้า',
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    FloatingActionButton.extended(
+                      backgroundColor: Colors.white,
+                      onPressed: () async {
+                        dialog(MyStyle().imageWaistline, MyStyle().detail2,
+                            MyStyle().waistline);
+                      },
+                      label: const Text(
+                        'วัดขนาดรอบเอว',
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ],
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              FloatingActionButton.extended(
-                backgroundColor: Colors.white,
-                onPressed: () async {
-                  dialog( MyStyle().imageWaistline, MyStyle().detail2,MyStyle().waistline);
-                },
-                label: const Text(
-                  'วัดขนาดรอบเอว',
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
+              ],
+            )
+          : Container()
+          // Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Row(),
+          //       const Text(
+          //         'Permission denied',
+          //         style: TextStyle(
+          //           color: Colors.white,
+          //           fontSize: 24,
+          //         ),
+          //       ),
+          //       const SizedBox(height: 24),
+          //       ElevatedButton(
+          //         onPressed: () {
+          //           getPermissionStatus();
+          //         },
+          //         child: const Padding(
+          //           padding: EdgeInsets.all(8.0),
+          //           child: Text(
+          //             'Give permission',
+          //             style: TextStyle(
+          //               color: Colors.white,
+          //               fontSize: 24,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
     );
   }
 
@@ -125,7 +178,8 @@ class _MyHomeState extends State<MyHome> {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => OpenCamera(
-                            cameras: widget.camera,type: text,
+                            cameras: widget.camera,
+                            type: text,
                           ),
                         ),
                       );
