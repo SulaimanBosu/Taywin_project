@@ -1,8 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, avoid_unnecessary_containers, camel_case_types, avoid_print, unused_element, sized_box_for_whitespace
 
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:camera/camera.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +42,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   double alignment_f = 20;
   late double sizewidth = 10;
   late double sizeheight = 28.6;
-  //bool showFocusCircle = false;
   bool isBasicsFlash = true;
   bool isdialog = false;
   bool isimage = false;
@@ -79,7 +76,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   @override
   void initState() {
     type();
-    // size();
     timer = Timer.periodic(
       const Duration(milliseconds: 300),
       (Timer t) => setState(
@@ -99,24 +95,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     ]);
     super.initState();
   }
-
-  // void size() {
-  //   if (widget.type == MyStyle().footmeasure) {
-  //     setState(() {
-  //       sizewidth = 10;
-  //       sizeheight = 28.6;
-  //     });
-  //   } else if (widget.type == MyStyle().waistline) {
-  //     setState(() {
-  //       sizewidth = 10;
-  //       sizeheight = 28.6;
-  //       waistwidth = sizewidth * 3;
-  //       inch = waistwidth / 2.5;
-  //     });
-  //   } else {
-  //     print('เกิดผิดพลาด');
-  //   }
-  // }
 
   void type() {
     if (widget.type == MyStyle().footmeasure) {
@@ -212,7 +190,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                   alignment: AlignmentDirectional.topEnd,
                   children: [
                     Stack(
-                      //  alignment: AlignmentDirectional.center,
+                      
                       alignment: device == 'MOBILE'
                           ? isType
                               ? const Alignment(0, -2)
@@ -281,7 +259,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     return device == 'MOBILE'
         ? Stack(
             alignment: Alignment(alignmentwidth, 0.35),
-            //  alignment: Alignment(alignmentwidth, -10),
             children: [
               line(),
               GestureDetector(
@@ -316,7 +293,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                   'images/Line7.png',
                                   // height: 40,
                                 ),
-                          // _textcontainer(),
                         ],
                       ),
                     ],
@@ -339,10 +315,9 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                   });
                 },
                 child: Container(
-                  // color: Colors.pink,
                   width: screenwidth * 0.3,
                   height: screenheight * 0.22,
-                  // alignment: Alignment(startDXPoint, 0.35),
+                 
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -429,7 +404,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                        SizedBox(
-                        height: screenheight * 0.08,
+                        height: screenheight * 0.1,
                       ),
                       _textcontainer(),
                       Stack(
@@ -509,29 +484,34 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                   ),
                                 ],
                               ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    width: screenwidth * 0.1,
-                                  ),
-                                  Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      isimage
-                                          ? Image.asset(
-                                              'images/Line4.png',
-                                              // width: screenwidth * 0.01,
-                                              // height: screenwidth * 1.23,
-                                            )
-                                          : Image.asset(
-                                              'images/Line1.png',
-                                            ),
-                                    ],
-                                  ),
-                                ],
+                              Padding(
+                                padding:  EdgeInsets.only(right: screenwidth * 0.01,),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      width: screenwidth * 0.18,
+                                    ),
+                                    Column(
+                                      children: [
+                                        SizedBox(
+                                      height: screenheight * 0.013,
+                                    ),
+                                        isimage
+                                            ? Image.asset(
+                                                'images/Line4.png',
+                                               //  width: screenwidth * 0.01,
+                                               //  height: screenheight * 0.612,
+                                              )
+                                            : Image.asset(
+                                                'images/Line1.png',
+                                               // width: screenwidth * 0.01,
+                                              // height: screenheight * 0.612,
+                                              ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -742,28 +722,10 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               );
   }
 
-  // Widget line2() {
-  //   return Stack(
-  //     alignment: Alignment(alignmentwidth, 0.35),
-  //     children: [
-  //       isimage
-  //           ? Image.asset(
-  //               'images/Line9.png',
-  //               //height: 40,
-  //             )
-  //           : Image.asset(
-  //               'images/Line7.png',
-  //               // height: 40,
-  //             ),
-  //       // _textcontainer(),
-  //     ],
-  //   );
-  // }
 
   Widget _textcontainer() {
     return device == 'MOBILE'
         ? Container(
-            // alignment: Alignment(alignmentValue_a, alignmentValue_b),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadiusDirectional.circular(5)),
@@ -798,7 +760,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             ),
           )
         : Container(
-            // alignment: Alignment(alignmentValue_a, alignmentValue_b),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadiusDirectional.circular(5)),

@@ -59,9 +59,6 @@ class _MyHomeState extends State<MyHome> {
     device = ScreenSize().screenwidth(screenwidth);
     return Scaffold(
         backgroundColor: const Color.fromRGBO(30, 29, 89, 1),
-        // body: Center(
-        //     child: Text(screenwidth.toString(),
-        //         style: const TextStyle(color: Colors.white))),
         body: _isCameraPermissionGranted
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +91,7 @@ class _MyHomeState extends State<MyHome> {
                       ),
                       FlatButton(
                         minWidth: screenwidth * 0.8,
-                        color: Colors.white, // foreground
+                        color: Colors.white,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                         onPressed: () async {
@@ -115,35 +112,6 @@ class _MyHomeState extends State<MyHome> {
                 ],
               )
             : Container()
-        // Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       Row(),
-        //       const Text(
-        //         'Permission denied',
-        //         style: TextStyle(
-        //           color: Colors.white,
-        //           fontSize: 24,
-        //         ),
-        //       ),
-        //       const SizedBox(height: 24),
-        //       ElevatedButton(
-        //         onPressed: () {
-        //           getPermissionStatus();
-        //         },
-        //         child: const Padding(
-        //           padding: EdgeInsets.all(8.0),
-        //           child: Text(
-        //             'Give permission',
-        //             style: TextStyle(
-        //               color: Colors.white,
-        //               fontSize: 24,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
         );
   }
 
@@ -203,18 +171,8 @@ class _MyHomeState extends State<MyHome> {
                         ),
                       );
                     } catch (e) {
-                      // ignore: avoid_print
                       print(e);
                     }
-
-                    // MaterialPageRoute route = MaterialPageRoute(
-                    //   builder: (context) => const OpenCamera(
-                    //     camera: widget.camera;
-                    //   ),
-                    // );
-                    // Navigator.pushAndRemoveUntil(
-                    //     context, route, (route) => true);
-                    // Navigator.pop(context);
                   },
                   icon: const Icon(
                     Icons.photo_camera,

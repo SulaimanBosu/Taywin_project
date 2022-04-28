@@ -1,12 +1,18 @@
-// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace
+// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, avoid_returning_null_for_void, avoid_print, non_constant_identifier_names, unnecessary_null_comparison
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:taywin_project/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/utility/size.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:file_picker/file_picker.dart';
 
 class MeasurementResults extends StatefulWidget {
   final XFile image;
@@ -40,6 +46,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   bool isType = false;
   bool isMen = false;
   String device = '';
+  final _screenshotcontroller = ScreenshotController();
+  late Uint8List _imageFile;
 
   final moreControler = TextEditingController();
 
@@ -454,7 +462,10 @@ class _MeasurementResultsState extends State<MeasurementResults> {
             Container(
               child: IconButton(
                   onPressed: () {
-                    share();
+                      share();
+                    //   shareFile();
+                   // shareScreenshot();
+                    // screenshot();
                   },
                   icon: const Icon(
                     Icons.share,
@@ -502,22 +513,68 @@ class _MeasurementResultsState extends State<MeasurementResults> {
 
   Future<void> share() async {
     await FlutterShare.share(
-        title: 'Example share',
-        text: 'Example share text',
-        linkUrl: 'https://flutter.dev/',
-        chooserTitle: 'Example Chooser Title');
+      title: isType ? 'ไซส์รองเท้า : ' : 'ขนาดรอบเอว : ',
+      text: isType
+          ? 'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
+          : 'ขนาดเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
+      chooserTitle: 'การแชร์',
+    );
   }
 
-  // Future<void> shareFile() async {
-  //   List<dynamic> docs = await DocumentsPicker.pickDocuments;
-  //   if (docs == null || docs.isEmpty) return null;
+  void screenshot() {
+    _screenshotcontroller
+        .capture(delay: const Duration(seconds: 1))
+        .then((capturedImage) async {
+      ShowCapturedWidget(context, capturedImage!);
+    }).catchError((onError) {
+      print(onError);
+    });
+  }
 
-  //   await FlutterShare.shareFile(
-  //     title: 'Example share',
-  //     text: 'Example share text',
-  //     filePath: docs[0] as String,
-  //   );
-  // }
+  ShowCapturedWidget(BuildContext context, Uint8List capturedImage) {
+    return showDialog(
+      useSafeArea: false,
+      context: context,
+      builder: (context) => Scaffold(
+        appBar: AppBar(
+          title: const Text("Captured widget screenshot"),
+        ),
+        body: Center(child: Image.memory(capturedImage)),
+      ),
+    );
+  }
+
+  Future<void> shareFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null || result.files.isEmpty) return null;
+
+    await FlutterShare.shareFile(
+      title: 'Example share',
+      text: 'Example share text',
+      filePath: result.files[0] as String,
+    );
+  }
+
+  Future<void> shareScreenshot() async {
+    Directory? directory;
+    if (Platform.isAndroid) {
+      directory = await getExternalStorageDirectory();
+    } else {
+      directory = await getApplicationDocumentsDirectory();
+    }
+    final String localPath =
+        '${directory!.path}/${DateTime.now().toIso8601String()}.png';
+
+    await _screenshotcontroller.captureAndSave(localPath);
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    await FlutterShare.shareFile(
+        title: 'Compartilhar comprovante',
+        filePath: localPath,
+        fileType: 'image/png');
+    print('path ========>>>   $localPath');
+  }
 
   Widget appbar() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
