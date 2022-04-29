@@ -10,8 +10,8 @@ import 'package:taywin_project/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class OpenCamera extends StatefulWidget {
-  const OpenCamera({
+class OpenCamera2 extends StatefulWidget {
+  const OpenCamera2({
     Key? key,
     required this.cameras,
     required this.type,
@@ -21,10 +21,10 @@ class OpenCamera extends StatefulWidget {
   final String type;
 
   @override
-  State<OpenCamera> createState() => _OpenCameraState();
+  State<OpenCamera2> createState() => _OpenCamera2State();
 }
 
-class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
+class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   late CameraController _controller;
   late Future<void> _initcontroler;
   String device = '';
@@ -34,17 +34,17 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late double screenwidth;
   late double screenheight;
 
-  double alignment_a = 0.7;
-  double alignment_b = -0.9999999999999999;
-  double alignment_c = -1.155;
-  double alignment_d = 0.9999999999999998;
+  double alignment_a = 0.62;
+  double alignment_b = -0.7899999999999989;
+  double alignment_c = -0.6499999999999999;
+  double alignment_d = 1.89;
   double alignment_e = 3;
   double alignment_f = 20;
   late double sizewidth = 10;
   late double sizeheight = 28.6;
   bool isBasicsFlash = true;
   bool isdialog = false;
-  bool isimage = false;
+  bool isColor = false;
   bool isType = false;
   bool _isCameraPermissionGranted = false;
   late Timer timer;
@@ -57,6 +57,11 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   double alignmentwidth = 0.87;
   late double waistwidth = 120;
   late double inch = 48;
+
+  double indent_a = 10;
+  double endIndent_b = 10;
+  double indent_c = 15;
+  double endIndent_d = 15;
 
   // getPermissionStatus() async {
   //   await Permission.camera.request();
@@ -80,10 +85,10 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
       const Duration(milliseconds: 300),
       (Timer t) => setState(
         () {
-          if (isimage == true) {
-            isimage = false;
+          if (isColor == true) {
+            isColor = false;
           } else {
-            isimage = true;
+            isColor = true;
           }
         },
       ),
@@ -184,7 +189,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Column(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Stack(
                   alignment: AlignmentDirectional.topEnd,
@@ -192,7 +196,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     Stack(
                       alignment: device == 'MOBILE'
                           ? isType
-                              ? const Alignment(0, -2)
+                              ? const Alignment(0, 0)
                               : AlignmentDirectional.center
                           : isType
                               ? const Alignment(0, 0)
@@ -209,7 +213,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                             ),
                           ],
                         ),
-                        isType ? line() : _isline(),
+                        isType ? diviver() : _isline(),
                         isType ? Container() : groupButton(),
                       ],
                     ),
@@ -221,6 +225,13 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                           Icons.close,
                           color: Colors.white,
                         )),
+                    const VerticalDivider(
+                      width: 20,
+                      thickness: 1,
+                      indent: 20,
+                      endIndent: 0,
+                      color: Colors.grey,
+                    ),
                   ],
                 ),
               ],
@@ -256,13 +267,93 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   }
 
   Widget diviver() {
-    return Container(
-      color: Colors.white,
-      child: const VerticalDivider(
-        thickness: 5,
-        width: 5,
-        color: Colors.white,
-      ),
+    return Column(
+      children: [
+        _textcontainer(),
+        Stack(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  alignment: Alignment(alignment_c, alignment_d),
+                  width: screenwidth * 0.14, height: screenheight * 0.6,
+                  // color: Colors.red,
+                  child: VerticalDivider(
+                    thickness: 5,
+                    indent: indent_a,
+                    endIndent: endIndent_b,
+                    width: 5,
+                    color: Colors.red,
+                  ),
+                ),
+                //const SizedBox(width: 10,),
+                Container(
+                  alignment: Alignment(alignment_a, alignment_b),
+                  width: screenwidth * 0.14, height: screenheight * 0.6,
+                  // color: Colors.red,
+                  child: VerticalDivider(
+                    indent: indent_a,
+                    endIndent: endIndent_b,
+                    thickness: 5,
+                    width: 5,
+                    color: isColor
+                        ? const Color.fromARGB(255, 247, 166, 61)
+                        : Colors.red,
+                  ),
+                ),
+              ],
+            ),
+            Stack(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          alignment: Alignment(alignment_a, alignment_b),
+                          width: screenwidth * 0.66,
+                          height: screenheight * 0.14,
+                          // color: Colors.red,
+                          child: Divider(
+                            indent: indent_c,
+                            endIndent: endIndent_d,
+                            thickness: 5,
+                            height: 5,
+                            color: isColor ?  Colors.red : Colors.green,
+                          ),
+                        ),
+                        SizedBox(
+                          height: screenheight * 0.285,
+                        ),
+                        Container(
+                          alignment: Alignment(alignment_c, alignment_d),
+                          width: screenwidth * 0.66,
+                          height: screenheight * 0.114,
+                          // color: Colors.red,
+                          child: Divider(
+                            indent: indent_c,
+                            endIndent: endIndent_d,
+                            thickness: 5,
+                            height: 5,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(
+          height: screenheight * 0.03,
+        ),
+        groupButton()
+      ],
     );
   }
 
@@ -295,7 +386,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       Stack(
                         //  alignment: Alignment(alignmentwidth, 0.35),
                         children: [
-                          isimage
+                          isColor
                               ? Image.asset(
                                   'images/Line9.png',
                                   //height: 40,
@@ -338,7 +429,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       Stack(
                         //  alignment: Alignment(alignmentwidth, 0.35),
                         children: [
-                          isimage
+                          isColor
                               ? Image.asset(
                                   'images/Line9.png',
                                   //height: 40,
@@ -483,7 +574,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                       SizedBox(
                                         width: screenwidth * 0.13,
                                       ),
-                                      isimage
+                                      isColor
                                           ? Image.asset(
                                               'images/Line3.png',
                                             )
@@ -509,7 +600,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                         SizedBox(
                                           height: screenheight * 0.013,
                                         ),
-                                        isimage
+                                        isColor
                                             ? Image.asset(
                                                 'images/Line4.png',
                                                 //  width: screenwidth * 0.01,
@@ -648,7 +739,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                       SizedBox(
                                         width: screenwidth * 0.3,
                                       ),
-                                      isimage
+                                      isColor
                                           ? Image.asset(
                                               'images/Line3.png',
                                             )
@@ -670,7 +761,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      isimage
+                                      isColor
                                           ? Image.asset(
                                               'images/Line4.png',
                                               // width: screenwidth * 0.01,
@@ -840,8 +931,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  if (alignment_a >= 0.7 &&
-                      alignment_b >= -0.9999999999999999) {
+                  if (alignment_a >= 0.62 &&
+                      alignment_b >= -0.7899999999999989) {
                     MyStyle().showBasicsFlash(
                         context: context,
                         text: 'เพิ่มขนาดสูงสุดแล้ว',
@@ -854,12 +945,17 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       () {
                         alignmentValue_a += 0.002;
                         // alignmentValue_b -= 1;
-                        alignment_a += 0.025;
-                        alignment_b -= 0.03;
-                        alignment_c -= 0.03;
-                        alignment_d += 0.025;
+                        alignment_a += 0.07;
+                        alignment_b -= 0.05;
+                        alignment_c -= 0.07;
+                        alignment_d += 0.07;
                         sizewidth += 0.2;
                         sizeheight += 0.5;
+                        indent_a -= 2.7;
+                        endIndent_b -= 3;
+                        indent_c -= 1.7;
+                        endIndent_d -= 1.7;
+
                         print(
                             'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
                       },
@@ -881,8 +977,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  if (alignment_a <= 0.2749999999999996 &&
-                      alignment_b <= -0.48999999999999944) {
+                  if (alignment_a <= -0.43000000000000005 &&
+                      alignment_b <= 0.2600000000000014) {
                     MyStyle().showBasicsFlash(
                         context: context,
                         text: 'ลดขนาดต่ำสุดแล้ว',
@@ -895,10 +991,14 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       () {
                         alignmentValue_a -= 0.002;
                         // alignmentValue_b += 1;
-                        alignment_a -= 0.025;
-                        alignment_b += 0.03;
-                        alignment_c += 0.03;
-                        alignment_d -= 0.025;
+                        alignment_a -= 0.07;
+                        alignment_b += 0.05;
+                        alignment_c += 0.07;
+                        alignment_d -= 0.07;
+                        indent_a += 2.7;
+                        endIndent_b += 3;
+                        indent_c += 1.7;
+                        endIndent_d += 1.7;
 
                         sizewidth -= 0.2;
                         sizeheight -= 0.5;

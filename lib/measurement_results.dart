@@ -200,104 +200,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isMen = false;
-                              size();
-                            });
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                              child: Container(
-                                width: screenwidth * 0.35,
-                                height: screenwidth * 0.12,
-                                color: isMen
-                                    ? Colors.grey.withOpacity(0.3)
-                                    : MyStyle().primaryColor,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ImageIcon(
-                                        const AssetImage('images/woman.png'),
-                                        size: 25,
-                                        color: isMen
-                                            ? const Color.fromARGB(
-                                                137, 82, 78, 78)
-                                            : Colors.white,
-                                      ),
-                                      Text(
-                                        'ไซส์รองเท้าสตรี',
-                                        style: TextStyle(
-                                          fontFamily: 'FC-Minimal-Regular',
-                                          fontSize: 18,
-                                          color: isMen
-                                              ? const Color.fromARGB(
-                                                  137, 82, 78, 78)
-                                              : Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isMen = true;
-                              size();
-                            });
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                              child: Container(
-                                width: screenwidth * 0.35,
-                                height: screenwidth * 0.12,
-                                color: isMen
-                                    ? MyStyle().primaryColor
-                                    : Colors.grey.withOpacity(0.3),
-                                child: Center(
-                                    child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ImageIcon(
-                                      const AssetImage('images/man.png'),
-                                      size: 25,
-                                      color: isMen
-                                          ? Colors.white
-                                          : const Color.fromARGB(
-                                              137, 82, 78, 78),
-                                    ),
-                                    Text(
-                                      'ไซส์รองเท้าบุรุษ',
-                                      style: TextStyle(
-                                        fontFamily: 'FC-Minimal-Regular',
-                                        fontSize: 18,
-                                        color: isMen
-                                            ? Colors.white
-                                            : const Color.fromARGB(
-                                                137, 82, 78, 78),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    // typeButton2(),
+                    typeButton(),
                     const SizedBox(
                       height: 5,
                     ),
@@ -421,6 +325,197 @@ class _MeasurementResultsState extends State<MeasurementResults> {
           );
   }
 
+  Row typeButton2() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isMen = false;
+              size();
+            });
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              child: Container(
+                width: screenwidth * 0.35,
+                height: screenwidth * 0.12,
+                color: isMen
+                    ? Colors.grey.withOpacity(0.3)
+                    : MyStyle().primaryColor,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ImageIcon(
+                        const AssetImage('images/woman.png'),
+                        size: 25,
+                        color: isMen
+                            ? const Color.fromARGB(137, 82, 78, 78)
+                            : Colors.white,
+                      ),
+                      Text(
+                        'ไซส์รองเท้าสตรี',
+                        style: TextStyle(
+                          fontFamily: 'FC-Minimal-Regular',
+                          fontSize: 18,
+                          color: isMen
+                              ? const Color.fromARGB(137, 82, 78, 78)
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isMen = true;
+              size();
+            });
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+              child: Container(
+                width: screenwidth * 0.35,
+                height: screenwidth * 0.12,
+                color: isMen
+                    ? MyStyle().primaryColor
+                    : Colors.grey.withOpacity(0.3),
+                child: Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ImageIcon(
+                      const AssetImage('images/man.png'),
+                      size: 25,
+                      color: isMen
+                          ? Colors.white
+                          : const Color.fromARGB(137, 82, 78, 78),
+                    ),
+                    Text(
+                      'ไซส์รองเท้าบุรุษ',
+                      style: TextStyle(
+                        fontFamily: 'FC-Minimal-Regular',
+                        fontSize: 18,
+                        color: isMen
+                            ? Colors.white
+                            : const Color.fromARGB(137, 82, 78, 78),
+                      ),
+                    ),
+                  ],
+                )),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row typeButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isMen = false;
+              size();
+            });
+          },
+          child: Container(
+            width: screenwidth * 0.35,
+            height: screenwidth * 0.12,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ImageIcon(
+                    const AssetImage('images/woman.png'),
+                    size: 25,
+                    color: isMen
+                        ? const Color.fromARGB(137, 82, 78, 78)
+                        : MyStyle().primaryColor,
+                  ),
+                  Text(
+                    'ไซส์รองเท้าสตรี',
+                    style: TextStyle(
+                      fontFamily: 'FC-Minimal-Regular',
+                      fontSize: 18,
+                      color: isMen
+                          ? const Color.fromARGB(137, 82, 78, 78)
+                          : MyStyle().primaryColor,
+                    ),
+                  ),
+                  Divider(
+                    endIndent: 30,
+                    indent: 30,
+                    thickness: 2,
+                    height: 5,
+                    color: isMen ? Colors.white : MyStyle().primaryColor,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isMen = true;
+              size();
+            });
+          },
+          child: Container(
+            width: screenwidth * 0.35,
+            height: screenwidth * 0.12,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ImageIcon(
+                    const AssetImage('images/man.png'),
+                    size: 25,
+                    color: isMen
+                        ? MyStyle().primaryColor
+                        : const Color.fromARGB(137, 82, 78, 78),
+                  ),
+                  Text(
+                    'ไซส์รองเท้าบุรุษ',
+                    style: TextStyle(
+                      fontFamily: 'FC-Minimal-Regular',
+                      fontSize: 18,
+                      color: isMen
+                          ? MyStyle().primaryColor
+                          : const Color.fromARGB(137, 82, 78, 78),
+                    ),
+                  ),
+                  Divider(
+                    endIndent: 30,
+                    indent: 30,
+                    thickness: 2,
+                    height: 5,
+                    color: isMen ? MyStyle().primaryColor : Colors.white,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget more() {
     return Container(
       width: screenwidth * 0.87,
@@ -462,9 +557,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
             Container(
               child: IconButton(
                   onPressed: () {
-                      share();
+                    share();
                     //   shareFile();
-                   // shareScreenshot();
+                    // shareScreenshot();
                     // screenshot();
                   },
                   icon: const Icon(

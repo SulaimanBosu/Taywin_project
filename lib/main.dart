@@ -32,7 +32,7 @@ Future<void> main() async {
           ),
         ),
         home: 
-        //const MeasureFootSize()
+      //  const MeasureFootSize()
         MyHome(
           camera: firstCamera,
         ),

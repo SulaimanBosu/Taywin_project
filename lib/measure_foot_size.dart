@@ -23,8 +23,18 @@ class _MeasureFootSizeState extends State<MeasureFootSize> {
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width;
     final screenheight = MediaQuery.of(context).size.height;
-    return Center(
-      child: Text('${screenwidth.toString()} \n ${screenheight.toString()}'),
+    return  
+     Container(
+      color: Colors.amber,
+      child: const VerticalDivider(
+        thickness: 5,
+        width: 5,
+        color: Colors.white,
+      ),
     );
   }
+    //Center(
+    //  child: Text('${screenwidth.toString()} \n ${screenheight.toString()}'),
+    
+  
 }
