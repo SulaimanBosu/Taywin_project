@@ -163,7 +163,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     return Center(
       child: Container(
         width: screenwidth,
-        height: screenheight * 0.967,
+        height: screenheight * 0.964,
         child: Transform.scale(
           scale: scale,
           child: CameraPreview(_controller),
