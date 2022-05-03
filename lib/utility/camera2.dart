@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:taywin_project/measurement_results.dart';
 import 'package:taywin_project/screen_size.dart';
@@ -28,18 +29,19 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   late CameraController _controller;
   late Future<void> _initcontroler;
   String device = '';
-
   var isCameraReady = true;
   late XFile imagefile;
   late double screenwidth;
   late double screenheight;
-
-  double alignment_a = 0.62;
-  double alignment_b = -0.7899999999999989;
-  double alignment_c = -0.6499999999999999;
-  double alignment_d = 1.89;
-  double alignment_e = 3;
-  double alignment_f = 20;
+  double alignment = 0.0;
+  double alignment_a = 0.22000000000000003;
+  double alignment_b = -1.18999999999999878;
+  double alignment_c = -0.20;
+  double alignment_d = -1.0499999999999992;
+  double alignment_e = -0.22000000000000003;
+  double alignment_f = -1.0;
+  double alignment_g = 0.19000000000000028;
+  double alignment_h = 0.4;
   late double sizewidth = 10;
   late double sizeheight = 28.6;
   bool isBasicsFlash = true;
@@ -48,19 +50,15 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   bool isType = false;
   bool _isCameraPermissionGranted = false;
   late Timer timer;
-
-  double alignmentValue_a = 4;
-  double alignmentValue_b = 7.5;
-
+  double alignmentValue_b = 0;
   late double startDXPoint;
   late double startDYPoint;
   double alignmentwidth = 0.87;
   late double waistwidth = 120;
-  late double inch = 48;
-
+  late double inch = waistwidth / 2.5;
   double indent_a = 10;
   double endIndent_b = 10;
-  double indent_c = 15;
+  double indent_c = 16;
   double endIndent_d = 15;
 
   // getPermissionStatus() async {
@@ -163,7 +161,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     return Center(
       child: Container(
         width: screenwidth,
-        height: screenheight * 0.964,
+        height: screenheight * 0.967,
         child: Transform.scale(
           scale: scale,
           child: CameraPreview(_controller),
@@ -196,7 +194,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                     Stack(
                       alignment: device == 'MOBILE'
                           ? isType
-                              ? const Alignment(0, 0)
+                              ? const Alignment(0, -0.5)
                               : AlignmentDirectional.center
                           : isType
                               ? const Alignment(0, 0)
@@ -206,15 +204,74 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                           alignment: AlignmentDirectional.bottomCenter,
                           children: [
                             _cameraWidget(context),
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              child: icon(),
-                              //iconCamerabutton(),
+                            Column(
+                              children: [
+                                Stack(
+                                  alignment: AlignmentDirectional.topCenter,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(30.0),
+                                      child: Slider(
+                                        activeColor: Colors.white,
+                                        inactiveColor: Colors.red,
+                                        thumbColor: Colors.green,
+                                        // min: -3.5,
+                                        // max: 1.0,
+                                        min: 0.0,
+                                        max: 100.0,
+                                        value: waistwidth - 20,
+                                        onChanged: (value) {
+                                          if (value <= 0.0) {
+                                            MyStyle().showBasicsFlash(
+                                                context: context,
+                                                text: 'ลดขนาดต่ำสุดแล้ว',
+                                                flashStyle: FlashBehavior.fixed,
+                                                duration:
+                                                    const Duration(seconds: 2));
+                                            print(
+                                                'alignmentwidth ===> $alignmentwidth');
+                                          } else if (value >= 100.0) {
+                                            MyStyle().showBasicsFlash(
+                                                context: context,
+                                                text: 'เพิ่มขนาดสูงสุดแล้ว',
+                                                flashStyle: FlashBehavior.fixed,
+                                                duration:
+                                                    const Duration(seconds: 2));
+                                            print(
+                                                'alignmentwidth ===> $alignmentwidth');
+                                          } else {
+                                            double min = -3.1;
+                                            double max = 0.87;
+                                            setState(
+                                              () {
+                                                alignmentwidth = value * min ;
+                                                waistwidth = value + 20;
+                                                inch = waistwidth / 2.5;
+                                                print(
+                                                    'alignmentwidth ===> $alignmentwidth\n min ===> $min\nmax ===> $max ');
+                                              },
+                                            );
+                                          }
+
+                                          setState(() {
+                                            // alignmentwidth = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  child: icon(),
+                                  //iconCamerabutton(),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        isType ? diviver() : _isline(),
-                        isType ? Container() : groupButton(),
+                        diviver(),
+                        //   isType ? Container() : groupButton(),
                       ],
                     ),
                     IconButton(
@@ -267,183 +324,179 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   }
 
   Widget diviver() {
-    return Column(
-      children: [
-        _textcontainer(),
-        Stack(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Container(
-                  alignment: Alignment(alignment_c, alignment_d),
-                  width: screenwidth * 0.14, height: screenheight * 0.6,
-                  // color: Colors.red,
-                  child: VerticalDivider(
-                    thickness: 5,
-                    indent: indent_a,
-                    endIndent: endIndent_b,
-                    width: 5,
-                    color: Colors.red,
-                  ),
-                ),
-                //const SizedBox(width: 10,),
-                Container(
-                  alignment: Alignment(alignment_a, alignment_b),
-                  width: screenwidth * 0.14, height: screenheight * 0.6,
-                  // color: Colors.red,
-                  child: VerticalDivider(
-                    indent: indent_a,
-                    endIndent: endIndent_b,
-                    thickness: 5,
-                    width: 5,
-                    color: isColor
-                        ? const Color.fromARGB(255, 247, 166, 61)
-                        : Colors.red,
-                  ),
-                ),
-              ],
-            ),
-            Stack(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          alignment: Alignment(alignment_a, alignment_b),
-                          width: screenwidth * 0.66,
-                          height: screenheight * 0.14,
-                          // color: Colors.red,
-                          child: Divider(
-                            indent: indent_c,
-                            endIndent: endIndent_d,
-                            thickness: 5,
-                            height: 5,
-                            color: isColor ?  Colors.red : Colors.green,
-                          ),
-                        ),
-                        SizedBox(
-                          height: screenheight * 0.285,
-                        ),
-                        Container(
-                          alignment: Alignment(alignment_c, alignment_d),
-                          width: screenwidth * 0.66,
-                          height: screenheight * 0.114,
-                          // color: Colors.red,
-                          child: Divider(
-                            indent: indent_c,
-                            endIndent: endIndent_d,
-                            thickness: 5,
-                            height: 5,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(
-          height: screenheight * 0.03,
-        ),
-        groupButton()
-      ],
-    );
-  }
-
-  Widget _isline() {
-    return device == 'MOBILE'
-        ? Stack(
-            alignment: Alignment(alignmentwidth, 0.35),
+    return isType
+        ? Column(
             children: [
-              line(),
-              GestureDetector(
-                // onHorizontalDragStart: _onHorizontalDragStartHandler,
-                // onHorizontalDragUpdate: _onDragUpdateHandler,
-                onTap: () {
-                  setState(() {
-                    //  startDXPoint = startDXPoint;
-                  });
-                },
-                child: Container(
-                  // color: Colors.pink,
+              Container(
+                  alignment: Alignment(0, alignmentValue_b),
                   width: screenwidth * 0.3,
-                  height: screenheight * 0.22,
-                  // alignment: Alignment(startDXPoint, 0.35),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  height: screenheight * 0.05,
+                  child: _textcontainer()),
+              SizedBox(
+                height: screenheight * 0.01,
+              ),
+              Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _textcontainer(),
-                      const SizedBox(
-                        height: 8,
+                      Container(
+                        alignment: Alignment(alignment_a, alignment_b),
+                        width: screenwidth * 0.14,
+                        height: screenheight * 0.55,
+                        // color: Colors.red,
+                        child: VerticalDivider(
+                          thickness: 5,
+                          indent: indent_a,
+                          endIndent: endIndent_b,
+                          width: 5,
+                          color: Colors.red,
+                        ),
                       ),
-                      Stack(
-                        //  alignment: Alignment(alignmentwidth, 0.35),
+                      //const SizedBox(width: 10,),
+                      Container(
+                        alignment: Alignment(alignment_c, alignment_d),
+                        width: screenwidth * 0.14,
+                        height: screenheight * 0.55,
+                        // color: Colors.red,
+                        child: VerticalDivider(
+                          indent: indent_a,
+                          endIndent: endIndent_b,
+                          thickness: 5,
+                          width: 5,
+                          color: isColor
+                              ? const Color.fromARGB(255, 247, 166, 61)
+                              : Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          isColor
-                              ? Image.asset(
-                                  'images/Line9.png',
-                                  //height: 40,
-                                )
-                              : Image.asset(
-                                  'images/Line7.png',
-                                  // height: 40,
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                alignment: Alignment(alignment_e, alignment_f),
+                                width: screenwidth * 0.56,
+                                height: screenheight * 0.14,
+                                // color: Colors.red,
+                                child: Divider(
+                                  indent: indent_c,
+                                  endIndent: endIndent_d,
+                                  thickness: 5,
+                                  color: isColor ? Colors.red : Colors.green,
                                 ),
+                              ),
+                              SizedBox(
+                                height: screenheight * 0.285,
+                              ),
+                              Container(
+                                alignment: Alignment(alignment_g, alignment_h),
+                                width: screenwidth * 0.56,
+                                height: screenheight * 0.157,
+                                // color: Colors.red,
+                                child: Divider(
+                                  indent: indent_c,
+                                  endIndent: endIndent_d,
+                                  thickness: 5,
+                                  height: 5,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
+              groupButton()
             ],
           )
         : Stack(
-            alignment: Alignment(alignmentwidth - 0.37, 0.25),
-            //  alignment: Alignment(alignmentwidth, -10),
+            alignment: AlignmentDirectional.topCenter,
             children: [
-              line(),
-              GestureDetector(
-                // onHorizontalDragStart: _onHorizontalDragStartHandler,
-                // onHorizontalDragUpdate: _onDragUpdateHandler,
-                onTap: () {
-                  setState(() {
-                    //  startDXPoint = startDXPoint;
-                  });
-                },
-                child: Container(
-                  width: screenwidth * 0.3,
-                  height: screenheight * 0.22,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+              Container(
+                alignment: const Alignment(0, -5),
+                width: screenwidth * 0.3,
+                height: screenheight * 0.05,
+                child: _textcontainer(),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Stack(
+                alignment: const Alignment(0, 0),
+                children: [
+                  Container(
+                    width: screenwidth * 0.7,
+                    height: screenheight * 0.14,
+                    // color: Colors.red,
+                    child: Divider(
+                      indent: indent_c,
+                      endIndent: endIndent_d,
+                      thickness: 5,
+                      color: const Color.fromARGB(255, 247, 166, 61),
+                    ),
+                  ),
+                  groupButton(),
+                ],
+              ),
+              Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _textcontainer(),
-                      const SizedBox(
-                        height: 8,
+                      Container(
+                        alignment: const Alignment(-1, -1.0),
+                        width: screenwidth * 0.14,
+                        height: screenheight * 0.15,
+                        child: VerticalDivider(
+                          thickness: 5,
+                          indent: indent_a,
+                          endIndent: endIndent_b,
+                          width: 5,
+                          color: Colors.red,
+                        ),
                       ),
-                      Stack(
-                        //  alignment: Alignment(alignmentwidth, 0.35),
-                        children: [
-                          isColor
-                              ? Image.asset(
-                                  'images/Line9.png',
-                                  //height: 40,
-                                )
-                              : Image.asset(
-                                  'images/Line7.png',
-                                  // height: 40,
-                                ),
-                          // _textcontainer(),
-                        ],
+                      //const SizedBox(width: 10,),
+                      GestureDetector(
+                        onPanStart: (DragStartDetails details) {
+                          alignment = details.globalPosition.dx;
+                        },
+                        onPanUpdate: (DragUpdateDetails details) {
+                          double distance =
+                              details.globalPosition.dx - alignment;
+                          double percentageAddition = distance / 400;
+                          setState(() {});
+                          alignmentwidth = (alignmentwidth + percentageAddition)
+                              .clamp(0.0, 20.00);
+                        },
+                        onPanEnd: (DragEndDetails details) {
+                          alignmentwidth = 0.1;
+                        },
+                        child: Container(
+                          alignment: Alignment(alignmentwidth, 0),
+                          width: screenwidth * 0.14,
+                          height: screenheight * 0.15,
+                          // color: Colors.red,
+                          child: VerticalDivider(
+                            indent: indent_a,
+                            endIndent: endIndent_b,
+                            thickness: 5,
+                            width: 5,
+                            color: isColor ? Colors.green : Colors.red,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
             ],
           );
@@ -495,343 +548,13 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     });
   }
 
-  Widget line() {
-    return device == 'MOBILE'
-        ? isType
-            ? Stack(
-                alignment: AlignmentDirectional.topCenter,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: screenheight * 0.1,
-                      ),
-                      _textcontainer(),
-                      Stack(
-                        children: [
-                          Stack(
-                            alignment: Alignment(alignment_c, alignment_d),
-                            children: [
-                              Stack(
-                                alignment: const Alignment(9, 22),
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                        width: screenwidth * 0.18,
-                                      ),
-                                      Column(
-                                        children: [
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Image.asset(
-                                            'images/Line1.png',
-                                            // width: screenwidth * 0.01,
-                                            // height: screenwidth * 1.23,
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    width: screenwidth * 0.13,
-                                  ),
-                                  Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Image.asset(
-                                        'images/Line2.png',
-                                        // width: screenwidth * 0.01,
-                                        // height: screenwidth * 1.23,
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Stack(
-                            alignment: Alignment(alignment_a, alignment_b),
-                            children: [
-                              Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: screenwidth * 0.13,
-                                      ),
-                                      isColor
-                                          ? Image.asset(
-                                              'images/Line3.png',
-                                            )
-                                          : Image.asset(
-                                              'images/Line2.png',
-                                            )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  right: screenwidth * 0.01,
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(
-                                      width: screenwidth * 0.18,
-                                    ),
-                                    Column(
-                                      children: [
-                                        SizedBox(
-                                          height: screenheight * 0.013,
-                                        ),
-                                        isColor
-                                            ? Image.asset(
-                                                'images/Line4.png',
-                                                //  width: screenwidth * 0.01,
-                                                //  height: screenheight * 0.612,
-                                              )
-                                            : Image.asset(
-                                                'images/Line1.png',
-                                                // width: screenwidth * 0.01,
-                                                // height: screenheight * 0.612,
-                                              ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      groupButton(),
-                    ],
-                  ),
-                ],
-              )
-            : Stack(
-                children: [
-                  Stack(
-                    alignment: AlignmentDirectional.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    'images/Line7.png',
-                                    // width: screenwidth * 0.01,
-                                    // height: screenwidth * 1.23,
-                                  ),
-                                  Image.asset(
-                                    'images/Line8.png',
-                                    width: screenwidth * 0.6,
-                                    // height: screenwidth * 1.23,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              )
-        : isType
-            ? Stack(
-                alignment: AlignmentDirectional.topCenter,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 60,
-                      ),
-                      _textcontainer(),
-                      Stack(
-                        children: [
-                          Stack(
-                            alignment: Alignment(alignment_c, alignment_d),
-                            children: [
-                              Stack(
-                                alignment: const Alignment(9, 22),
-                                children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                        width: screenwidth * 0.325,
-                                      ),
-                                      Column(
-                                        children: [
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Image.asset(
-                                            'images/Line1.png',
-                                            // width: screenwidth * 0.01,
-                                            // height: screenwidth * 1.23,
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    width: screenwidth * 0.3,
-                                  ),
-                                  Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Image.asset(
-                                        'images/Line2.png',
-                                        // width: screenwidth * 0.01,
-                                        // height: screenwidth * 1.23,
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Stack(
-                            alignment:
-                                Alignment((-1.73 + alignment_a), alignment_b),
-                            children: [
-                              Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: screenwidth * 0.3,
-                                      ),
-                                      isColor
-                                          ? Image.asset(
-                                              'images/Line3.png',
-                                            )
-                                          : Image.asset(
-                                              'images/Line2.png',
-                                            )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SizedBox(
-                                    width: screenwidth * 0.69,
-                                  ),
-                                  Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      isColor
-                                          ? Image.asset(
-                                              'images/Line4.png',
-                                              // width: screenwidth * 0.01,
-                                              // height: screenwidth * 1.23,
-                                            )
-                                          : Image.asset(
-                                              'images/Line1.png',
-                                            ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      groupButton(),
-                    ],
-                  ),
-                ],
-              )
-            : Stack(
-                children: [
-                  Stack(
-                    alignment: AlignmentDirectional.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: screenwidth * 0.01,
-                                  ),
-                                  Image.asset(
-                                    'images/Line7.png',
-
-                                    // width: screenwidth * 0.01,
-                                    // height: screenwidth * 1.23,
-                                  ),
-                                  Image.asset(
-                                    'images/Line8.png',
-                                    //width: screenwidth * 0.6,
-                                    // height: screenwidth * 1.23,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              );
-  }
-
   Widget _textcontainer() {
     return device == 'MOBILE'
         ? Container(
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadiusDirectional.circular(5)),
-            width: screenwidth * 0.25,
+            width: screenwidth * 0.27,
             height: screenheight * 0.03,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -931,8 +654,8 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  if (alignment_a >= 0.62 &&
-                      alignment_b >= -0.7899999999999989) {
+                  if (alignment_a >= 0.009999999999999953 &&
+                      alignment_b >= -0.9799999999999986) {
                     MyStyle().showBasicsFlash(
                         context: context,
                         text: 'เพิ่มขนาดสูงสุดแล้ว',
@@ -943,21 +666,24 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                   } else {
                     setState(
                       () {
-                        alignmentValue_a += 0.002;
-                        // alignmentValue_b -= 1;
-                        alignment_a += 0.07;
-                        alignment_b -= 0.05;
-                        alignment_c -= 0.07;
-                        alignment_d += 0.07;
+                        alignmentValue_b -= 0.45;
+                        alignment_a -= 0.07;
+                        alignment_b += 0.07;
+                        alignment_c += 0.07;
+                        alignment_d -= 0.05;
+                        alignment_e += 0.07;
+                        alignment_f -= 0.07;
+                        alignment_g -= 0.07;
+                        alignment_h += 0.05;
                         sizewidth += 0.2;
                         sizeheight += 0.5;
-                        indent_a -= 2.7;
-                        endIndent_b -= 3;
-                        indent_c -= 1.7;
-                        endIndent_d -= 1.7;
 
+                        indent_a -= 3;
+                        endIndent_b -= 3;
+                        indent_c -= 1.85;
+                        endIndent_d -= 1.85;
                         print(
-                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d\nalignment_e ===> $alignment_e\n alignment_f ===> $alignment_f\nalignment_g ===> $alignment_g\n alignment_h ===> $alignment_h');
                       },
                     );
                   }
@@ -977,8 +703,8 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  if (alignment_a <= -0.43000000000000005 &&
-                      alignment_b <= 0.2600000000000014) {
+                  if (alignment_a <= 1.3400000000000007 &&
+                      alignment_b <= -2.3099999999999987) {
                     MyStyle().showBasicsFlash(
                         context: context,
                         text: 'ลดขนาดต่ำสุดแล้ว',
@@ -989,21 +715,24 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                   } else {
                     setState(
                       () {
-                        alignmentValue_a -= 0.002;
-                        // alignmentValue_b += 1;
-                        alignment_a -= 0.07;
-                        alignment_b += 0.05;
-                        alignment_c += 0.07;
-                        alignment_d -= 0.07;
-                        indent_a += 2.7;
+                        alignmentValue_b += 0.45;
+                        alignment_a += 0.07;
+                        alignment_b -= 0.07;
+                        alignment_c -= 0.07;
+                        alignment_d += 0.05;
+                        alignment_e -= 0.07;
+                        alignment_f += 0.07;
+                        alignment_g += 0.07;
+                        alignment_h -= 0.05;
+                        indent_a += 3;
                         endIndent_b += 3;
-                        indent_c += 1.7;
-                        endIndent_d += 1.7;
+                        indent_c += 1.85;
+                        endIndent_d += 1.85;
 
                         sizewidth -= 0.2;
                         sizeheight -= 0.5;
                         print(
-                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d');
+                            'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d\nalignment_e ===> $alignment_e\n alignment_f ===> $alignment_f\nalignment_g ===> $alignment_g\n alignment_h ===> $alignment_h');
                       },
                     );
                   }
@@ -1026,10 +755,10 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                 : MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                padding: const EdgeInsets.only(top: 25.0, left: 30),
+                padding: const EdgeInsets.only(left: 30),
                 onPressed: () {
                   if (device == 'MOBILE') {
-                    if (alignmentwidth <= 0.00) {
+                    if (alignmentwidth <= -3.0499999999999963) {
                       MyStyle().showBasicsFlash(
                           context: context,
                           text: 'ลดขนาดต่ำสุดแล้ว',
@@ -1039,7 +768,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                     } else {
                       setState(
                         () {
-                          alignmentwidth -= 0.01;
+                          alignmentwidth -= 0.05;
                           waistwidth -= 1;
                           inch = waistwidth / 2.5;
                           print('alignmentwidth ===> $alignmentwidth');
@@ -1057,7 +786,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                     } else {
                       setState(
                         () {
-                          alignmentwidth -= 0.01;
+                          alignmentwidth -= 0.05;
                           waistwidth -= 1;
                           inch = waistwidth / 2.5;
                           print('alignmentwidth ===> $alignmentwidth');
@@ -1073,7 +802,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                 ),
               ),
               IconButton(
-                padding: const EdgeInsets.only(top: 25.0, right: 30),
+                padding: const EdgeInsets.only(right: 30),
                 onPressed: () {
                   if (alignmentwidth >= 0.87) {
                     MyStyle().showBasicsFlash(
@@ -1085,7 +814,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                   } else {
                     setState(
                       () {
-                        alignmentwidth += 0.01;
+                        alignmentwidth += 0.05;
                         waistwidth += 1;
                         inch = waistwidth / 2.5;
                         print('alignmentwidth ===> $alignmentwidth');
@@ -1124,22 +853,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
           captureImage(context);
         },
       );
-
-  // Stack iconCamerabutton() => Stack(
-  //       children: [
-  //         FloatingActionButton(
-  //           backgroundColor: Colors.white,
-  //           child: const Icon(
-  //             Icons.circle_outlined,
-  //             color: Colors.black45,
-  //             size: 55,
-  //           ),
-  //           onPressed: () {
-  //             captureImage(context);
-  //           },
-  //         ),
-  //       ],
-  //     );
 
   captureImage(BuildContext context) {
     _controller.takePicture().then((file) {
