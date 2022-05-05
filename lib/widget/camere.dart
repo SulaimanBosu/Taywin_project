@@ -5,10 +5,10 @@ import 'package:camera/camera.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:taywin_project/measurement_results.dart';
-import 'package:taywin_project/screen_size.dart';
+import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:taywin_project/widget/measurement_results.dart';
 
 class OpenCamera extends StatefulWidget {
   const OpenCamera({

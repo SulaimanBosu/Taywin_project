@@ -7,7 +7,7 @@ import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:taywin_project/screen_size.dart';
+import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/utility/size.dart';
 import 'package:flutter_share/flutter_share.dart';

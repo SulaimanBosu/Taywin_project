@@ -1,8 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:taywin_project/home.dart';
-import 'package:taywin_project/measure_foot_size.dart';
+import 'package:taywin_project/widget/home.dart';
 
 List<CameraDescription> cameras = [];
 

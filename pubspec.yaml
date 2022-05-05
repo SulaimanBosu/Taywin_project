@@ -45,6 +45,7 @@ dependencies:
   flutter_share: ^2.0.0
   screenshot: ^1.2.3
   file_picker: ^4.5.1
+  align_positioned: ^3.0.0
   
 
 dev_dependencies:

@@ -4,10 +4,9 @@ import 'dart:developer';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:taywin_project/camere.dart';
-import 'package:taywin_project/screen_size.dart';
-import 'package:taywin_project/utility/camera2.dart';
+import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
+import 'package:taywin_project/widget/camera2.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({
@@ -201,7 +200,7 @@ class _MyHomeState extends State<MyHome> {
             )
           ],
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
       ),
