@@ -46,15 +46,11 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   double alignment_h = 0.4;
   late double sizewidth = 10;
   late double sizeheight = 28.6;
-  bool isBasicsFlash = true;
-  bool isdialog = false;
   bool isColor = false;
   bool isType = false;
   bool _isCameraPermissionGranted = false;
   late Timer timer;
   double alignmentValue_b = 0;
-  late double startDXPoint;
-  late double startDYPoint;
   double alignmentwidth = 0.0;
   late double waistwidth = 20;
   late double inch = waistwidth / 2.5;
@@ -62,15 +58,13 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   double endIndent_b = 10;
   double indent_c = 16;
   double endIndent_d = 15;
-
-  double? x = 0.0;
-  double? y = 0.0;
   Offset offset = const Offset(140, 0.0);
+  bool flash_on = false;
+  bool flash_off = false;
 
   // getPermissionStatus() async {
   //   await Permission.camera.request();
   //   var status = await Permission.camera.status;
-
   //   if (status.isGranted) {
   //     log('Camera Permission: GRANTED');
   //     setState(() {
@@ -151,7 +145,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   //   final size = MediaQuery.of(context).size;
   //   var scale = size.aspectRatio * camera.aspectRatio;
   //   if (scale < 1) scale = 1 / scale;
-
   //   return Transform.scale(
   //     scale: scale,
   //     child: CameraPreview(_controller),
@@ -218,25 +211,16 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                                 Container(
                                   margin: const EdgeInsets.only(bottom: 10),
                                   child: icon(),
-                                  //iconCamerabutton(),
                                 ),
                               ],
                             ),
                           ],
                         ),
                         diviver(),
-                        _isGestureDetector(),
-                        //   isType ? Container() : groupButton(),
+                        //  isType ? Container() : _isGestureDetector(),
                       ],
                     ),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                        )),
+                    action_button(context),
                     const VerticalDivider(
                       width: 20,
                       thickness: 1,
@@ -278,48 +262,166 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     );
   }
 
+  Padding action_button(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // _isFlashmode(),
+          IconButton(
+            onPressed: () {
+              if (flash_on) {
+                _controller.setFlashMode(FlashMode.off);
+
+                setState(() {
+                  flash_on = false;
+                  flash_off = true;
+                });
+              } else if (flash_off) {
+                _controller.setFlashMode(FlashMode.auto);
+                setState(() {
+                  flash_on = false;
+                  flash_off = false;
+                });
+              } else {
+                _controller.setFlashMode(FlashMode.torch);
+                setState(() {
+                  flash_on = true;
+                  flash_off = false;
+                });
+              }
+            },
+            icon: flash_on
+                ? const Icon(
+                    Icons.flash_on_outlined,
+                    color: Colors.yellow,
+                  )
+                : flash_off
+                    ? const Icon(
+                        Icons.flash_off_outlined,
+                        color: Colors.white,
+                      )
+                    : const Icon(
+                        Icons.flash_auto_outlined,
+                        color: Colors.yellow,
+                      ),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Stack _isSlider(BuildContext context) {
     return Stack(
       alignment: AlignmentDirectional.topCenter,
       children: [
         Padding(
           padding:
-              const EdgeInsets.only(top: 30.0, bottom: 30, left: 50, right: 50),
-          child: Slider(
-            activeColor: const Color.fromARGB(255, 247, 166, 61),
-            inactiveColor: const Color.fromARGB(255, 247, 243, 243),
-            thumbColor: isColor ? Colors.green : Colors.red,
-            // min: -3.5,
-            // max: 1.0,
-            min: -0.1,
-            max: 5.1,
-            value: alignmentwidth,
-            onChanged: (value) {
-              if (value <= -0.1) {
-                MyStyle().showBasicsFlash(
-                    context: context,
-                    text: 'ลดขนาดต่ำสุดแล้ว',
-                    flashStyle: FlashBehavior.fixed,
-                    duration: const Duration(seconds: 2));
-                print('alignmentwidth ===> $alignmentwidth');
-              } else if (value >= 5.0) {
-                MyStyle().showBasicsFlash(
-                    context: context,
-                    text: 'เพิ่มขนาดสูงสุดแล้ว',
-                    flashStyle: FlashBehavior.fixed,
-                    duration: const Duration(seconds: 2));
-                print('alignmentwidth ===> $alignmentwidth');
-              } else {
-                setState(
-                  () {
-                    alignmentwidth = value;
-                    waistwidth = (value * 100 / 5) + 20;
-                    inch = waistwidth / 2.5;
+              const EdgeInsets.only(top: 30.0, bottom: 30, left: 10, right: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                padding: const EdgeInsets.only(left: 30),
+                onPressed: () {
+                  if (alignmentwidth <= 0.0) {
+                    MyStyle().showBasicsFlash(
+                        context: context,
+                        text: 'ลดขนาดต่ำสุดแล้ว',
+                        flashStyle: FlashBehavior.fixed,
+                        duration: const Duration(seconds: 2));
                     print('alignmentwidth ===> $alignmentwidth');
-                  },
-                );
-              }
-            },
+                  } else {
+                    setState(
+                      () {
+                        alignmentwidth -= 0.05;
+                        waistwidth -= 1;
+                        inch = waistwidth / 2.5;
+                        print('alignmentwidth ===> $alignmentwidth');
+                      },
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.remove_circle_outline,
+                  color: Colors.red,
+                  size: 30,
+                ),
+              ),
+              Slider(
+                activeColor: const Color.fromARGB(255, 247, 166, 61),
+                inactiveColor: const Color.fromARGB(255, 247, 243, 243),
+                thumbColor: isColor ? Colors.green : Colors.red,
+                // min: -3.5,
+                // max: 1.0,
+                min: -0.1,
+                max: 5.1,
+                value: alignmentwidth,
+                onChanged: (value) {
+                  if (value <= -0.1) {
+                    MyStyle().showBasicsFlash(
+                        context: context,
+                        text: 'ลดขนาดต่ำสุดแล้ว',
+                        flashStyle: FlashBehavior.fixed,
+                        duration: const Duration(seconds: 2));
+                    print('alignmentwidth ===> $alignmentwidth');
+                  } else if (value >= 5.0) {
+                    MyStyle().showBasicsFlash(
+                        context: context,
+                        text: 'เพิ่มขนาดสูงสุดแล้ว',
+                        flashStyle: FlashBehavior.fixed,
+                        duration: const Duration(seconds: 2));
+                    print('alignmentwidth ===> $alignmentwidth');
+                  } else {
+                    setState(
+                      () {
+                        alignmentwidth = value;
+                        waistwidth = (value * 100 / 5) + 20;
+                        inch = waistwidth / 2.5;
+                        print('alignmentwidth ===> $alignmentwidth');
+                      },
+                    );
+                  }
+                },
+              ),
+              IconButton(
+                padding: const EdgeInsets.only(right: 30),
+                onPressed: () {
+                  if (alignmentwidth >= 5) {
+                    MyStyle().showBasicsFlash(
+                        context: context,
+                        text: 'เพิ่มขนาดสูงสุดแล้ว',
+                        flashStyle: FlashBehavior.fixed,
+                        duration: const Duration(seconds: 2));
+                    print('alignmentwidth ===> $alignmentwidth');
+                  } else {
+                    setState(
+                      () {
+                        alignmentwidth += 0.05;
+                        waistwidth += 1;
+                        inch = waistwidth / 2.5;
+                        print('alignmentwidth ===> $alignmentwidth');
+                      },
+                    );
+                  }
+                },
+                icon: const Icon(
+                  Icons.add_circle_outline,
+                  color: Colors.green,
+                  size: 30,
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -456,7 +558,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Container(
-                        alignment: const Alignment(-5, -1.0),
+                        alignment: const Alignment(-0.1, -1.0),
                         width: screenwidth * 0.14,
                         height: screenheight * 0.15,
                         child: VerticalDivider(
@@ -467,21 +569,23 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                           color: Colors.red,
                         ),
                       ),
-                      //const SizedBox(width: 10,),
-                      // Container(
-                      //   alignment: Alignment(alignmentwidth - 4, 0),
-                      //   width: screenwidth * 0.14,
-                      //   height: screenheight * 0.15,
-                      //   // color: Colors.red,
-                      //   child: VerticalDivider(
-                      //     indent: indent_a,
-                      //     endIndent: endIndent_b,
-                      //     thickness: 5,
-                      //     width: 5,
-                      //     color: isColor ? Colors.green : Colors.red,
-                      //   ),
-                      // ),
-                      // _isGestureDetector(),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                        alignment: Alignment(alignmentwidth - 4.7, 0),
+                        width: screenwidth * 0.14,
+                        height: screenheight * 0.15,
+                        // color: Colors.red,
+                        child: VerticalDivider(
+                          indent: indent_a,
+                          endIndent: endIndent_b,
+                          thickness: 5,
+                          width: 5,
+                          color: isColor ? Colors.green : Colors.red,
+                        ),
+                      ),
+                      //_isGestureDetector(),
                     ],
                   ),
                 ],
@@ -491,24 +595,41 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   }
 
   Widget _isGestureDetector() {
+    double dx = 120;
     return Positioned(
       left: offset.dx,
       child: GestureDetector(
         onPanUpdate: (details) {
-          if (offset.dx / 2.5 <= 50 || offset.dx / 2.5 >= 120) {
+          if (dx <= 110) {
             setState(() {
-              offset = Offset(offset.dx + details.delta.dx, 0);
-              print('Offset DX ======> ${offset.dx}');
+              offset = Offset(details.delta.dx, 0);
+              //dx = dx + details.delta.dx;
+
+              print(' DX ======> ${dx.toString()}');
             });
           } else {
             setState(() {
               offset = Offset(offset.dx + details.delta.dx, 0);
-              print('Offset DX ======> ${offset.dx}');
+              dx = dx + details.delta.dx;
+
+              print(' DX ======> ${dx.toString()}');
             });
           }
+
+          // if (details.primaryDelta != 0.0) {
+          //   setState(() {
+          //     offset = Offset(offset.dx + details.delta.dx, 0);
+          //     // min.add(details.delta.dx);
+          //     print('details.primaryDelta ======> ${details.primaryDelta}');
+          //   });
+          // } else {
+          //   setState(() {
+          //     offset = Offset(offset.dx + details.delta.dx, 0);
+          //     print('Offset DX ======> (offset.dx / 2.5 >= 120 ${offset.dx}');
+          //   });
+          // }
         },
         child: Container(
-          //alignment: Alignment(alignmentwidth - 4, -10),
           width: screenwidth * 0.14,
           height: screenheight * 0.15,
           // color: Colors.red,
@@ -594,35 +715,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
           );
   }
 
-  void _showBasicsFlash({
-    String? text,
-    Duration? duration,
-    flashStyle = FlashBehavior.floating,
-  }) {
-    showFlash(
-      context: context,
-      duration: duration,
-      builder: (context, controller) {
-        return Flash(
-          controller: controller,
-          behavior: flashStyle,
-          position: FlashPosition.bottom,
-          boxShadows: kElevationToShadow[4],
-          horizontalDismissDirection: HorizontalDismissDirection.horizontal,
-          child: FlashBar(
-            content: Row(
-              children: [
-                const Icon(Icons.info_outline),
-                MyStyle().mySizebox(),
-                Text(text!),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   Row groupButton() {
     return isType
         ? Row(
@@ -670,9 +762,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                   ),
                 ),
                 icon: const Icon(Icons.add_circle_outline),
-                label: const Text(
-                  'เพิ่มขนาด',
-                ),
+                label: MyStyle().showtext_2('เพิ่มขนาด'),
               ),
               const SizedBox(
                 width: 10,
@@ -719,73 +809,72 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                   ),
                 ),
                 icon: const Icon(Icons.remove_circle_outline),
-                label: const Text(
-                  'ลดขนาด',
-                ),
+                label: MyStyle().showtext_2('ลดขนาด'),
               ),
             ],
           )
-        : Row(
-            mainAxisAlignment: device == 'MOBILE'
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                padding: const EdgeInsets.only(left: 30),
-                onPressed: () {
-                  if (alignmentwidth <= 0.0) {
-                    MyStyle().showBasicsFlash(
-                        context: context,
-                        text: 'ลดขนาดต่ำสุดแล้ว',
-                        flashStyle: FlashBehavior.fixed,
-                        duration: const Duration(seconds: 2));
-                    print('alignmentwidth ===> $alignmentwidth');
-                  } else {
-                    setState(
-                      () {
-                        alignmentwidth -= 0.05;
-                        waistwidth -= 1;
-                        inch = waistwidth / 2.5;
-                        print('alignmentwidth ===> $alignmentwidth');
-                      },
-                    );
-                  }
-                },
-                icon: const Icon(
-                  Icons.remove_circle_outline,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-              IconButton(
-                padding: const EdgeInsets.only(right: 30),
-                onPressed: () {
-                  if (alignmentwidth >= 5) {
-                    MyStyle().showBasicsFlash(
-                        context: context,
-                        text: 'เพิ่มขนาดสูงสุดแล้ว',
-                        flashStyle: FlashBehavior.fixed,
-                        duration: const Duration(seconds: 2));
-                    print('alignmentwidth ===> $alignmentwidth');
-                  } else {
-                    setState(
-                      () {
-                        alignmentwidth += 0.05;
-                        waistwidth += 1;
-                        inch = waistwidth / 2.5;
-                        print('alignmentwidth ===> $alignmentwidth');
-                      },
-                    );
-                  }
-                },
-                icon: const Icon(
-                  Icons.add_circle_outline,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ],
-          );
+        : Row();
+    // Row(
+    //     mainAxisAlignment: device == 'MOBILE'
+    //         ? MainAxisAlignment.spaceBetween
+    //         : MainAxisAlignment.spaceAround,
+    //     children: [
+    //       IconButton(
+    //         padding: const EdgeInsets.only(left: 30),
+    //         onPressed: () {
+    //           if (alignmentwidth <= 0.0) {
+    //             MyStyle().showBasicsFlash(
+    //                 context: context,
+    //                 text: 'ลดขนาดต่ำสุดแล้ว',
+    //                 flashStyle: FlashBehavior.fixed,
+    //                 duration: const Duration(seconds: 2));
+    //             print('alignmentwidth ===> $alignmentwidth');
+    //           } else {
+    //             setState(
+    //               () {
+    //                 alignmentwidth -= 0.05;
+    //                 waistwidth -= 1;
+    //                 inch = waistwidth / 2.5;
+    //                 print('alignmentwidth ===> $alignmentwidth');
+    //               },
+    //             );
+    //           }
+    //         },
+    //         icon: const Icon(
+    //           Icons.remove_circle_outline,
+    //           color: Colors.white,
+    //           size: 30,
+    //         ),
+    //       ),
+    //       IconButton(
+    //         padding: const EdgeInsets.only(right: 30),
+    //         onPressed: () {
+    //           if (alignmentwidth >= 5) {
+    //             MyStyle().showBasicsFlash(
+    //                 context: context,
+    //                 text: 'เพิ่มขนาดสูงสุดแล้ว',
+    //                 flashStyle: FlashBehavior.fixed,
+    //                 duration: const Duration(seconds: 2));
+    //             print('alignmentwidth ===> $alignmentwidth');
+    //           } else {
+    //             setState(
+    //               () {
+    //                 alignmentwidth += 0.05;
+    //                 waistwidth += 1;
+    //                 inch = waistwidth / 2.5;
+    //                 print('alignmentwidth ===> $alignmentwidth');
+    //               },
+    //             );
+    //           }
+    //         },
+    //         icon: const Icon(
+    //           Icons.add_circle_outline,
+    //           color: Colors.white,
+    //           size: 30,
+    //         ),
+    //       ),
+    //     ],
+    //   );
   }
 
   Widget icon() => InkWell(
@@ -827,6 +916,11 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
               ),
             )),
             (route) => true);
+        _controller.setFlashMode(FlashMode.auto);
+        setState(() {
+          flash_on = false;
+          flash_off = false;
+        });
       }
     });
   }

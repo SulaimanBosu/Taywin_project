@@ -422,7 +422,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     );
   }
 
-  Row typeButton() {
+  Widget typeButton() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -435,14 +435,14 @@ class _MeasurementResultsState extends State<MeasurementResults> {
           },
           child: Container(
             width: screenwidth * 0.35,
-            height: screenwidth * 0.12,
+            height: screenheight * 0.09,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ImageIcon(
                     const AssetImage('images/woman.png'),
-                    size: 25,
+                    size: !isMen ? 30 : 25,
                     color: isMen
                         ? const Color.fromARGB(137, 82, 78, 78)
                         : MyStyle().primaryColor,
@@ -451,10 +451,10 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     'ไซส์รองเท้าสตรี',
                     style: TextStyle(
                       fontFamily: 'FC-Minimal-Regular',
-                      fontSize: 18,
-                      color: isMen
-                          ? const Color.fromARGB(137, 82, 78, 78)
-                          : MyStyle().primaryColor,
+                      fontSize: !isMen ? 16 : 14,
+                      color: !isMen
+                          ? MyStyle().primaryColor
+                          : const Color.fromARGB(137, 82, 78, 78),
                     ),
                   ),
                   Divider(
@@ -478,14 +478,14 @@ class _MeasurementResultsState extends State<MeasurementResults> {
           },
           child: Container(
             width: screenwidth * 0.35,
-            height: screenwidth * 0.12,
+            height: screenheight * 0.09,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ImageIcon(
                     const AssetImage('images/man.png'),
-                    size: 25,
+                    size: isMen ? 30 : 25,
                     color: isMen
                         ? MyStyle().primaryColor
                         : const Color.fromARGB(137, 82, 78, 78),
@@ -494,7 +494,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     'ไซส์รองเท้าบุรุษ',
                     style: TextStyle(
                       fontFamily: 'FC-Minimal-Regular',
-                      fontSize: 18,
+                      fontSize: isMen ? 16 : 14,
                       color: isMen
                           ? MyStyle().primaryColor
                           : const Color.fromARGB(137, 82, 78, 78),
@@ -610,7 +610,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     await FlutterShare.share(
       title: isType ? 'ไซส์รองเท้า : ' : 'ขนาดรอบเอว : ',
       text: isType
-          ? 'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
+          ? isMen
+              ? 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
+              : 'เบอร์รองเท้าของท่านสุภาพสตรีคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
           : 'ขนาดเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
       chooserTitle: 'การแชร์',
     );
