@@ -140,34 +140,34 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     });
   }
 
-  // Widget _cameraWidget(context) {
-  //   var camera = _controller.value;
-  //   final size = MediaQuery.of(context).size;
-  //   var scale = size.aspectRatio * camera.aspectRatio;
-  //   if (scale < 1) scale = 1 / scale;
-  //   return Transform.scale(
-  //     scale: scale,
-  //     child: CameraPreview(_controller),
-  //   );
-  // }
-
   Widget _cameraWidget(context) {
     var camera = _controller.value;
     final size = MediaQuery.of(context).size;
     var scale = size.aspectRatio * camera.aspectRatio;
     if (scale < 1) scale = 1 / scale;
-
-    return Center(
-      child: Container(
-        width: screenwidth,
-        height: screenheight * 0.967,
-        child: Transform.scale(
-          scale: scale,
-          child: CameraPreview(_controller),
-        ),
-      ),
+    return Transform.scale(
+      scale: scale,
+      child: CameraPreview(_controller),
     );
   }
+
+  // Widget _cameraWidget(context) {
+  //   var camera = _controller.value;
+  //   final size = MediaQuery.of(context).size;
+  //   var scale = size.aspectRatio * camera.aspectRatio;
+  //   if (scale < 1) scale = 1 / scale;
+
+  //   return Center(
+  //     child: Container(
+  //       width: screenwidth,
+  //       height: screenheight * 0.967,
+  //       child: Transform.scale(
+  //         scale: scale,
+  //         child: CameraPreview(_controller),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -175,9 +175,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     screenheight = MediaQuery.of(context).size.height;
     device = ScreenSize().screenwidth(screenwidth);
     return Scaffold(
-      body:
-          //  _isGestureDetector(),
-          newContent(),
+      body: newContent(),
     );
   }
 
@@ -208,16 +206,18 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                             Column(
                               children: [
                                 isType ? Container() : _isSlider(context),
-                                Container(
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  child: icon(),
-                                ),
+                                isType
+                                    ? Container()
+                                    : Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        child: icon(),
+                                      ),
                               ],
                             ),
                           ],
                         ),
                         diviver(),
-                        //  isType ? Container() : _isGestureDetector(),
                       ],
                     ),
                     action_button(context),
@@ -431,6 +431,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   Widget diviver() {
     return isType
         ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                   alignment: Alignment(0, alignmentValue_b),
@@ -520,7 +521,15 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                   ),
                 ],
               ),
-              groupButton()
+              Column(
+                children: [
+                  groupButton(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  icon(),
+                ],
+              )
             ],
           )
         : Stack(
@@ -658,7 +667,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
               children: [
                 Text(
                   isType
-                      ? '${sizewidth.toStringAsFixed(0)} Cm'
+                      ? '${sizewidth.toStringAsFixed(1)} Cm'
                       : '${waistwidth.toStringAsFixed(0)} ซม.',
                   style: const TextStyle(
                     color: Colors.green,
@@ -746,8 +755,8 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         sizewidth += 0.2;
                         sizeheight += 0.5;
 
-                        indent_a -= 3;
-                        endIndent_b -= 3;
+                        indent_a -= 2.5;
+                        endIndent_b -= 2.5;
                         indent_c -= 1.85;
                         endIndent_d -= 1.85;
                         print(
@@ -790,8 +799,8 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         alignment_f += 0.07;
                         alignment_g += 0.07;
                         alignment_h -= 0.05;
-                        indent_a += 3;
-                        endIndent_b += 3;
+                        indent_a += 2.5;
+                        endIndent_b += 2.5;
                         indent_c += 1.85;
                         endIndent_d += 1.85;
 
