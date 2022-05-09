@@ -64,12 +64,10 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   }
 
   void size() {
-    if (widget.type == MyStyle().footmeasure) {
+    if (isType) {
       if (isMen) {
         setState(() {
           sizes = Size().man(sizeheight);
-          //  print('sizes ==== $sizes');
-          //  print('sizeheight ==== $sizeheight');
           sizeTH = sizes[0];
           sizeUS = sizes[1];
           sizeUK = sizes[2];
@@ -77,14 +75,12 @@ class _MeasurementResultsState extends State<MeasurementResults> {
       } else {
         setState(() {
           sizes = Size().woman(sizeheight);
-          //   print('sizes ==== $sizes');
-          //   print('sizeheight ==== $sizeheight');
           sizeTH = sizes[0];
           sizeUS = sizes[1];
           sizeUK = sizes[2];
         });
       }
-    } else if (widget.type == MyStyle().waistline) {
+    } else if (!isType) {
       setState(() {
         waistwidth = sizewidth;
         inch = waistwidth / 2.5;
@@ -99,8 +95,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     imagefile = widget.image;
     sizewidth = widget.width;
     sizeheight = widget.height;
-    size();
     type();
+    size();
+    
     super.initState();
   }
 
