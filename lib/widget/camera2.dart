@@ -59,6 +59,8 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   double indent_c = 20;
   double endIndent_d = 15;
   Offset offset = const Offset(280, 0.0);
+  Offset _Greenline = const Offset(77.0, 117.0);
+  Offset _OrangeLine = const Offset(270, 141.5);
   bool flash_on = false;
   bool flash_off = false;
 
@@ -98,8 +100,10 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     ]);
     waistwidth = offset.dx * 100 / 300;
     inch = waistwidth / 2.5;
+    
     super.initState();
   }
+
 
   void type() {
     if (widget.type == MyStyle().footmeasure) {
@@ -216,7 +220,10 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                           ),
                         ],
                       ),
-                      diviver(),
+                      // diviver2(),
+                      // _isOrangeLine(),
+                      // _isGreenLine(),
+                        diviver(),
                       isType ? Container() : _isGestureDetector()
                     ],
                   ),
@@ -428,6 +435,257 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
           ),
         ),
       ],
+    );
+  }
+
+  Widget diviver2() {
+    return isType
+        ? Column(
+            //  mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: screenheight * 0.1,
+              ),
+              Container(
+                  alignment: Alignment(0, alignmentValue_b),
+                  width: screenwidth * 0.3,
+                  height: screenheight * 0.05,
+                  child: _textcontainer()),
+              SizedBox(
+                height: screenheight * 0.01,
+              ),
+              Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        alignment: Alignment(-3.5, alignment_b),
+                        width: screenwidth * 0.14,
+                        height: screenheight * 0.57,
+                        // color: Colors.red,
+                        child: VerticalDivider(
+                          thickness: 10,
+                          indent: indent_a,
+                          endIndent: endIndent_b,
+                          width: 5,
+                          color: Colors.red,
+                        ),
+                      ),
+                      //const SizedBox(width: 10,),
+                      //_isorangeLine(),
+                    ],
+                  ),
+                  Stack(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              //   _isGreenLine(),
+                              SizedBox(
+                                height: screenheight * 0.285,
+                              ),
+                              Container(
+                                alignment: Alignment(alignment_g, 2.3),
+                                width: screenwidth * 0.62,
+                                height: screenheight * 0.157,
+                                // color: Colors.red,
+                                child: Divider(
+                                  indent: indent_c,
+                                  endIndent: endIndent_d,
+                                  thickness: 10,
+                                  height: 5,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  // groupButton(),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  icon(),
+                ],
+              )
+            ],
+          )
+        : Stack(
+            alignment: AlignmentDirectional.topCenter,
+            children: [
+              Container(
+                alignment: const Alignment(0, -5),
+                width: screenwidth * 0.3,
+                height: screenheight * 0.05,
+                child: _textcontainer(),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Stack(
+                alignment: const Alignment(0, 0),
+                children: [
+                  Container(
+                    width: screenwidth * 0.7,
+                    height: screenheight * 0.14,
+                    // color: Colors.red,
+                    child: const Divider(
+                      indent: 10,
+                      endIndent: 10,
+                      thickness: 5,
+                      color: Color.fromARGB(255, 247, 166, 61),
+                    ),
+                  ),
+                  groupButton(),
+                ],
+              ),
+              Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        alignment: const Alignment(-1.7, -1.0),
+                        width: screenwidth * 0.14,
+                        height: screenheight * 0.15,
+                        child: VerticalDivider(
+                          thickness: 10,
+                          indent: indent_a,
+                          endIndent: endIndent_b,
+                          width: 5,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      // Container(
+                      //   alignment: Alignment(alignmentwidth - 4.7, 0),
+                      //   width: screenwidth * 0.14,
+                      //   height: screenheight * 0.15,
+                      //   // color: Colors.red,
+                      //   child: VerticalDivider(
+                      //     indent: indent_a,
+                      //     endIndent: endIndent_b,
+                      //     thickness: 5,
+                      //     width: 5,
+                      //     color: isColor ? Colors.green : Colors.red,
+                      //   ),
+                      // ),
+                      //_isGestureDetector(),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          );
+  }
+
+  Widget _isGreenLine() {
+    return Positioned(
+      top: _Greenline.dy,
+      left: _Greenline.dx,
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            _Greenline =
+                Offset(_Greenline.dx, _Greenline.dy + details.delta.dy);
+            _OrangeLine =
+                Offset(_OrangeLine.dx - details.delta.dy, _OrangeLine.dy);
+                sizewidth = (_OrangeLine.dx / 100) * 5 - 3.5;
+
+            if (_Greenline.dy <= 117 || _OrangeLine.dx >= 270) {
+              _Greenline = Offset(_Greenline.dx, 117);
+              _OrangeLine = Offset(270, _OrangeLine.dy);
+              
+              MyStyle().showBasicsFlash(
+                  context: context,
+                  text: 'เพิ่มความยาวสูงสุดแล้ว',
+                  flashStyle: FlashBehavior.fixed,
+                  duration: const Duration(seconds: 2));
+            } else if (_Greenline.dy >= 200 || _OrangeLine.dx <= 190) {
+              _Greenline = Offset(_Greenline.dx, 200);
+              _OrangeLine = Offset(190, _OrangeLine.dy);
+              MyStyle().showBasicsFlash(
+                  context: context,
+                  text: 'ลดความยาวต่ำสุดแล้ว',
+                  flashStyle: FlashBehavior.fixed,
+                  duration: const Duration(seconds: 2));
+            } else {}
+            sizeheight = 40.3 - (_Greenline.dy / 10);
+
+            print('_offset.dy ======> ${_Greenline.dy.toString()}');
+          });
+        },
+        child: Container(
+          width: screenwidth * 0.62,
+          height: screenheight * 0.14,
+          // color: Colors.red,
+          child: Divider(
+            indent: indent_c,
+            endIndent: endIndent_d,
+            thickness: 10,
+            color: isColor ? Colors.red : Colors.green,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _isOrangeLine() {
+    return Positioned(
+      left: _OrangeLine.dx,
+      top: _OrangeLine.dy,
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            _OrangeLine =
+                Offset(_OrangeLine.dx + details.delta.dx, _OrangeLine.dy);
+            if (_OrangeLine.dx >= 270) {
+              _OrangeLine = Offset(270, _OrangeLine.dy);
+              // MyStyle().showBasicsFlash(
+              //     context: context,
+              //     text: 'เพิ่มความกว้างสูงสุดแล้ว',
+              //     flashStyle: FlashBehavior.fixed,
+              //     duration: const Duration(seconds: 2));
+            } else if (_OrangeLine.dx <= 190) {
+              _OrangeLine = Offset(190, _OrangeLine.dy);
+              // MyStyle().showBasicsFlash(
+              //     context: context,
+              //     text: 'ลดความกว้างต่ำสุดแล้ว',
+              //     flashStyle: FlashBehavior.fixed,
+              //     duration: const Duration(seconds: 2));
+            } else {}
+            sizewidth = (_OrangeLine.dx / 100) * 5 - 3.5;
+
+            print('_OrangeLine.dx ======> ${_OrangeLine.dx.toString()}');
+          });
+        },
+        child: Container(
+          //  alignment: Alignment(alignment_c, alignment_d),
+          width: screenwidth * 0.14,
+          height: screenheight * 0.57,
+          // color: Colors.red,
+          child: VerticalDivider(
+            indent: indent_a,
+            endIndent: endIndent_b,
+            thickness: 10,
+            width: 5,
+            color:
+                isColor ? const Color.fromARGB(255, 247, 166, 61) : Colors.red,
+          ),
+        ),
+      ),
     );
   }
 
@@ -731,8 +989,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  if (sizewidth >= 10.0 ||
-                      sizeheight >= 28.6) {
+                  if (sizewidth >= 10.0 || sizeheight >= 28.6) {
                     MyStyle().showBasicsFlash(
                         context: context,
                         text: 'เพิ่มขนาดสูงสุดแล้ว',
@@ -778,8 +1035,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
               ),
               ElevatedButton.icon(
                 onPressed: () {
-                  if (sizewidth <= 6.8 ||
-                      sizeheight <= 20.6) {
+                  if (sizewidth <= 6.8 || sizeheight <= 20.6) {
                     MyStyle().showBasicsFlash(
                         context: context,
                         text: 'ลดขนาดต่ำสุดแล้ว',
