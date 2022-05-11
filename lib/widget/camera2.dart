@@ -100,10 +100,9 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     ]);
     waistwidth = offset.dx * 100 / 300;
     inch = waistwidth / 2.5;
-    
+
     super.initState();
   }
-
 
   void type() {
     if (widget.type == MyStyle().footmeasure) {
@@ -221,9 +220,9 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         ],
                       ),
                       // diviver2(),
-                      // _isOrangeLine(),
-                      // _isGreenLine(),
-                        diviver(),
+                      // isType ? _isOrangeLine() : Container(),
+                      // isType ? _isGreenLine() : Container(),
+                          diviver(),
                       isType ? Container() : _isGestureDetector()
                     ],
                   ),
@@ -602,12 +601,12 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                 Offset(_Greenline.dx, _Greenline.dy + details.delta.dy);
             _OrangeLine =
                 Offset(_OrangeLine.dx - details.delta.dy, _OrangeLine.dy);
-                sizewidth = (_OrangeLine.dx / 100) * 5 - 3.5;
+            sizewidth = (_OrangeLine.dx / 100) * 5 - 3.5;
 
             if (_Greenline.dy <= 117 || _OrangeLine.dx >= 270) {
               _Greenline = Offset(_Greenline.dx, 117);
               _OrangeLine = Offset(270, _OrangeLine.dy);
-              
+
               MyStyle().showBasicsFlash(
                   context: context,
                   text: 'เพิ่มความยาวสูงสุดแล้ว',
@@ -623,7 +622,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                   duration: const Duration(seconds: 2));
             } else {}
             sizeheight = 40.3 - (_Greenline.dy / 10);
-
             print('_offset.dy ======> ${_Greenline.dy.toString()}');
           });
         },
@@ -651,28 +649,23 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
           setState(() {
             _OrangeLine =
                 Offset(_OrangeLine.dx + details.delta.dx, _OrangeLine.dy);
-            if (_OrangeLine.dx >= 270) {
+            _Greenline =
+                Offset(_Greenline.dx, _Greenline.dy - details.delta.dx);
+            sizeheight = (_Greenline.dy / 10);
+
+
+            if (_OrangeLine.dx >= 270 || _Greenline.dy <= 117) {
               _OrangeLine = Offset(270, _OrangeLine.dy);
-              // MyStyle().showBasicsFlash(
-              //     context: context,
-              //     text: 'เพิ่มความกว้างสูงสุดแล้ว',
-              //     flashStyle: FlashBehavior.fixed,
-              //     duration: const Duration(seconds: 2));
-            } else if (_OrangeLine.dx <= 190) {
+              _Greenline = Offset(_Greenline.dx, 117);
+            } else if (_OrangeLine.dx <= 190 || _Greenline.dy >= 200) {
               _OrangeLine = Offset(190, _OrangeLine.dy);
-              // MyStyle().showBasicsFlash(
-              //     context: context,
-              //     text: 'ลดความกว้างต่ำสุดแล้ว',
-              //     flashStyle: FlashBehavior.fixed,
-              //     duration: const Duration(seconds: 2));
+              _Greenline = Offset(_Greenline.dx, 200);
             } else {}
             sizewidth = (_OrangeLine.dx / 100) * 5 - 3.5;
-
             print('_OrangeLine.dx ======> ${_OrangeLine.dx.toString()}');
           });
         },
         child: Container(
-          //  alignment: Alignment(alignment_c, alignment_d),
           width: screenwidth * 0.14,
           height: screenheight * 0.57,
           // color: Colors.red,
@@ -758,7 +751,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                                   indent: indent_c,
                                   endIndent: endIndent_d,
                                   thickness: 10,
-                                  color: isColor ? Colors.red : Colors.green,
+                                  color: isColor ? Colors.green : Colors.red,
                                 ),
                               ),
                               SizedBox(
