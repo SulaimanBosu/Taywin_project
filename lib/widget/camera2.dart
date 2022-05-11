@@ -6,6 +6,7 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:taywin_project/main.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -16,11 +17,9 @@ import 'package:taywin_project/widget/measurement_results.dart';
 class OpenCamera2 extends StatefulWidget {
   const OpenCamera2({
     Key? key,
-    required this.cameras,
     required this.type,
   }) : super(key: key);
 
-  final CameraDescription cameras;
   final String type;
 
   @override
@@ -30,6 +29,7 @@ class OpenCamera2 extends StatefulWidget {
 class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   late CameraController _controller;
   late Future<void> _initcontroler;
+  bool _isRearCameraSelected = true;
   String device = '';
   var isCameraReady = true;
   late XFile imagefile;
@@ -93,7 +93,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
         },
       ),
     );
-    initCamera();
+    initCamera(cameras[isType ? 0 : 1]);
     WidgetsBinding.instance!.addObserver(this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -156,6 +156,15 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     );
   }
 
+  Future<void> initCamera(CameraDescription cameraDescription) async {
+    final firstCamera = cameraDescription;
+    _controller = CameraController(firstCamera, ResolutionPreset.high);
+    _initcontroler = _controller.initialize();
+    if (!mounted) return;
+    setState(() {
+      isCameraReady = true;
+    });
+  }
   // Widget _cameraWidget(context) {
   //   var camera = _controller.value;
   //   final size = MediaQuery.of(context).size;
@@ -222,11 +231,13 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                       // diviver2(),
                       // isType ? _isOrangeLine() : Container(),
                       // isType ? _isGreenLine() : Container(),
-                          diviver(),
-                      isType ? Container() : _isGestureDetector()
+                      diviver(),
+                      isType ? Container() : _isGestureDetector(),
+                      
                     ],
                   ),
                   action_button(context),
+                  iconCameraSelected()
                 ],
               ),
             ],
@@ -652,7 +663,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
             _Greenline =
                 Offset(_Greenline.dx, _Greenline.dy - details.delta.dx);
             sizeheight = (_Greenline.dy / 10);
-
 
             if (_OrangeLine.dx >= 270 || _Greenline.dy <= 117) {
               _OrangeLine = Offset(270, _OrangeLine.dy);
@@ -1162,6 +1172,25 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
         },
       );
 
+  Widget iconCameraSelected() => InkWell(
+        child: Stack(
+          alignment: Alignment.center,
+          // ignore: prefer_const_literals_to_create_immutables
+          children: [
+            Icon(
+              _isRearCameraSelected ? Icons.camera_front : Icons.camera_rear,
+              color: Colors.white,
+              size: 30,
+            ),
+          ],
+        ),
+        onTap: () {
+          setState(() {
+            _isRearCameraSelected = !_isRearCameraSelected;
+          });
+        },
+      );
+
   captureImage(BuildContext context) {
     _controller.takePicture().then((file) {
       setState(() {
@@ -1185,16 +1214,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
           flash_off = false;
         });
       }
-    });
-  }
-
-  Future<void> initCamera() async {
-    final firstCamera = widget.cameras;
-    _controller = CameraController(firstCamera, ResolutionPreset.high);
-    _initcontroler = _controller.initialize();
-    if (!mounted) return;
-    setState(() {
-      isCameraReady = true;
     });
   }
 }

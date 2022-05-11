@@ -31,11 +31,9 @@ Future<void> main() async {
             ),
           ),
         ),
-        home: 
-      //  const MeasureFootSize()
-        MyHome(
-          camera: firstCamera,
-        ),
+        home:
+            //  const MeasureFootSize()
+            const MyHome(),
       ),
     );
   });

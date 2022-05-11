@@ -15,10 +15,7 @@ import 'package:taywin_project/widget/camera2.dart';
 class MyHome extends StatefulWidget {
   const MyHome({
     Key? key,
-    required this.camera,
   }) : super(key: key);
-
-  final CameraDescription camera;
 
   @override
   State<MyHome> createState() => _MyHomeState();
@@ -32,24 +29,24 @@ class _MyHomeState extends State<MyHome> {
   // late Widget waistline = OpenCamera(cameras: widget.camera,type: 'waistline',);
   // late Widget footmeasure = OpenCamera(cameras: widget.camera, type: 'footmeasure',);
 
-
-
   @override
   void initState() {
     getPermissionStatus();
     initAppCenter();
     super.initState();
-    
   }
 
-  void initAppCenter() async{
-  final ios = defaultTargetPlatform == TargetPlatform.iOS;
-  var app_secret = ios ? "123cfac9-123b-123a-123f-123273416a48" : "e7868325-f456-4d02-a6ac-78b2c080a86f";
+  void initAppCenter() async {
+    final ios = defaultTargetPlatform == TargetPlatform.iOS;
+    var app_secret = ios
+        ? "123cfac9-123b-123a-123f-123273416a48"
+        : "e7868325-f456-4d02-a6ac-78b2c080a86f";
 
-  await AppCenter.start(app_secret, [AppCenterAnalytics.id, AppCenterCrashes.id]);
-}
+    await AppCenter.start(
+        app_secret, [AppCenterAnalytics.id, AppCenterCrashes.id]);
+  }
 
-    getPermissionStatus() async {
+  getPermissionStatus() async {
     await Permission.camera.request();
     var status = await Permission.camera.status;
 
@@ -66,7 +63,7 @@ class _MyHomeState extends State<MyHome> {
 
   @override
   Widget build(BuildContext context) {
-        screenwidth = MediaQuery.of(context).size.width;
+    screenwidth = MediaQuery.of(context).size.width;
     screenheight = MediaQuery.of(context).size.height;
     device = ScreenSize().screenwidth(screenwidth);
     return Scaffold(
@@ -123,8 +120,7 @@ class _MyHomeState extends State<MyHome> {
                   ),
                 ],
               )
-            : Container()
-        );
+            : Container());
   }
 
   Future<void> dialog(String image, String message, String text) async {
@@ -177,7 +173,6 @@ class _MyHomeState extends State<MyHome> {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => OpenCamera2(
-                            cameras: widget.camera,
                             type: text,
                           ),
                         ),
