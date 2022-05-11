@@ -46,6 +46,9 @@ dependencies:
   screenshot: ^1.2.3
   file_picker: ^4.5.1
   align_positioned: ^3.0.0
+  appcenter: ^0.2.1
+  appcenter_analytics: ^0.2.1
+  appcenter_crashes: ^0.2.1
   
 
 dev_dependencies:

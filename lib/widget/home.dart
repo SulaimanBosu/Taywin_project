@@ -1,12 +1,16 @@
-// ignore_for_file: avoid_unnecessary_containers, deprecated_member_use, avoid_print
+// ignore_for_file: avoid_unnecessary_containers, deprecated_member_use, avoid_print, non_constant_identifier_names
 import 'dart:developer';
 
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/widget/camera2.dart';
+import 'package:appcenter/appcenter.dart';
+import 'package:appcenter_analytics/appcenter_analytics.dart';
+import 'package:appcenter_crashes/appcenter_crashes.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({
@@ -33,9 +37,17 @@ class _MyHomeState extends State<MyHome> {
   @override
   void initState() {
     getPermissionStatus();
+    initAppCenter();
     super.initState();
     
   }
+
+  void initAppCenter() async{
+  final ios = defaultTargetPlatform == TargetPlatform.iOS;
+  var app_secret = ios ? "123cfac9-123b-123a-123f-123273416a48" : "e7868325-f456-4d02-a6ac-78b2c080a86f";
+
+  await AppCenter.start(app_secret, [AppCenterAnalytics.id, AppCenterCrashes.id]);
+}
 
     getPermissionStatus() async {
     await Permission.camera.request();
