@@ -4,13 +4,13 @@ import 'dart:developer';
 import 'package:appcenter/appcenter.dart';
 import 'package:appcenter_analytics/appcenter_analytics.dart';
 import 'package:appcenter_crashes/appcenter_crashes.dart';
-import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/widget/camera2.dart';
+import 'package:taywin_project/widget/measure_foot_size.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({
@@ -180,6 +180,12 @@ class _MyHomeState extends State<MyHome> {
                     } catch (e) {
                       print(e);
                     }
+
+                    // await Navigator.of(context).push(
+                    //     MaterialPageRoute(
+                    //       builder: (context) => const MeasureFootSize(),
+                    //     ),
+                    //   );
                   },
                   icon: const Icon(
                     Icons.photo_camera,

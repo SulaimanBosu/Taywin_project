@@ -1,17 +1,13 @@
-// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, avoid_unnecessary_containers, camel_case_types, avoid_print, unused_element, sized_box_for_whitespace
+// ignore_for_file: non_constant_identifier_names, unnecessary_null_comparison, avoid_unnecessary_containers, camel_case_types, avoid_print, unused_element, sized_box_for_whitespace, prefer_typing_uninitialized_variables, import_of_legacy_library_into_null_safe
 
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:taywin_project/main.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:align_positioned/align_positioned.dart';
-import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:taywin_project/widget/measurement_results.dart';
 
 class OpenCamera2 extends StatefulWidget {
@@ -31,7 +27,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   late Future<void> _initcontroler;
   bool _isRearCameraSelected = true;
   String device = '';
-  var isCameraReady = true;
   late XFile imagefile;
   late double screenwidth;
   late double screenheight;
@@ -51,7 +46,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
   bool _isCameraPermissionGranted = false;
   late Timer timer;
   double alignmentValue_b = 0;
-  double alignmentwidth = 0.0;
   late double waistwidth;
   late double inch = waistwidth / 2.5;
   double indent_a = 10;
@@ -93,7 +87,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
         },
       ),
     );
-    initCamera(cameras[isType ? 0 : 1]);
+    initCamera(cameras[0]);
     WidgetsBinding.instance!.addObserver(this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -140,9 +134,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
       _controller != null ? _initcontroler = _controller.initialize() : null;
     }
     if (!mounted) return;
-    setState(() {
-      isCameraReady = true;
-    });
   }
 
   Widget _cameraWidget(context) {
@@ -161,10 +152,8 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     _controller = CameraController(firstCamera, ResolutionPreset.high);
     _initcontroler = _controller.initialize();
     if (!mounted) return;
-    setState(() {
-      isCameraReady = true;
-    });
   }
+  
   // Widget _cameraWidget(context) {
   //   var camera = _controller.value;
   //   final size = MediaQuery.of(context).size;
@@ -220,9 +209,23 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                               // isType ? Container() : _isSlider(context),
                               isType
                                   ? Container()
-                                  : Container(
-                                      margin: const EdgeInsets.only(bottom: 10),
-                                      child: icon(),
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        isType
+                                            ? Container()
+                                            : iconCameraSelected(),
+                                        Container(
+                                          // padding:
+                                          //     const EdgeInsets.only(bottom: 10),
+                                          child: icon(),
+                                        ),
+                                        Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 20),
+                                        ),
+                                      ],
                                     ),
                             ],
                           ),
@@ -233,11 +236,9 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                       // isType ? _isGreenLine() : Container(),
                       diviver(),
                       isType ? Container() : _isGestureDetector(),
-                      
                     ],
                   ),
                   action_button(context),
-                  iconCameraSelected()
                 ],
               ),
             ],
@@ -271,7 +272,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     );
   }
 
-  Padding action_button(BuildContext context) {
+  Widget action_button(BuildContext context) {
     return Padding(
       padding:
           EdgeInsets.only(left: 20.0, right: 20.0, top: screenheight * 0.05),
@@ -331,7 +332,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
     );
   }
 
-  Stack _isSlider(BuildContext context) {
+  Widget _isSlider(BuildContext context) {
     return Stack(
       alignment: AlignmentDirectional.topCenter,
       children: [
@@ -350,7 +351,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         text: 'ลดขนาดต่ำสุดแล้ว',
                         flashStyle: FlashBehavior.fixed,
                         duration: const Duration(seconds: 2));
-                    print('alignmentwidth ===> $alignmentwidth');
                   } else {
                     setState(
                       () {
@@ -360,7 +360,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         //  alignmentwidth -= 0.05;
                         // waistwidth -= 1;
                         // inch = waistwidth / 2.5;
-                        print('alignmentwidth ===> $alignmentwidth');
                       },
                     );
                   }
@@ -387,14 +386,12 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         text: 'ลดขนาดต่ำสุดแล้ว',
                         flashStyle: FlashBehavior.fixed,
                         duration: const Duration(seconds: 2));
-                    print('alignmentwidth ===> $alignmentwidth');
                   } else if (value >= 310) {
                     MyStyle().showBasicsFlash(
                         context: context,
                         text: 'เพิ่มขนาดสูงสุดแล้ว',
                         flashStyle: FlashBehavior.fixed,
                         duration: const Duration(seconds: 2));
-                    print('alignmentwidth ===> $alignmentwidth');
                   } else {
                     setState(
                       () {
@@ -420,7 +417,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         text: 'เพิ่มขนาดสูงสุดแล้ว',
                         flashStyle: FlashBehavior.fixed,
                         duration: const Duration(seconds: 2));
-                    print('alignmentwidth ===> $alignmentwidth');
                   } else {
                     setState(
                       () {
@@ -430,7 +426,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         // alignmentwidth += 0.05;
                         // waistwidth += 1;
                         // inch = waistwidth / 2.5;
-                        print('alignmentwidth ===> $alignmentwidth');
                       },
                     );
                   }
@@ -985,7 +980,7 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
           );
   }
 
-  Row groupButton() {
+  Widget groupButton() {
     return isType
         ? Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -1095,7 +1090,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         text: 'ลดขนาดต่ำสุดแล้ว',
                         flashStyle: FlashBehavior.fixed,
                         duration: const Duration(seconds: 2));
-                    print('alignmentwidth ===> $alignmentwidth');
                   } else {
                     setState(
                       () {
@@ -1105,7 +1099,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         //  alignmentwidth -= 0.05;
                         // waistwidth -= 1;
                         // inch = waistwidth / 2.5;
-                        print('alignmentwidth ===> $alignmentwidth');
                       },
                     );
                   }
@@ -1125,7 +1118,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         text: 'เพิ่มขนาดสูงสุดแล้ว',
                         flashStyle: FlashBehavior.fixed,
                         duration: const Duration(seconds: 2));
-                    print('alignmentwidth ===> $alignmentwidth');
                   } else {
                     setState(
                       () {
@@ -1135,7 +1127,6 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
                         // alignmentwidth += 0.05;
                         // waistwidth += 1;
                         // inch = waistwidth / 2.5;
-                        print('alignmentwidth ===> $alignmentwidth');
                       },
                     );
                   }
@@ -1173,19 +1164,11 @@ class _OpenCamera2State extends State<OpenCamera2> with WidgetsBindingObserver {
       );
 
   Widget iconCameraSelected() => InkWell(
-        child: Stack(
-          alignment: Alignment.center,
-          // ignore: prefer_const_literals_to_create_immutables
-          children: [
-            Icon(
-              _isRearCameraSelected ? Icons.camera_front : Icons.camera_rear,
-              color: Colors.white,
-              size: 30,
-            ),
-          ],
-        ),
+        child: 
+            Image.asset('images/switch_camera.png',color: Colors.white,scale: 12,),   
         onTap: () {
           setState(() {
+            initCamera(cameras[_isRearCameraSelected ? 1 : 0]);
             _isRearCameraSelected = !_isRearCameraSelected;
           });
         },

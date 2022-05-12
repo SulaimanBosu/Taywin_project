@@ -49,6 +49,7 @@ dependencies:
   appcenter: ^0.2.1
   appcenter_analytics: ^0.2.1
   appcenter_crashes: ^0.2.1
+  #arkit_plugin: ^1.0.5
   
 
 dev_dependencies:
