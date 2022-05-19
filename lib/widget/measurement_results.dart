@@ -6,6 +6,7 @@ import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
@@ -13,6 +14,8 @@ import 'package:taywin_project/utility/size.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:taywin_project/widget/camera.dart';
+import 'package:taywin_project/widget/home.dart';
 
 class MeasurementResults extends StatefulWidget {
   final XFile image;
@@ -32,7 +35,7 @@ class MeasurementResults extends StatefulWidget {
 }
 
 class _MeasurementResultsState extends State<MeasurementResults> {
-  late XFile imagefile;
+  File? imagefile;
   late double screenwidth;
   late double screenheight;
   late double sizewidth;
@@ -46,8 +49,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   bool isType = false;
   bool isMen = false;
   String device = '';
-  final _screenshotcontroller = ScreenshotController();
-  late Uint8List _imageFile;
+  ScreenshotController screenshotController = ScreenshotController();
+  Uint8List? _imageFile;
+  final int _counter = 0;
 
   final moreControler = TextEditingController();
 
@@ -92,12 +96,15 @@ class _MeasurementResultsState extends State<MeasurementResults> {
 
   @override
   void initState() {
-    imagefile = widget.image;
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    // imagefile = widget.image;
     sizewidth = widget.width;
     sizeheight = widget.height;
     type();
     size();
-    
+
     super.initState();
   }
 
@@ -112,13 +119,27 @@ class _MeasurementResultsState extends State<MeasurementResults> {
           iconTheme: const IconThemeData(color: Colors.black54),
           backgroundColor: Colors.white,
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        (MaterialPageRoute(
+                          builder: (context) => const MyHome(),
+                        )),
+                        (route) => false);
+                  },
+                  icon: const Icon(Icons.arrow_back_ios_new_outlined)),
               appbar(),
             ],
           )),
       backgroundColor: Colors.white,
-      body: content(),
+      body: Screenshot(
+        
+        controller: screenshotController,
+        child: Container(color: Colors.white, child: content()),
+      ),
     );
   }
 
@@ -138,7 +159,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         const SizedBox(
                           width: 60,
                         ),
-                        Text('${sizewidth.toStringAsFixed(1)} cm'),
+                        Text('${sizewidth.toStringAsFixed(1)} ซม.'),
                       ],
                     ),
                     Container(
@@ -149,7 +170,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                             width: 60,
                           ),
                           Image.asset(
-                            'images/Line5.png',
+                            'images/Line1.png',
                             width: screenwidth * 0.4,
                             height: screenheight * 0.01,
                           ),
@@ -169,7 +190,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         ),
                         Container(
                           child: Image.asset(
-                            'images/Line6.png',
+                            'images/Line2.png',
                             width: screenwidth * 0.01,
                             //  height: screenheight * 0.8,
                           ),
@@ -177,7 +198,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         const SizedBox(
                           width: 5,
                         ),
-                        Text('${sizeheight.toStringAsFixed(1)} cm')
+                        Text('${sizeheight.toStringAsFixed(1)} ซม.')
                       ],
                     ),
 
@@ -202,6 +223,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     const SizedBox(
                       height: 5,
                     ),
+
                     Card(
                       semanticContainer: true,
                       elevation: 5,
@@ -226,18 +248,33 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         ),
                       ),
                     ),
-                    more(),
-                    groupbutton(),
 
-                    // Center(
-                    //   child: Container(
-                    //     width: screenheight * 0.5,
-                    //     height: screenheight * 0.5,
-                    //     child: Image.file(
-                    //       File(imagefile.path),
-                    //     ),
+                    Container(
+                      color: Colors.red,
+                      width: 200,
+                      height: 200,
+                      child: Center(
+                        child: _imageFile != null
+                            ? Image.memory(_imageFile!)
+                            : Container(
+                                width: 200,
+                                height: 200,
+                                color: Colors.blue,
+                              ),
+                      ),
+                    ),
+                    // Container(
+                    //   color: Colors.green,
+                    //   width: 200,
+                    //   height: 200,
+                    //   child: Center(
+                    //     child: _imageFile != null
+                    //         ? Image.memory(_imageFile!)
+                    //         : Container(),
                     //   ),
                     // ),
+                    more(),
+                    groupbutton(),
                   ],
                 ),
               ),
@@ -251,7 +288,30 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     const SizedBox(
                       height: 30,
                     ),
-
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 60,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: screenwidth * 0.15),
+                          child: Text('${inch.toStringAsFixed(0)} นิ้ว'),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'images/Line1.png',
+                            width: screenwidth * 0.8,
+                            height: screenheight * 0.01,
+                          ),
+                        ],
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -262,7 +322,6 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         ),
                       ],
                     ),
-
                     const SizedBox(
                       height: 15,
                     ),
@@ -292,7 +351,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         height: screenwidth * 0.25,
                         child: Center(
                           child: Text(
-                            'ขนาดเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
+                            'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 18,
@@ -310,9 +369,11 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     //   child: Container(
                     //     width: screenheight * 0.5,
                     //     height: screenheight * 0.5,
-                    //     child: Image.file(
-                    //       File(imagefile.path),
-                    //     ),
+                    //     child: imagefile != null
+                    //         ? Image.file(
+                    //             File(imagefile.path),
+                    //           )
+                    //         : Container(),
                     //   ),
                     // ),
                   ],
@@ -537,7 +598,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               Icons.more_vert_sharp,
               color: Colors.black54,
             ),
-            labelText: 'เพิ่มเติม...',
+            labelText: 'แสดงความคิดเห็นเพิ่มเติม...',
             labelStyle: TextStyle(color: Colors.black54),
             border: InputBorder.none,
           ),
@@ -558,6 +619,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     //   shareFile();
                     // shareScreenshot();
                     // screenshot();
+                    print('moreControler ====== ${moreControler.text}');
                   },
                   icon: const Icon(
                     Icons.share,
@@ -569,8 +631,23 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                 Container(
                   margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context);
+                    onPressed: () async {
+                      try {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => OpenCamera(
+                              type: isType
+                                  ? MyStyle().footmeasure
+                                  : MyStyle().waistline,
+                            ),
+                          ),
+                        );
+                        SystemChrome.setPreferredOrientations([
+                          DeviceOrientation.portraitUp,
+                        ]);
+                      } catch (e) {
+                        print(e);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -587,7 +664,11 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                 Container(
                   margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      screenshot();
+                      shareScreenshot();
+                     // shareFile();
+                    },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -608,32 +689,51 @@ class _MeasurementResultsState extends State<MeasurementResults> {
       title: isType ? 'ไซส์รองเท้า : ' : 'ขนาดรอบเอว : ',
       text: isType
           ? isMen
-              ? 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
-              : 'เบอร์รองเท้าของท่านสุภาพสตรีคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
-          : 'ขนาดเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
+              ? moreControler.text != ''
+                  ? 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )\n ความคิดเห็นเพิ่มเติม : ${moreControler.text}'
+                  : 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
+              : moreControler.text != ''
+                  ? 'เบอร์รองเท้าของท่านสุภาพสตรีคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )\n ความคิดเห็นเพิ่มเติม : ${moreControler.text}'
+                  : 'เบอร์รองเท้าของท่านสุภาพสตรีคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
+          : moreControler.text != ''
+              ? 'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว\n ความคิดเห็นเพิ่มเติม : ${moreControler.text}'
+              : 'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
       chooserTitle: 'การแชร์',
     );
   }
 
   void screenshot() {
-    _screenshotcontroller
-        .capture(delay: const Duration(seconds: 1))
+    screenshotController
+        .capture(delay: Duration(milliseconds: 10))
         .then((capturedImage) async {
-      ShowCapturedWidget(context, capturedImage!);
+      setState(() {
+        _imageFile = capturedImage;
+      });
+
+      // ShowCapturedWidget(context, capturedImage!);
     }).catchError((onError) {
       print(onError);
     });
   }
 
-  ShowCapturedWidget(BuildContext context, Uint8List capturedImage) {
+  Future<dynamic> ShowCapturedWidget(
+      BuildContext context, Uint8List capturedImage) {
     return showDialog(
       useSafeArea: false,
       context: context,
       builder: (context) => Scaffold(
         appBar: AppBar(
-          title: const Text("Captured widget screenshot"),
+          title: Text("Captured widget screenshot"),
         ),
-        body: Center(child: Image.memory(capturedImage)),
+        body: Center(
+          child: capturedImage != null
+              ? Image.memory(capturedImage)
+              : Container(
+                  width: 200,
+                  height: 200,
+                  color: Colors.blue,
+                ),
+        ),
       ),
     );
   }
@@ -659,19 +759,18 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     final String localPath =
         '${directory!.path}/${DateTime.now().toIso8601String()}.png';
 
-    await _screenshotcontroller.captureAndSave(localPath);
+    await screenshotController.captureAndSave(localPath);
 
-    await Future.delayed(const Duration(seconds: 1));
 
     await FlutterShare.shareFile(
         title: 'Compartilhar comprovante',
         filePath: localPath,
         fileType: 'image/png');
-    print('path ========>>>   $localPath');
+     print('path ========>>>   $localPath');
   }
 
   Widget appbar() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Image.asset(
             'images/logo2.png',
@@ -686,8 +785,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
             width: 85,
             height: 65,
           ),
-          const SizedBox(
-            width: 23,
+          SizedBox(
+            width: (screenwidth * 20) / 100,
           ),
         ],
       );

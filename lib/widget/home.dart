@@ -6,10 +6,11 @@ import 'package:appcenter_analytics/appcenter_analytics.dart';
 import 'package:appcenter_crashes/appcenter_crashes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
-import 'package:taywin_project/widget/camera2.dart';
+import 'package:taywin_project/widget/camera.dart';
 import 'package:taywin_project/widget/measure_foot_size.dart';
 
 class MyHome extends StatefulWidget {
@@ -26,24 +27,14 @@ class _MyHomeState extends State<MyHome> {
   late double screenheight = MediaQuery.of(context).size.height;
   bool _isCameraPermissionGranted = false;
   String device = '';
-  // late Widget waistline = OpenCamera(cameras: widget.camera,type: 'waistline',);
-  // late Widget footmeasure = OpenCamera(cameras: widget.camera, type: 'footmeasure',);
 
   @override
   void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     getPermissionStatus();
-    initAppCenter();
     super.initState();
-  }
-
-  void initAppCenter() async {
-    final ios = defaultTargetPlatform == TargetPlatform.iOS;
-    var app_secret = ios
-        ? "123cfac9-123b-123a-123f-123273416a48"
-        : "e7868325-f456-4d02-a6ac-78b2c080a86f";
-
-    await AppCenter.start(
-        app_secret, [AppCenterAnalytics.id, AppCenterCrashes.id]);
   }
 
   getPermissionStatus() async {
@@ -67,60 +58,61 @@ class _MyHomeState extends State<MyHome> {
     screenheight = MediaQuery.of(context).size.height;
     device = ScreenSize().screenwidth(screenwidth);
     return Scaffold(
-        backgroundColor: const Color.fromRGBO(30, 29, 89, 1),
-        body: _isCameraPermissionGranted
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MyStyle().showlogo(screenwidth),
-                      FlatButton(
-                        minWidth: screenwidth * 0.8,
-                        color: Colors.white, // foreground
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        onPressed: () async {
-                          dialog(MyStyle().imageFootmeasure, MyStyle().detail1,
-                              MyStyle().footmeasure);
-                        },
-                        child: const Text(
-                          'วัดขนาดเท้า',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontFamily: 'FC-Minimal-Regular',
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
+      backgroundColor: const Color.fromRGBO(30, 29, 89, 1),
+      body: _isCameraPermissionGranted
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    MyStyle().showlogo(screenwidth),
+                    FlatButton(
+                      minWidth: screenwidth * 0.8,
+                      color: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      onPressed: () async {
+                        dialog(MyStyle().imageFootmeasure, MyStyle().detail1,
+                            MyStyle().footmeasure);
+                      },
+                      child: const Text(
+                        'วัดขนาดเท้า',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'FC-Minimal-Regular',
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(
-                        height: 20,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    FlatButton(
+                      minWidth: screenwidth * 0.8,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      onPressed: () async {
+                        dialog(MyStyle().imageWaistline, MyStyle().detail2,
+                            MyStyle().waistline);
+                      },
+                      child: const Text(
+                        'วัดขนาดรอบเอว',
+                        style: TextStyle(
+                            fontFamily: 'FC-Minimal-Regular',
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
                       ),
-                      FlatButton(
-                        minWidth: screenwidth * 0.8,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        onPressed: () async {
-                          dialog(MyStyle().imageWaistline, MyStyle().detail2,
-                              MyStyle().waistline);
-                        },
-                        child: const Text(
-                          'วัดขนาดรอบเอว',
-                          style: TextStyle(
-                              fontFamily: 'FC-Minimal-Regular',
-                              fontSize: 20,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              )
-            : Container());
+                    ),
+                  ],
+                ),
+              ],
+            )
+          : Container(),
+    );
   }
 
   Future<void> dialog(String image, String message, String text) async {
@@ -172,14 +164,23 @@ class _MyHomeState extends State<MyHome> {
                     try {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => OpenCamera2(
+                          builder: (context) => OpenCamera(
                             type: text,
                           ),
                         ),
                       );
+                      SystemChrome.setPreferredOrientations([
+                        DeviceOrientation.portraitUp,
+                      ]);
                     } catch (e) {
                       print(e);
                     }
+                    // Future.delayed(const Duration(milliseconds: 10), () {
+                    //   setState(() {
+                    //     Navigator.pop(context);
+                    //   });
+                    // });
+                   // Navigator.pop(context);
 
                     // await Navigator.of(context).push(
                     //     MaterialPageRoute(

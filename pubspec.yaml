@@ -38,14 +38,11 @@ dependencies:
   camera: any
   path: any
   gallery_saver: any
-  arrow_path: ^2.0.0
-  line_awesome_flutter: ^2.0.0
   flash: ^2.0.3+2
   permission_handler: ^9.2.0
   flutter_share: ^2.0.0
   screenshot: ^1.2.3
   file_picker: ^4.5.1
-  align_positioned: ^3.0.0
   appcenter: ^0.2.1
   appcenter_analytics: ^0.2.1
   appcenter_crashes: ^0.2.1
