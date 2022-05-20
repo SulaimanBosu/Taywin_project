@@ -30,6 +30,8 @@
 	<string>ต้องการเปิดไมค์</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>ต้องการเปิดอัลบั้ม</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>ต้องการเข้าถึงอัลบั้ม</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

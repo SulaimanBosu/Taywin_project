@@ -40,14 +40,20 @@ class _MyHomeState extends State<MyHome> {
   getPermissionStatus() async {
     await Permission.camera.request();
     var status = await Permission.camera.status;
+    await Permission.storage.request();
+    var status_storage = await Permission.storage.status;
 
-    if (status.isGranted) {
+
+    if (status.isGranted && status_storage.isGranted) {
       log('Camera Permission: GRANTED');
       setState(() {
         _isCameraPermissionGranted = true;
       });
       // Set and initialize the new camera
     } else {
+            setState(() {
+        _isCameraPermissionGranted = true;
+      });
       log('Camera Permission: DENIED');
     }
   }
@@ -180,7 +186,7 @@ class _MyHomeState extends State<MyHome> {
                     //     Navigator.pop(context);
                     //   });
                     // });
-                   // Navigator.pop(context);
+                    // Navigator.pop(context);
 
                     // await Navigator.of(context).push(
                     //     MaterialPageRoute(

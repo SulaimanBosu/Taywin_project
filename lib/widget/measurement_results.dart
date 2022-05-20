@@ -1,4 +1,5 @@
-// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, avoid_returning_null_for_void, avoid_print, non_constant_identifier_names, unnecessary_null_comparison
+// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace, avoid_returning_null_for_void, avoid_print, non_constant_identifier_names, unnecessary_null_comparison, unnecessary_const, unnecessary_string_interpolations
+import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
@@ -50,8 +51,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   bool isMen = false;
   String device = '';
   ScreenshotController screenshotController = ScreenshotController();
-  Uint8List? _imageFile;
-  final int _counter = 0;
+  static const MethodChannel _channel =
+      const MethodChannel('image_gallery_saver');
 
   final moreControler = TextEditingController();
 
@@ -136,9 +137,11 @@ class _MeasurementResultsState extends State<MeasurementResults> {
           )),
       backgroundColor: Colors.white,
       body: Screenshot(
-        
         controller: screenshotController,
-        child: Container(color: Colors.white, child: content()),
+        child: Container(
+          color: Colors.white,
+          child: content(),
+        ),
       ),
     );
   }
@@ -249,20 +252,20 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                       ),
                     ),
 
-                    Container(
-                      color: Colors.red,
-                      width: 200,
-                      height: 200,
-                      child: Center(
-                        child: _imageFile != null
-                            ? Image.memory(_imageFile!)
-                            : Container(
-                                width: 200,
-                                height: 200,
-                                color: Colors.blue,
-                              ),
-                      ),
-                    ),
+                    // Container(
+                    //   color: Colors.red,
+                    //   width: 200,
+                    //   height: 200,
+                    //   child: Center(
+                    //     child: _imageFile != null
+                    //         ? Image.memory(_imageFile!)
+                    //         : Container(
+                    //             width: 200,
+                    //             height: 200,
+                    //             color: Colors.blue,
+                    //           ),
+                    //   ),
+                    // ),
                     // Container(
                     //   color: Colors.green,
                     //   width: 200,
@@ -615,9 +618,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
             Container(
               child: IconButton(
                   onPressed: () {
-                    share();
+                    //  share();
                     //   shareFile();
-                    // shareScreenshot();
+                    shareScreenshot();
                     // screenshot();
                     print('moreControler ====== ${moreControler.text}');
                   },
@@ -665,9 +668,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                   margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      screenshot();
-                      shareScreenshot();
-                     // shareFile();
+                      screenshotAndSave();
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -702,71 +703,115 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     );
   }
 
-  void screenshot() {
+  void screenshotAndSave() {
     screenshotController
-        .capture(delay: Duration(milliseconds: 10))
+        .capture(delay: const Duration(milliseconds: 10))
         .then((capturedImage) async {
-      setState(() {
-        _imageFile = capturedImage;
-      });
+      final String localPath = '${DateTime.now().toIso8601String()}';
+      final result = await saveImage(
+        Uint8List.fromList(capturedImage!),
+        quality: 60,
+        name: localPath,
+      );
 
-      // ShowCapturedWidget(context, capturedImage!);
+      if (result == false) {
+        setState(() {
+          MyStyle().showdialog(context, 'ล้มเหลว!',
+              'กรุณาอณุญาตให้แอพสามารถเข้าถึงรูปภาพได้ จึงจะสามารถบันทึกได้สำเร็จ');
+        });
+      } else {
+        setState(() {
+          MyStyle()
+              .showdialog(context, 'บันทึก', 'บันทึกไปยังคลังรูปภาพเรียบร้อย');
+        });
+      }
+      // ShowCapturedWidget(context, capturedImage);
     }).catchError((onError) {
       print(onError);
     });
   }
 
-  Future<dynamic> ShowCapturedWidget(
-      BuildContext context, Uint8List capturedImage) {
-    return showDialog(
-      useSafeArea: false,
-      context: context,
-      builder: (context) => Scaffold(
-        appBar: AppBar(
-          title: Text("Captured widget screenshot"),
-        ),
-        body: Center(
-          child: capturedImage != null
-              ? Image.memory(capturedImage)
-              : Container(
-                  width: 200,
-                  height: 200,
-                  color: Colors.blue,
-                ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> shareFile() async {
-    final result = await FilePicker.platform.pickFiles();
-    if (result == null || result.files.isEmpty) return null;
-
-    await FlutterShare.shareFile(
-      title: 'Example share',
-      text: 'Example share text',
-      filePath: result.files[0] as String,
-    );
-  }
+  // Future<dynamic> ShowCapturedWidget(
+  //     BuildContext context, Uint8List capturedImage) {
+  //   return showDialog(
+  //     useSafeArea: false,
+  //     context: context,
+  //     builder: (context) => Scaffold(
+  //       appBar: AppBar(
+  //         title: Text("Captured widget screenshot"),
+  //       ),
+  //       body: Center(
+  //         child: capturedImage != null
+  //             ? Image.memory(capturedImage)
+  //             : Container(
+  //                 width: 200,
+  //                 height: 200,
+  //                 color: Colors.blue,
+  //               ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Future<void> shareScreenshot() async {
-    Directory? directory;
-    if (Platform.isAndroid) {
-      directory = await getExternalStorageDirectory();
-    } else {
-      directory = await getApplicationDocumentsDirectory();
-    }
-    final String localPath =
-        '${directory!.path}/${DateTime.now().toIso8601String()}.png';
+    screenshotController
+        .capture(delay: const Duration(milliseconds: 10))
+        .then((capturedImage) async {
+      Directory? directory;
+      if (Platform.isAndroid) {
+        directory = await getExternalStorageDirectory();
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
+      Uint8List imageInUnit8List = capturedImage!;
+      File file = await File(
+              '${directory!.path}/${DateTime.now().toIso8601String()}.png')
+          .create();
+      file.writeAsBytesSync(imageInUnit8List);
+      print('path ========>>> ${file.path.toString()}');
 
-    await screenshotController.captureAndSave(localPath);
+      //await Future.delayed(const Duration(milliseconds: 10));
+      await FlutterShare.shareFile(
+        title: isType ? 'ไซส์รองเท้า : ' : 'ขนาดรอบเอว : ',
+        text: isType
+            ? isMen
+                ? moreControler.text != ''
+                    ? 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )\n ความคิดเห็นเพิ่มเติม : ${moreControler.text}'
+                    : 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
+                : moreControler.text != ''
+                    ? 'เบอร์รองเท้าของท่านสุภาพสตรีคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )\n ความคิดเห็นเพิ่มเติม : ${moreControler.text}'
+                    : 'เบอร์รองเท้าของท่านสุภาพสตรีคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
+            : moreControler.text != ''
+                ? 'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว\n ความคิดเห็นเพิ่มเติม : ${moreControler.text}'
+                : 'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
+        chooserTitle: 'แชร์',
+        filePath: file.path,
+        fileType: 'image/png',
+      );
+      print('path ========>>> ${file.path}');
+    }).catchError((onError) {
+      print(onError);
+    });
+  }
 
-
-    await FlutterShare.shareFile(
-        title: 'Compartilhar comprovante',
-        filePath: localPath,
-        fileType: 'image/png');
-     print('path ========>>>   $localPath');
+  static FutureOr<dynamic> saveImage(Uint8List imageBytes,
+      {int quality = 80,
+      String? name,
+      bool isReturnImagePathOfIOS = false}) async {
+    assert(imageBytes != null);
+    final result =
+        await _channel.invokeMethod('saveImageToGallery', <String, dynamic>{
+      'imageBytes': imageBytes,
+      'quality': quality,
+      'name': name,
+      'isReturnImagePathOfIOS': isReturnImagePathOfIOS
+    }).then(
+      (value) {
+        print('object ========= $value');
+        return value['isSuccess'];
+      },
+    );
+    return result;
   }
 
   Widget appbar() => Row(

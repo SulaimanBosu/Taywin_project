@@ -208,42 +208,68 @@ class MyStyle {
     );
   }
 
-  confirmDialog(
+  showdialog(
     BuildContext context,
     String textTitle,
     String textContent,
-    Widget prossedYes,
   ) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(children: [Text(textTitle)]),
-          content: Text(textContent),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.save_alt_outlined,
+                    color: Colors.black45,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    textTitle,
+                    style: const TextStyle(
+                      fontSize: 22.0,
+                      // fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                      // fontStyle: FontStyle.italic,
+                      fontFamily: 'FC-Minimal-Regular',
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(
+                height: 10,
+                color: Colors.black26,
+              )
+            ],
+          ),
+          content: Text(
+            textContent,
+            style: const TextStyle(
+              overflow: TextOverflow.clip,
+              fontSize: 20.0,
+              // fontWeight: FontWeight.bold,
+              color: Colors.black45,
+              // fontStyle: FontStyle.italic,
+              fontFamily: 'FC-Minimal-Regular',
+            ),
+          ),
           actions: <Widget>[
             // ignore: deprecated_member_use
             FlatButton(
               child: const Text("ตกลง"),
               onPressed: () {
                 Navigator.of(context).pop();
-                // ใส่เงื่อนไขการกดตกลง
-                MaterialPageRoute route =
-                    MaterialPageRoute(builder: (value) => prossedYes);
-                Navigator.pushAndRemoveUntil(context, route, (route) => false);
               },
             ),
             // ignore: deprecated_member_use
-            FlatButton(
-              child: const Text("ยกเลิก"),
-              onPressed: () {
-                // ใส่เงื่อนไขการกดยกเลิก
-
-                Navigator.of(context).pop();
-              },
-            ),
           ],
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
+            borderRadius: BorderRadius.circular(8.0),
           ),
         );
       },
