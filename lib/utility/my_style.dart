@@ -233,9 +233,9 @@ class MyStyle {
                     textTitle,
                     style: const TextStyle(
                       fontSize: 22.0,
-                      // fontWeight: FontWeight.bold,
+                      
                       color: Colors.black45,
-                      // fontStyle: FontStyle.italic,
+                      
                       fontFamily: 'FC-Minimal-Regular',
                     ),
                   ),
@@ -252,9 +252,9 @@ class MyStyle {
             style: const TextStyle(
               overflow: TextOverflow.clip,
               fontSize: 20.0,
-              // fontWeight: FontWeight.bold,
+              
               color: Colors.black45,
-              // fontStyle: FontStyle.italic,
+              
               fontFamily: 'FC-Minimal-Regular',
             ),
           ),
@@ -319,7 +319,7 @@ class MyStyle {
                       value: null,
                       backgroundColor: Colors.white,
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                      strokeWidth: 7.0,
+                      strokeWidth: 5.0,
                     ),
                   ),
                 ),

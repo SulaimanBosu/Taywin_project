@@ -50,6 +50,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   bool isType = false;
   bool isMen = false;
   String device = '';
+  bool onLoading = false;
   ScreenshotController screenshotController = ScreenshotController();
   static const MethodChannel _channel =
       const MethodChannel('image_gallery_saver');
@@ -88,7 +89,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     } else if (!isType) {
       setState(() {
         waistwidth = sizewidth;
-        inch = waistwidth / 2.5;
+        inch = waistwidth / 2.54;
       });
     } else {
       //  print('เกิดผิดพลาด');
@@ -105,6 +106,14 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     sizeheight = widget.height;
     type();
     size();
+    Timer.periodic(
+      const Duration(milliseconds: 2000),
+      (Timer t) => setState(
+        () {
+          onLoading = true;
+        },
+      ),
+    );
 
     super.initState();
   }
@@ -136,12 +145,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
             ],
           )),
       backgroundColor: Colors.white,
-      body: Screenshot(
-        controller: screenshotController,
-        child: Container(
-          color: Colors.white,
-          child: content(),
-        ),
+      body: Container(
+        color: Colors.white,
+        child: onLoading ? content() : MyStyle().progress(context),
       ),
     );
   }
@@ -153,130 +159,114 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          width: 60,
-                        ),
-                        Text('${sizewidth.toStringAsFixed(1)} ซม.'),
-                      ],
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(
-                            width: 60,
-                          ),
-                          Image.asset(
-                            'images/Line1.png',
-                            width: screenwidth * 0.4,
-                            height: screenheight * 0.01,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'images/image3.png',
-                          width: screenwidth * 0.6,
-                          height: screenheight * 0.3,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          child: Image.asset(
-                            'images/Line2.png',
-                            width: screenwidth * 0.01,
-                            //  height: screenheight * 0.8,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Text('${sizeheight.toStringAsFixed(1)} ซม.')
-                      ],
-                    ),
-
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 30, right: 30),
-                      child: Text(
-                        'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง จะแสดงเพียงภาพจำลองเท่านั้น',
-                        style: TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    // typeButton2(),
-                    typeButton(),
-                    const SizedBox(
-                      height: 5,
-                    ),
-
-                    Card(
-                      semanticContainer: true,
-                      elevation: 5,
-                      margin: const EdgeInsets.all(10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      color: Colors.white,
+                    Screenshot(
+                      controller: screenshotController,
                       child: Container(
-                        width: screenwidth * 0.85,
-                        height: screenwidth * 0.25,
-                        child: Center(
-                          child: Text(
-                            'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black54,
-                                fontFamily: 'FC-Minimal-Regular',
-                                fontWeight: FontWeight.bold),
-                          ),
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  width: 60,
+                                ),
+                                Text('${sizewidth.toStringAsFixed(1)} ซม.'),
+                              ],
+                            ),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(
+                                    width: 60,
+                                  ),
+                                  Image.asset(
+                                    'images/Line1.png',
+                                    width: screenwidth * 0.4,
+                                    height: screenheight * 0.01,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'images/image3.png',
+                                  width: screenwidth * 0.6,
+                                  height: screenheight * 0.3,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  child: Image.asset(
+                                    'images/Line2.png',
+                                    width: screenwidth * 0.01,
+                                    //  height: screenheight * 0.8,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text('${sizeheight.toStringAsFixed(1)} ซม.')
+                              ],
+                            ),
+
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 30, right: 30),
+                              child: Text(
+                                'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง จะแสดงเพียงภาพจำลองเท่านั้น',
+                                style: TextStyle(
+                                    color: Colors.redAccent,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            // typeButton2(),
+                            typeButton(),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Card(
+                              semanticContainer: true,
+                              elevation: 5,
+                              margin: const EdgeInsets.all(10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              color: Colors.white,
+                              child: Container(
+                                width: screenwidth * 0.85,
+                                height: screenwidth * 0.25,
+                                child: Center(
+                                  child: Text(
+                                    'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black54,
+                                        fontFamily: 'FC-Minimal-Regular',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            more(),
+                          ],
                         ),
                       ),
                     ),
-
-                    // Container(
-                    //   color: Colors.red,
-                    //   width: 200,
-                    //   height: 200,
-                    //   child: Center(
-                    //     child: _imageFile != null
-                    //         ? Image.memory(_imageFile!)
-                    //         : Container(
-                    //             width: 200,
-                    //             height: 200,
-                    //             color: Colors.blue,
-                    //           ),
-                    //   ),
-                    // ),
-                    // Container(
-                    //   color: Colors.green,
-                    //   width: 200,
-                    //   height: 200,
-                    //   child: Center(
-                    //     child: _imageFile != null
-                    //         ? Image.memory(_imageFile!)
-                    //         : Container(),
-                    //   ),
-                    // ),
-                    more(),
                     groupbutton(),
                   ],
                 ),
@@ -288,97 +278,109 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          width: 60,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(right: screenwidth * 0.15),
-                          child: Text('${inch.toStringAsFixed(0)} นิ้ว'),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'images/Line1.png',
-                            width: screenwidth * 0.8,
-                            height: screenheight * 0.01,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'images/belt.png',
-                          width: screenwidth * 0.6,
-                          height: screenheight * 0.3,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 30, right: 30),
-                      child: Text(
-                        'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง จะแสดงเพียงภาพจำลองเท่านั้น',
-                        style: TextStyle(
-                            color: Colors.redAccent,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Card(
-                      semanticContainer: true,
-                      elevation: 5,
-                      margin: const EdgeInsets.all(10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      color: Colors.white,
+                    Screenshot(
+                      controller: screenshotController,
                       child: Container(
-                        width: screenwidth * 0.85,
-                        height: screenwidth * 0.25,
-                        child: Center(
-                          child: Text(
-                            'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black54,
-                                fontFamily: 'FC-Minimal-Regular',
-                                fontWeight: FontWeight.bold),
-                          ),
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizedBox(
+                                  width: 60,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      right: screenwidth * 0.15),
+                                  child:
+                                      Text('${inch.toStringAsFixed(0)} นิ้ว'),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'images/Line1.png',
+                                    width: screenwidth * 0.8,
+                                    height: screenheight * 0.01,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'images/belt.png',
+                                  width: screenwidth * 0.6,
+                                  height: screenheight * 0.3,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 30, right: 30),
+                              child: Text(
+                                'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง จะแสดงเพียงภาพจำลองเท่านั้น',
+                                style: TextStyle(
+                                    color: Colors.redAccent,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Card(
+                              semanticContainer: true,
+                              elevation: 5,
+                              margin: const EdgeInsets.all(10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              color: Colors.white,
+                              child: Container(
+                                width: screenwidth * 0.85,
+                                height: screenwidth * 0.25,
+                                child: Center(
+                                  child: Text(
+                                    'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black54,
+                                        fontFamily: 'FC-Minimal-Regular',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            more(),
+
+                            // Center(
+                            //   child: Container(
+                            //     width: screenheight * 0.5,
+                            //     height: screenheight * 0.5,
+                            //     child: imagefile != null
+                            //         ? Image.file(
+                            //             File(imagefile.path),
+                            //           )
+                            //         : Container(),
+                            //   ),
+                            // ),
+                          ],
                         ),
                       ),
                     ),
-                    more(),
                     groupbutton(),
-
-                    // Center(
-                    //   child: Container(
-                    //     width: screenheight * 0.5,
-                    //     height: screenheight * 0.5,
-                    //     child: imagefile != null
-                    //         ? Image.file(
-                    //             File(imagefile.path),
-                    //           )
-                    //         : Container(),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -589,6 +591,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
         ),
         color: Colors.white,
         child: TextField(
+          keyboardType:TextInputType.text,
+          maxLines:10,
+          minLines: 1,
           cursorColor: Colors.black54,
           controller: moreControler,
           style: const TextStyle(
@@ -611,17 +616,19 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   }
 
   Widget groupbutton() => Container(
+        padding: const EdgeInsets.only(bottom: 30, top: 10),
         width: screenwidth * 0.85,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey[100],
+              ),
               child: IconButton(
                   onPressed: () {
-                    //  share();
-                    //   shareFile();
                     shareScreenshot();
-                    // screenshot();
                     print('moreControler ====== ${moreControler.text}');
                   },
                   icon: const Icon(

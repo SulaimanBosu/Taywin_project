@@ -30,16 +30,16 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late XFile imagefile;
   late double screenwidth;
   late double screenheight;
-  double alignment_a = 0.0;
+  double alignment_a = -0.0;
   double alignment_b = -1.18999999999999878;
-  double alignment_c = -0.21000000000000003;
+  double alignment_c = -0.2;
   double alignment_d = -1.0499999999999992;
   double alignment_e = -0.22000000000000003;
   double alignment_f = -0.92;
   double alignment_g = 0.19000000000000028;
   double alignment_h = 1.5;
-  late double sizewidth = 10;
-  late double sizeheight = 28.6;
+  double sizewidth = 10;
+  double sizeheight = 28.6;
   bool isColor = false;
   bool isType = false;
   bool _isCameraPermissionGranted = false;
@@ -259,10 +259,10 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                           ),
                         ],
                       ),
-                      // diviver2(),
+                      // divider2(),
                       // isType ? _isOrangeLine() : Container(),
                       // isType ? _isGreenLine() : Container(),
-                      diviver(),
+                      divider(),
                       isType ? Container() : _isGestureDetector(),
                     ],
                   ),
@@ -471,7 +471,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     );
   }
 
-  Widget diviver2() {
+  Widget divider2() {
     return isType
         ? Column(
             //  mainAxisAlignment: MainAxisAlignment.center,
@@ -738,7 +738,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     );
   }
 
-  Widget diviver() {
+  Widget divider() {
     return isType
         ? Column(
             mainAxisAlignment: MainAxisAlignment.center,
