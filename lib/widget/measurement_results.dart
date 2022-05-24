@@ -649,6 +649,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                               type: isType
                                   ? MyStyle().footmeasure
                                   : MyStyle().waistline,
+                                  screenwidth: screenwidth,
+                                  screenheight: screenheight,
                             ),
                           ),
                         );
@@ -723,13 +725,13 @@ class _MeasurementResultsState extends State<MeasurementResults> {
 
       if (result == false) {
         setState(() {
-          MyStyle().showdialog(context, 'ล้มเหลว!',
+          MyStyle().showdialog(Icons.save_alt_outlined,context, 'ล้มเหลว!',
               'กรุณาอณุญาตให้แอพสามารถเข้าถึงรูปภาพได้ จึงจะสามารถบันทึกได้สำเร็จ');
         });
       } else {
         setState(() {
           MyStyle()
-              .showdialog(context, 'บันทึก', 'บันทึกไปยังคลังรูปภาพเรียบร้อย');
+              .showdialog(Icons.save_alt_outlined,context, 'บันทึก', 'บันทึกไปยังคลังรูปภาพเรียบร้อย');
         });
       }
       // ShowCapturedWidget(context, capturedImage);

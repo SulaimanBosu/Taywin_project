@@ -172,6 +172,8 @@ class _MyHomeState extends State<MyHome> {
                         MaterialPageRoute(
                           builder: (context) => OpenCamera(
                             type: text,
+                            screenwidth: screenwidth,
+                            screenheight: screenheight,
                           ),
                         ),
                       );

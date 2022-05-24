@@ -209,6 +209,7 @@ class MyStyle {
   }
 
   showdialog(
+    IconData icon,
     BuildContext context,
     String textTitle,
     String textContent,
@@ -222,8 +223,8 @@ class MyStyle {
             children: [
               Row(
                 children: [
-                  const Icon(
-                    Icons.save_alt_outlined,
+                  Icon(
+                    icon,
                     color: Colors.black45,
                   ),
                   const SizedBox(
@@ -233,17 +234,16 @@ class MyStyle {
                     textTitle,
                     style: const TextStyle(
                       fontSize: 22.0,
-                      
                       color: Colors.black45,
-                      
                       fontFamily: 'FC-Minimal-Regular',
                     ),
                   ),
                 ],
               ),
               const Divider(
-                height: 10,
-                color: Colors.black26,
+                thickness: 1,
+                height: 5,
+                color: Colors.black54,
               )
             ],
           ),
@@ -252,9 +252,7 @@ class MyStyle {
             style: const TextStyle(
               overflow: TextOverflow.clip,
               fontSize: 20.0,
-              
               color: Colors.black45,
-              
               fontFamily: 'FC-Minimal-Regular',
             ),
           ),

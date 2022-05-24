@@ -13,10 +13,14 @@ import 'package:taywin_project/widget/measurement_results.dart';
 class OpenCamera extends StatefulWidget {
   const OpenCamera({
     Key? key,
+    required this.screenwidth,
+    required this.screenheight,
     required this.type,
   }) : super(key: key);
 
   final String type;
+  final double screenwidth;
+  final double screenheight;
 
   @override
   State<OpenCamera> createState() => _OpenCameraState();
@@ -59,6 +63,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late double size;
   late Size sizeScreen;
   late double scale;
+  bool isMen = false;
 
   late MediaQueryData queryData;
 
@@ -93,7 +98,14 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     );
     initCamera(cameras[0]);
     WidgetsBinding.instance!.addObserver(this);
-    size = (((offset.dx * 100) / 665) + 4);
+    //size = (((offset.dx * 100) / 665) + 4);
+    if (isMen) {
+      size = (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
+     // size = (((offset.dx * 100) / widget.screenheight + 10));
+    } else {
+      size = (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
+     // size = (((offset.dx * 100) / widget.screenheight - 17));
+    }
     waistwidth = size;
     inch = waistwidth / 2.54;
     isType
@@ -107,6 +119,18 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     super.initState();
   }
 
+  void delaydialog() {
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      setState(() {
+        isMen
+            ? showdialog(context, 'วัดรอบเอวบุรุษ',
+                'กรุณาถือกล้องให้ห่างจากตัวบุคคล 50 ซม.หรือ 20 นิ้วเท่านั้น')
+            : showdialog(context, 'วัดรอบเอวสตรี',
+                'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น');
+      });
+    });
+  }
+
   void type() {
     if (widget.type == MyStyle().footmeasure) {
       setState(() {
@@ -114,6 +138,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
       });
     } else if (widget.type == MyStyle().waistline) {
       setState(() {
+        delaydialog();
         isType = false;
       });
     } else {
@@ -139,7 +164,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     // ]);
     WidgetsBinding.instance?.removeObserver(this);
     _controller.dispose();
-    // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
 
@@ -244,15 +268,17 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                                         isType
                                             ? Container()
                                             : iconCameraSelected(),
+
                                         Container(
                                           // padding:
                                           //     const EdgeInsets.only(bottom: 10),
                                           child: icon(),
                                         ),
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(right: 10),
-                                        ),
+                                        isType ? Container() : typeButton(),
+                                        // Container(
+                                        //   margin:
+                                        //       const EdgeInsets.only(right: 10),
+                                        // ),
                                       ],
                                     ),
                             ],
@@ -919,6 +945,55 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
           );
   }
 
+  Widget typeButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isMen = !isMen;
+              isMen
+                  ? showdialog(context, 'วัดรอบเอวบุรุษ',
+                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล 50 ซม.หรือ 20 นิ้วเท่านั้น')
+                  : showdialog(context, 'วัดรอบเอวสตรี',
+                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น');
+              if (isMen) {
+                size = (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
+               // size = (((offset.dx * 100) / widget.screenheight + 10));
+              } else {
+                size = (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
+               // size = (((offset.dx * 100) / widget.screenheight - 17));
+              }
+              waistwidth = size;
+              inch = waistwidth / 2.54;
+            });
+          },
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ImageIcon(
+                  AssetImage(isMen ? 'images/man.png' : 'images/woman.png'),
+                  size: 30,
+                  color: Colors.white,
+                ),
+                Text(
+                  isMen ? 'วัดรอบเอวบุรุษ' : 'วัดรอบเอวสตรี',
+                  style: const TextStyle(
+                    fontFamily: 'FC-Minimal-Regular',
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _isGestureDetector() {
     return Positioned(
       left: offset.dx,
@@ -926,36 +1001,42 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
         onPanUpdate: (details) {
           setState(() {
             offset = Offset(offset.dx + details.delta.dx, 0);
-
-            if (offset.dx >= (screenwidth * 91 / 100)) {
-              offset = Offset(screenwidth * 91 / 100, 0);
+            if (offset.dx >= (widget.screenheight * 91 / 100)) {
+              offset = Offset(widget.screenheight * 91 / 100, 0);
               MyStyle().showBasicsFlash(
                   context: context,
                   text: 'เพิ่มขนาดสูงสุดแล้ว',
                   flashStyle: FlashBehavior.fixed,
                   duration: const Duration(seconds: 2));
-              //print('sizeScreen.width ====== ${offset.dx}');
-            } else if (offset.dx <= screenwidth * 30 / 100) {
-              offset = Offset(screenwidth * 30 / 100, 0);
+            } else if (offset.dx <= widget.screenheight * 30 / 100) {
+              offset = Offset(widget.screenheight * 30 / 100, 0);
               MyStyle().showBasicsFlash(
                   context: context,
                   text: 'ลดขนาดต่ำสุดแล้ว',
                   flashStyle: FlashBehavior.fixed,
                   duration: const Duration(seconds: 2));
             } else {}
+            if (isMen) {
+              // size = (((offset.dx + 30) / 15.50) * 2);
+              // size = (((offset.dx * 100) / widget.screenheight + 10));
+              size = (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
+            } else {
+              //  size = (((offset.dx + 30) / 15.50) * 2);
+              //  size = (((offset.dx + 30) / 19.7) * 2);
+              size = (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
+              // size = ((((offset.dx+30) * 100) / widget.screenheight-7));
+            }
             // size = (((offset.dx * 100) / screenwidth - 12));
-            size = (((offset.dx * 100) / screenwidth + 12));
+            // size = (((offset.dx * 100) / screenwidth + 12));
             waistwidth = size;
             inch = (waistwidth / 2.54);
             print('offset.dx ======> ${offset.dx.toString()}');
-            // print('size ======> ${size.toString()}');
             print('screenwidth ======> ${screenwidth.toString()}');
           });
         },
         child: Container(
           width: screenwidth * 0.14,
           height: screenheight * 0.25,
-          // color: Colors.red,
           child: VerticalDivider(
             indent: 5,
             endIndent: 5,
@@ -1267,5 +1348,70 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
         });
       }
     });
+  }
+
+  showdialog(
+    BuildContext context,
+    String textTitle,
+    String textContent,
+  ) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  ImageIcon(
+                    AssetImage(isMen ? 'images/man.png' : 'images/woman.png'),
+                    color: Colors.black45,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    textTitle,
+                    style: const TextStyle(
+                      fontSize: 22.0,
+                      color: Colors.black45,
+                      fontFamily: 'FC-Minimal-Regular',
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(
+                thickness: 1,
+                height: 5,
+                color: Colors.black54,
+              )
+            ],
+          ),
+          content: Text(
+            textContent,
+            style: const TextStyle(
+              overflow: TextOverflow.clip,
+              fontSize: 20.0,
+              color: Colors.black45,
+              fontFamily: 'FC-Minimal-Regular',
+            ),
+          ),
+          actions: <Widget>[
+            // ignore: deprecated_member_use
+            FlatButton(
+              child: const Text("ตกลง"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            // ignore: deprecated_member_use
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        );
+      },
+    );
   }
 }
