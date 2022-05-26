@@ -47,8 +47,7 @@ class _MeasureFootSizeState extends State<MeasureFootSize> {
 //   @override
 //   void dispose() {
 //     arkitController?.dispose();
-//     super.dispose();
-//   }
+//     super.dispose();/   }
 
 //   @override
 //   Widget build(BuildContext context) => Scaffold(

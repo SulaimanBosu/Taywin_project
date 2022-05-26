@@ -67,6 +67,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
 
   late MediaQueryData queryData;
 
+  double endIndent = 0;
+
   // getPermissionStatus() async {
   //   await Permission.camera.request();
   //   var status = await Permission.camera.status;
@@ -100,13 +102,14 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     WidgetsBinding.instance!.addObserver(this);
     //size = (((offset.dx * 100) / 665) + 4);
     if (isMen) {
-      size = (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
-     // size = (((offset.dx * 100) / widget.screenheight + 10));
+      size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 1.65) * 2;
+      //size = (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
     } else {
-      size = (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
-     // size = (((offset.dx * 100) / widget.screenheight - 17));
+      size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) * 2;
+      // size = (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
+
     }
-    waistwidth = size;
+    waistwidth = size  + 15;
     inch = waistwidth / 2.54;
     isType
         ? SystemChrome.setPreferredOrientations([
@@ -124,9 +127,9 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
       setState(() {
         isMen
             ? showdialog(context, 'วัดรอบเอวบุรุษ',
-                'กรุณาถือกล้องให้ห่างจากตัวบุคคล 50 ซม.หรือ 20 นิ้วเท่านั้น')
+                'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น')
             : showdialog(context, 'วัดรอบเอวสตรี',
-                'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น');
+                'กรุณาถือกล้องให้ห่างจากตัวบุคคล 30 ซม.หรือ 12 นิ้วเท่านั้น');
       });
     });
   }
@@ -890,12 +893,14 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                 alignment: const Alignment(0, 0),
                 children: [
                   Container(
-                    width: screenwidth * 99 / 100,
+                    padding: EdgeInsets.only(left: screenwidth * 11 / 100),
+                    width: screenwidth * 95 / 100,
+                    //width: screenwidth * 99 / 100,
                     height: screenheight * 0.24,
                     // color: Colors.red,
                     child: Divider(
                       indent: screenwidth * 0.5 / 100,
-                      endIndent: screenwidth * 0.01,
+                      endIndent: endIndent,
                       thickness: 5,
                       color: const Color.fromARGB(255, 247, 166, 61),
                     ),
@@ -909,7 +914,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Container(
-                        alignment: const Alignment(-4.1, -1.0),
+                        alignment: const Alignment(-2.1, -1.0),
+                        //  alignment: const Alignment(-4.1, -1.0),
                         width: screenwidth * 0.14,
                         height: screenheight * 0.25,
                         child: VerticalDivider(
@@ -955,17 +961,27 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               isMen = !isMen;
               isMen
                   ? showdialog(context, 'วัดรอบเอวบุรุษ',
-                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล 50 ซม.หรือ 20 นิ้วเท่านั้น')
+                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น')
                   : showdialog(context, 'วัดรอบเอวสตรี',
-                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น');
+                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล 30 ซม.หรือ 12 นิ้วเท่านั้น');
               if (isMen) {
-                size = (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
-               // size = (((offset.dx * 100) / widget.screenheight + 10));
+                size =
+                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 1.65) *
+                        2;
+
+                //  size =
+                //    (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
+
               } else {
-                size = (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
-               // size = (((offset.dx * 100) / widget.screenheight - 17));
+                size =
+                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) *
+                        2;
+
+                //  size =
+                //      (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
+
               }
-              waistwidth = size;
+              waistwidth = size  + 15;
               inch = waistwidth / 2.54;
             });
           },
@@ -1017,19 +1033,72 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                   duration: const Duration(seconds: 2));
             } else {}
             if (isMen) {
-              // size = (((offset.dx + 30) / 15.50) * 2);
-              // size = (((offset.dx * 100) / widget.screenheight + 10));
-              size = (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
+              size =
+                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 1.65) * 2;
+              // size = (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
             } else {
-              //  size = (((offset.dx + 30) / 15.50) * 2);
-              //  size = (((offset.dx + 30) / 19.7) * 2);
-              size = (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
-              // size = ((((offset.dx+30) * 100) / widget.screenheight-7));
+              size =
+                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) * 2;
+              // size = (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
+
             }
             // size = (((offset.dx * 100) / screenwidth - 12));
             // size = (((offset.dx * 100) / screenwidth + 12));
-            waistwidth = size;
+            waistwidth = size  + 15;
             inch = (waistwidth / 2.54);
+            print('endIndent ======> ${endIndent.toString()}');
+            print('offset.dx ======> ${offset.dx.toString()}');
+            print('screenwidth ======> ${screenwidth.toString()}');
+          });
+        },
+        child: Container(
+          width: screenwidth * 0.14,
+          height: screenheight * 0.25,
+          child: VerticalDivider(
+            indent: 5,
+            endIndent: 5,
+            thickness: 12,
+            width: 5,
+            color: isColor ? Colors.green : Colors.red,
+          ),
+        ),
+      ),
+    );
+  }
+
+    Widget _isGestureDetector2() {
+    return Positioned(
+      left: offset.dx,
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            offset = Offset(offset.dx + details.delta.dx, 0);
+            if (offset.dx >= (widget.screenheight * 91 / 100)) {
+              offset = Offset(widget.screenheight * 91 / 100, 0);
+              MyStyle().showBasicsFlash(
+                  context: context,
+                  text: 'เพิ่มขนาดสูงสุดแล้ว',
+                  flashStyle: FlashBehavior.fixed,
+                  duration: const Duration(seconds: 2));
+            } else if (offset.dx <= widget.screenheight * 30 / 100) {
+              offset = Offset(widget.screenheight * 30 / 100, 0);
+              MyStyle().showBasicsFlash(
+                  context: context,
+                  text: 'ลดขนาดต่ำสุดแล้ว',
+                  flashStyle: FlashBehavior.fixed,
+                  duration: const Duration(seconds: 2));
+            } else {}
+            if (isMen) {
+              size =
+                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) * 2;
+            } else {
+              size =
+                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.65) * 2;
+            }
+            waistwidth = size +38;
+            //waistwidth = size;
+            inch = (waistwidth / 2.54);
+            print('endIndent ======> ${endIndent.toString()}');
             print('offset.dx ======> ${offset.dx.toString()}');
             print('screenwidth ======> ${screenwidth.toString()}');
           });

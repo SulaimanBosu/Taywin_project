@@ -594,6 +594,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
           keyboardType:TextInputType.text,
           maxLines:10,
           minLines: 1,
+          maxLength:300,
           cursorColor: Colors.black54,
           controller: moreControler,
           style: const TextStyle(
@@ -774,7 +775,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
       }
       Uint8List imageInUnit8List = capturedImage!;
       File file = await File(
-              '${directory!.path}/${DateTime.now().toIso8601String()}.png')
+              '${directory!.path}/${DateTime.now().toIso8601String()}.jpg')
           .create();
       file.writeAsBytesSync(imageInUnit8List);
       print('path ========>>> ${file.path.toString()}');
@@ -795,7 +796,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                 : 'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
         chooserTitle: 'แชร์',
         filePath: file.path,
-        fileType: 'image/png',
+        fileType: 'image/jpg',
       );
       print('path ========>>> ${file.path}');
     }).catchError((onError) {
