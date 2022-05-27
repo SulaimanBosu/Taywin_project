@@ -48,7 +48,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   late double inch;
   late List<String> sizes = [];
   bool isType = false;
-  bool isMen = false;
+  bool isMan = false;
   String device = '';
   bool onLoading = false;
   ScreenshotController screenshotController = ScreenshotController();
@@ -71,7 +71,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
 
   void size() {
     if (isType) {
-      if (isMen) {
+      if (isMan) {
         setState(() {
           sizes = Size().man(sizeheight);
           sizeTH = sizes[0];
@@ -395,7 +395,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
         GestureDetector(
           onTap: () {
             setState(() {
-              isMen = false;
+              isMan = false;
               size();
             });
           },
@@ -406,7 +406,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               child: Container(
                 width: screenwidth * 0.35,
                 height: screenwidth * 0.12,
-                color: isMen
+                color: isMan
                     ? Colors.grey.withOpacity(0.3)
                     : MyStyle().primaryColor,
                 child: Center(
@@ -416,7 +416,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                       ImageIcon(
                         const AssetImage('images/woman.png'),
                         size: 25,
-                        color: isMen
+                        color: isMan
                             ? const Color.fromARGB(137, 82, 78, 78)
                             : Colors.white,
                       ),
@@ -425,7 +425,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         style: TextStyle(
                           fontFamily: 'FC-Minimal-Regular',
                           fontSize: 18,
-                          color: isMen
+                          color: isMan
                               ? const Color.fromARGB(137, 82, 78, 78)
                               : Colors.white,
                         ),
@@ -440,7 +440,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
         GestureDetector(
           onTap: () {
             setState(() {
-              isMen = true;
+              isMan = true;
               size();
             });
           },
@@ -451,7 +451,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               child: Container(
                 width: screenwidth * 0.35,
                 height: screenwidth * 0.12,
-                color: isMen
+                color: isMan
                     ? MyStyle().primaryColor
                     : Colors.grey.withOpacity(0.3),
                 child: Center(
@@ -461,7 +461,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     ImageIcon(
                       const AssetImage('images/man.png'),
                       size: 25,
-                      color: isMen
+                      color: isMan
                           ? Colors.white
                           : const Color.fromARGB(137, 82, 78, 78),
                     ),
@@ -470,7 +470,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                       style: TextStyle(
                         fontFamily: 'FC-Minimal-Regular',
                         fontSize: 18,
-                        color: isMen
+                        color: isMan
                             ? Colors.white
                             : const Color.fromARGB(137, 82, 78, 78),
                       ),
@@ -492,7 +492,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
         GestureDetector(
           onTap: () {
             setState(() {
-              isMen = false;
+              isMan = false;
               size();
             });
           },
@@ -505,8 +505,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                 children: [
                   ImageIcon(
                     const AssetImage('images/woman.png'),
-                    size: !isMen ? 30 : 25,
-                    color: isMen
+                    size: !isMan ? 30 : 25,
+                    color: isMan
                         ? const Color.fromARGB(137, 82, 78, 78)
                         : MyStyle().primaryColor,
                   ),
@@ -514,8 +514,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     'ไซส์รองเท้าสตรี',
                     style: TextStyle(
                       fontFamily: 'FC-Minimal-Regular',
-                      fontSize: !isMen ? 16 : 14,
-                      color: !isMen
+                      fontSize: !isMan ? 16 : 14,
+                      color: !isMan
                           ? MyStyle().primaryColor
                           : const Color.fromARGB(137, 82, 78, 78),
                     ),
@@ -525,7 +525,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     indent: 30,
                     thickness: 2,
                     height: 5,
-                    color: isMen ? Colors.white : MyStyle().primaryColor,
+                    color: isMan ? Colors.white : MyStyle().primaryColor,
                   )
                 ],
               ),
@@ -535,7 +535,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
         GestureDetector(
           onTap: () {
             setState(() {
-              isMen = true;
+              isMan = true;
               size();
             });
           },
@@ -548,8 +548,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                 children: [
                   ImageIcon(
                     const AssetImage('images/man.png'),
-                    size: isMen ? 30 : 25,
-                    color: isMen
+                    size: isMan ? 30 : 25,
+                    color: isMan
                         ? MyStyle().primaryColor
                         : const Color.fromARGB(137, 82, 78, 78),
                   ),
@@ -557,8 +557,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     'ไซส์รองเท้าบุรุษ',
                     style: TextStyle(
                       fontFamily: 'FC-Minimal-Regular',
-                      fontSize: isMen ? 16 : 14,
-                      color: isMen
+                      fontSize: isMan ? 16 : 14,
+                      color: isMan
                           ? MyStyle().primaryColor
                           : const Color.fromARGB(137, 82, 78, 78),
                     ),
@@ -568,7 +568,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     indent: 30,
                     thickness: 2,
                     height: 5,
-                    color: isMen ? MyStyle().primaryColor : Colors.white,
+                    color: isMan ? MyStyle().primaryColor : Colors.white,
                   )
                 ],
               ),
@@ -699,7 +699,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     await FlutterShare.share(
       title: isType ? 'ไซส์รองเท้า : ' : 'ขนาดรอบเอว : ',
       text: isType
-          ? isMen
+          ? isMan
               ? moreControler.text != ''
                   ? 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )\n ความคิดเห็นเพิ่มเติม : ${moreControler.text}'
                   : 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
@@ -784,7 +784,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
       await FlutterShare.shareFile(
         title: isType ? 'ไซส์รองเท้า : ' : 'ขนาดรอบเอว : ',
         text: isType
-            ? isMen
+            ? isMan
                 ? moreControler.text != ''
                     ? 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )\n ความคิดเห็นเพิ่มเติม : ${moreControler.text}'
                     : 'เบอร์รองเท้าของท่านสุภาพบุรุษคือ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )'
