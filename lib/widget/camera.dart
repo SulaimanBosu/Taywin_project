@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'package:camera/camera.dart';
 import 'package:flash/flash.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:taywin_project/main.dart';
@@ -34,14 +35,14 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late XFile imagefile;
   late double screenwidth;
   late double screenheight;
-  double alignment_a = -0.0;
-  double alignment_b = -1.18999999999999878;
-  double alignment_c = -0.2;
-  double alignment_d = -1.0499999999999992;
+  double alignment_a = -0.3;
+  double alignment_b = -1.19;
+  double alignment_c = 0.1;
+  double alignment_d = -1.06;
   double alignment_e = -0.22000000000000003;
   double alignment_f = -0.92;
   double alignment_g = 0.19000000000000028;
-  double alignment_h = 1.5;
+  double alignment_h = 1.80;
   double sizewidth = 10;
   double sizeheight = 28.6;
   bool isColor = false;
@@ -53,8 +54,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late double inch = waistwidth / 2.5;
   double indent_a = 0;
   double endIndent_b = 0;
-  double indent_c = 15;
-  double endIndent_d = 15;
+  double indent_c = 8;
+  double endIndent_d = 8;
   Offset offset = const Offset(480, 0.0);
   Offset _Greenline = const Offset(77.0, 117.0);
   Offset _OrangeLine = const Offset(270, 141.5);
@@ -82,6 +83,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   //     log('Camera Permission: DENIED');
   //   }
   // }
+
+  // AssetImage(isMan ? 'images/man.png' : 'images/woman.png')
 
   @override
   void initState() {
@@ -114,11 +117,20 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   void delaydialog() {
     Future.delayed(const Duration(milliseconds: 1000), () {
       setState(() {
-        isMan
-            ? showdialog(context, 'วัดรอบเอวบุรุษ',
-                'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น')
-            : showdialog(context, 'วัดรอบเอวสตรี',
-                'กรุณาถือกล้องให้ห่างจากตัวบุคคล 30 ซม.หรือ 12 นิ้วเท่านั้น');
+        // isMan
+        //     ? showdialog(
+        //         const AssetImage('images/man.png'),
+        //         context,
+        //         'วัดรอบเอวบุรุษ',
+        //         'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น')
+        //     : showdialog(
+        //         const AssetImage('images/woman.png'),
+        //         context,
+        //         'วัดรอบเอวสตรี',
+        //         'กรุณาถือกล้องให้ห่างจากตัวบุคคล 30 ซม.หรือ 12 นิ้วเท่านั้น');
+
+        _showAlertDialog(true, const AssetImage('images/man.png'), context,
+            'เลือกเพศ', 'กรุณาเลือกเพศและอ่านคำแนะนำก่อนทำการวัดรอบเอว');
       });
     });
   }
@@ -783,10 +795,11 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                 height: screenheight * 0.1,
               ),
               Container(
-                  alignment: const Alignment(0, 0),
-                  width: screenwidth * 0.3,
-                  height: screenheight * 0.05,
-                  child: _textcontainer()),
+                alignment: const Alignment(0, -1),
+                width: screenwidth * 0.3,
+                height: screenheight * 0.05,
+                child: _textcontainer(),
+              ),
               SizedBox(
                 height: screenheight * 0.01,
               ),
@@ -798,7 +811,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       Container(
                         alignment: Alignment(alignment_a, alignment_b),
                         width: screenwidth * 0.14,
-                        height: screenheight * 0.63,
+                        height: screenheight * 0.65,
                         // color: Colors.red,
                         child: VerticalDivider(
                           thickness: 10,
@@ -812,7 +825,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       Container(
                         alignment: Alignment(alignment_c, alignment_d),
                         width: screenwidth * 0.14,
-                        height: screenheight * 0.63,
+                        height: screenheight * 0.65,
                         // color: Colors.red,
                         child: VerticalDivider(
                           indent: indent_a,
@@ -872,13 +885,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               ),
               Column(
                 children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
                   groupButton(),
-                  const SizedBox(
-                    height: 10,
-                  ),
                   icon(),
                 ],
               )
@@ -967,10 +974,18 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             setState(() {
               isMan = !isMan;
               isMan
-                  ? showdialog(context, 'วัดรอบเอวบุรุษ',
-                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น')
-                  : showdialog(context, 'วัดรอบเอวสตรี',
-                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล 30 ซม.หรือ 12 นิ้วเท่านั้น');
+                  ? _showAlertDialog(
+                      false,
+                      const AssetImage('images/man.png'),
+                      context,
+                      'วัดรอบเอวบุรุษ',
+                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 40 ซม.หรือ 15 นิ้วเท่านั้น')
+                  : _showAlertDialog(
+                      false,
+                      const AssetImage('images/woman.png'),
+                      context,
+                      'วัดรอบเอวสตรี',
+                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 30 ซม.หรือ 12 นิ้วเท่านั้น');
               // if (isMan) {
               //   size =
               //       (((offset.dx - 73.2) * 100 / widget.screenheight) / 1.65) *
@@ -1219,14 +1234,14 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     setState(
                       () {
                         alignmentValue_b -= 0.4;
-                        alignment_a -= 0.07;
-                        alignment_b += 0.07;
-                        alignment_c += 0.07;
-                        alignment_d -= 0.05;
-                        alignment_e += 0.07;
-                        alignment_f -= 0.075;
-                        alignment_g -= 0.07;
-                        alignment_h += 0.075;
+                        alignment_a -= 0.075;
+                        alignment_b += 0.075;
+                        alignment_c += 0.075;
+                        alignment_d -= 0.060;
+                        alignment_e += 0.075;
+                        alignment_f -= 0.080;
+                        alignment_g -= 0.075;
+                        alignment_h += 0.080;
                         sizewidth += 0.2;
                         sizeheight += 0.5;
 
@@ -1265,14 +1280,14 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     setState(
                       () {
                         alignmentValue_b += 0.4;
-                        alignment_a += 0.07;
-                        alignment_b -= 0.07;
-                        alignment_c -= 0.07;
-                        alignment_d += 0.05;
-                        alignment_e -= 0.07;
-                        alignment_f += 0.075;
-                        alignment_g += 0.07;
-                        alignment_h -= 0.075;
+                        alignment_a += 0.075;
+                        alignment_b -= 0.075;
+                        alignment_c -= 0.075;
+                        alignment_d += 0.075;
+                        alignment_e -= 0.075;
+                        alignment_f += 0.080;
+                        alignment_g += 0.075;
+                        alignment_h -= 0.080;
                         indent_a += 3.2;
                         endIndent_b += 4.0;
                         indent_c += 1.85;
@@ -1430,6 +1445,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   }
 
   showdialog(
+    AssetImage icon,
     BuildContext context,
     String textTitle,
     String textContent,
@@ -1444,7 +1460,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               Row(
                 children: [
                   ImageIcon(
-                    AssetImage(isMan ? 'images/man.png' : 'images/woman.png'),
+                    icon,
                     color: Colors.black45,
                   ),
                   const SizedBox(
@@ -1491,6 +1507,92 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
           ),
         );
       },
+    );
+  }
+
+  void _showAlertDialog(
+    bool isAction,
+    AssetImage icon,
+    BuildContext context,
+    String textTitle,
+    String textContent,
+  ) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+         title: !isAction ? Column(
+           children: [
+             Row(
+              children: [
+                ImageIcon(icon),const SizedBox(width: 5,),
+                Text(
+              textTitle,
+              style: const TextStyle(
+                overflow: TextOverflow.clip,
+                fontSize: 20.0,
+                color: Colors.black45,
+                fontFamily: 'FC-Minimal-Regular',
+              ),
+        ),
+              ],
+        ),const Divider(
+                thickness: 1,
+                height: 5,
+                color: Colors.black54,
+              ),const SizedBox(height: 10,),
+           ],
+         ) : null,
+        content: Text(
+          textContent,
+          style: const TextStyle(
+            overflow: TextOverflow.clip,
+            fontSize: 20.0,
+            color: Colors.black45,
+            fontFamily: 'FC-Minimal-Regular',
+          ),
+        ),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+              isDefaultAction: !isAction,
+              onPressed: () {
+                if (isAction) {
+                  Navigator.pop(context);
+                  isMan = true;
+                  _showAlertDialog(false,
+                      const AssetImage('images/man.png'),
+                      context,
+                      'วัดรอบเอวบุรุษ',
+                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 40 ซม.หรือ 15 นิ้วเท่านั้น');
+                } else {
+                  Navigator.pop(context);
+                }
+              },
+              child: isAction
+                  ? const Text(
+                      'ชาย',
+                      style: TextStyle(color: Colors.red),
+                    )
+                  : const Text(
+                      'OK',
+                      style: TextStyle(color: Colors.blue),
+                    )),
+          if (isAction)
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.pop(context);
+                _showAlertDialog(false,
+                    const AssetImage('images/woman.png'),
+                    context,
+                    'วัดรอบเอวสตรี',
+                    'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 30 ซม.หรือ 12 นิ้วเท่านั้น');
+              },
+              child: const Text(
+                'หญิง',
+                style: TextStyle(color: Colors.red),
+              ),
+            )
+        ],
+      ),
     );
   }
 }

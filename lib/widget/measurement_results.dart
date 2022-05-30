@@ -352,7 +352,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                                 height: screenwidth * 0.25,
                                 child: Center(
                                   child: Text(
-                                    'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(0)} นิ้ว',
+                                    'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(1)} นิ้ว',
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                         fontSize: 18,
@@ -591,10 +591,10 @@ class _MeasurementResultsState extends State<MeasurementResults> {
         ),
         color: Colors.white,
         child: TextField(
-          keyboardType:TextInputType.text,
-          maxLines:10,
+          keyboardType: TextInputType.text,
+          maxLines: 10,
           minLines: 1,
-          maxLength:300,
+          maxLength: 300,
           cursorColor: Colors.black54,
           controller: moreControler,
           style: const TextStyle(
@@ -650,8 +650,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                               type: isType
                                   ? MyStyle().footmeasure
                                   : MyStyle().waistline,
-                                  screenwidth: screenwidth,
-                                  screenheight: screenheight,
+                              screenwidth: screenwidth,
+                              screenheight: screenheight,
                             ),
                           ),
                         );
@@ -726,13 +726,13 @@ class _MeasurementResultsState extends State<MeasurementResults> {
 
       if (result == false) {
         setState(() {
-          MyStyle().showdialog(Icons.save_alt_outlined,context, 'ล้มเหลว!',
+          MyStyle().showdialog(Icons.save_alt_outlined, context, 'ล้มเหลว!',
               'กรุณาอณุญาตให้แอพสามารถเข้าถึงรูปภาพได้ จึงจะสามารถบันทึกได้สำเร็จ');
         });
       } else {
         setState(() {
-          MyStyle()
-              .showdialog(Icons.save_alt_outlined,context, 'บันทึก', 'บันทึกไปยังคลังรูปภาพเรียบร้อย');
+          MyStyle().showdialog(Icons.save_alt_outlined, context, 'บันทึก',
+              'บันทึกไปยังคลังรูปภาพเรียบร้อย');
         });
       }
       // ShowCapturedWidget(context, capturedImage);
