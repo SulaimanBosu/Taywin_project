@@ -6,6 +6,7 @@ import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:taywin_project/main.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
@@ -65,6 +66,9 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   late Size sizeScreen;
   late double scale;
   bool isMan = false;
+  final controller = JustTheController();
+  final selectcameraTooltip = JustTheController();
+  bool _istooltip = true;
 
   late MediaQueryData queryData;
 
@@ -974,14 +978,12 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             setState(() {
               isMan = !isMan;
               isMan
-                  ? _showAlertDialog(
-                      false,
+                  ? _showtDialog(
                       const AssetImage('images/man.png'),
                       context,
                       'วัดรอบเอวบุรุษ',
                       'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 40 ซม.หรือ 15 นิ้วเท่านั้น')
-                  : _showAlertDialog(
-                      false,
+                  : _showtDialog(
                       const AssetImage('images/woman.png'),
                       context,
                       'วัดรอบเอวสตรี',
@@ -1014,10 +1016,42 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ImageIcon(
-                  AssetImage(isMan ? 'images/man.png' : 'images/woman.png'),
-                  size: 30,
-                  color: Colors.white,
+                JustTheTooltip(
+                  controller: controller,
+                  onShow: controller.showTooltip,
+                  onDismiss: controller.hideTooltip,
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      isMan
+                          ? 'กดปุ่มนี้หากต้องการสลับไปวัดรอบเอวสตรี'
+                          : 'กดปุ่มนี้หากต้องการสลับไปวัดรอบเอวบุรุษ',
+                      style: const TextStyle(
+                        fontFamily: 'FC-Minimal-Regular',
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ImageIcon(
+                          AssetImage(
+                              isMan ? 'images/man.png' : 'images/woman.png'),
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                        const ImageIcon(
+                          AssetImage('images/icons-circle.png'),
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 Text(
                   isMan ? 'วัดรอบเอวบุรุษ' : 'วัดรอบเอวสตรี',
@@ -1400,21 +1434,42 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
         },
       );
 
-  Widget iconCameraSelected() => InkWell(
-        child: Image.asset(
-          'images/switch_camera.png',
-          color: Colors.white,
-          scale: 12,
+  Widget iconCameraSelected() => JustTheTooltip(
+        controller: selectcameraTooltip,
+        onShow: selectcameraTooltip.showTooltip,
+        onDismiss: selectcameraTooltip.hideTooltip,
+        content: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            _isRearCameraSelected
+                ? 'กดปุ่มนี้หากต้องการสลับไปใช้กล้องหน้า'
+                : 'กดปุ่มนี้หากต้องการสลับไปใช้กล้องหลัง',
+            style: const TextStyle(
+              fontFamily: 'FC-Minimal-Regular',
+              fontSize: 16,
+              color: Colors.black54,
+            ),
+          ),
         ),
-        onTap: () {
-          setState(() {
-            queryData = MediaQuery.of(context);
-            var screen = queryData.size.height;
-            print('screen ==== ${screen.toString()}');
-            initCamera(cameras[_isRearCameraSelected ? 1 : 0]);
-            _isRearCameraSelected = !_isRearCameraSelected;
-          });
-        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: InkWell(
+            child: Image.asset(
+              'images/switch_camera.png',
+              color: Colors.white,
+              scale: 12,
+            ),
+            onTap: () {
+              setState(() {
+                queryData = MediaQuery.of(context);
+                var screen = queryData.size.height;
+                print('screen ==== ${screen.toString()}');
+                initCamera(cameras[_isRearCameraSelected ? 1 : 0]);
+                _isRearCameraSelected = !_isRearCameraSelected;
+              });
+            },
+          ),
+        ),
       );
 
   captureImage(BuildContext context) {
@@ -1431,6 +1486,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                 width: isType ? sizewidth : waistwidth,
                 height: isType ? sizeheight : 0,
                 type: widget.type,
+                sex: isMan ? true : false,
               ),
             )),
             (route) => false);
@@ -1520,28 +1576,37 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
-         title: !isAction ? Column(
-           children: [
-             Row(
-              children: [
-                ImageIcon(icon),const SizedBox(width: 5,),
-                Text(
-              textTitle,
-              style: const TextStyle(
-                overflow: TextOverflow.clip,
-                fontSize: 20.0,
-                color: Colors.black45,
-                fontFamily: 'FC-Minimal-Regular',
-              ),
-        ),
-              ],
-        ),const Divider(
-                thickness: 1,
-                height: 5,
-                color: Colors.black54,
-              ),const SizedBox(height: 10,),
-           ],
-         ) : null,
+        title: !isAction
+            ? Column(
+                children: [
+                  Row(
+                    children: [
+                      ImageIcon(icon),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        textTitle,
+                        style: const TextStyle(
+                          overflow: TextOverflow.clip,
+                          fontSize: 20.0,
+                          color: Colors.black45,
+                          fontFamily: 'FC-Minimal-Regular',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    thickness: 1,
+                    height: 5,
+                    color: Colors.black54,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              )
+            : null,
         content: Text(
           textContent,
           style: const TextStyle(
@@ -1558,12 +1623,31 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                 if (isAction) {
                   Navigator.pop(context);
                   isMan = true;
-                  _showAlertDialog(false,
+                  _showAlertDialog(
+                      false,
                       const AssetImage('images/man.png'),
                       context,
                       'วัดรอบเอวบุรุษ',
                       'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 40 ซม.หรือ 15 นิ้วเท่านั้น');
                 } else {
+                  Future.delayed(const Duration(milliseconds: 2000), () {
+                    controller.showTooltip();
+                    Future.delayed(const Duration(milliseconds: 4000), () {
+                      setState(() {
+                        controller.hideTooltip();
+                        Future.delayed(const Duration(milliseconds: 1000), () {
+                          selectcameraTooltip.showTooltip();
+                          Future.delayed(const Duration(milliseconds: 4000),
+                              () {
+                            setState(() {
+                              selectcameraTooltip.hideTooltip();
+                            });
+                          });
+                        });
+                      });
+                    });
+                  });
+
                   Navigator.pop(context);
                 }
               },
@@ -1580,7 +1664,8 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             CupertinoDialogAction(
               onPressed: () {
                 Navigator.pop(context);
-                _showAlertDialog(false,
+                _showAlertDialog(
+                    false,
                     const AssetImage('images/woman.png'),
                     context,
                     'วัดรอบเอวสตรี',
@@ -1591,6 +1676,67 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                 style: TextStyle(color: Colors.red),
               ),
             )
+        ],
+      ),
+    );
+  }
+
+  void _showtDialog(
+    AssetImage icon,
+    BuildContext context,
+    String textTitle,
+    String textContent,
+  ) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Column(
+          children: [
+            Row(
+              children: [
+                ImageIcon(icon),
+                const SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  textTitle,
+                  style: const TextStyle(
+                    overflow: TextOverflow.clip,
+                    fontSize: 20.0,
+                    color: Colors.black45,
+                    fontFamily: 'FC-Minimal-Regular',
+                  ),
+                ),
+              ],
+            ),
+            const Divider(
+              thickness: 1,
+              height: 5,
+              color: Colors.black54,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
+        content: Text(
+          textContent,
+          style: const TextStyle(
+            overflow: TextOverflow.clip,
+            fontSize: 20.0,
+            color: Colors.black45,
+            fontFamily: 'FC-Minimal-Regular',
+          ),
+        ),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.blue),
+              )),
         ],
       ),
     );

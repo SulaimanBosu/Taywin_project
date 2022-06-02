@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,12 +24,14 @@ class MeasurementResults extends StatefulWidget {
   final double width;
   final double height;
   final String type;
+  final bool sex;
   const MeasurementResults({
     Key? key,
     required this.image,
     required this.width,
     required this.height,
     required this.type,
+    required this.sex,
   }) : super(key: key);
 
   @override
@@ -51,6 +54,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
   bool isMan = false;
   String device = '';
   bool onLoading = false;
+  bool isNosave = true;
   ScreenshotController screenshotController = ScreenshotController();
   static const MethodChannel _channel =
       const MethodChannel('image_gallery_saver');
@@ -123,31 +127,34 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     screenwidth = MediaQuery.of(context).size.width;
     screenheight = MediaQuery.of(context).size.height;
     device = ScreenSize().screenwidth(screenwidth);
-    return Scaffold(
-      appBar: AppBar(
-          elevation: 0,
-          iconTheme: const IconThemeData(color: Colors.black54),
-          backgroundColor: Colors.white,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        (MaterialPageRoute(
-                          builder: (context) => const MyHome(),
-                        )),
-                        (route) => false);
-                  },
-                  icon: const Icon(Icons.arrow_back_ios_new_outlined)),
-              appbar(),
-            ],
-          )),
-      backgroundColor: Colors.white,
-      body: Container(
-        color: Colors.white,
-        child: onLoading ? content() : MyStyle().progress(context),
+    return WillPopScope(
+      onWillPop: _onBackPressed,
+      child: Scaffold(
+        appBar: AppBar(
+            elevation: 0,
+            iconTheme: const IconThemeData(color: Colors.black54),
+            backgroundColor: Colors.white,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          (MaterialPageRoute(
+                            builder: (context) => const MyHome(),
+                          )),
+                          (route) => false);
+                    },
+                    icon: const Icon(Icons.arrow_back_ios_new_outlined)),
+                appbar(),
+              ],
+            )),
+        backgroundColor: Colors.white,
+        body: Container(
+          color: Colors.white,
+          child: onLoading ? content() : MyStyle().progress(context),
+        ),
       ),
     );
   }
@@ -185,9 +192,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                                     width: 60,
                                   ),
                                   Image.asset(
-                                    'images/Line1.png',
-                                    width: screenwidth * 0.4,
-                                    height: screenheight * 0.01,
+                                    'images/arrow2.png',
+                                    width: screenwidth * 0.35,
+                                    height: screenheight * 0.06,
                                   ),
                                 ],
                               ),
@@ -203,13 +210,12 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                                 const SizedBox(
                                   width: 10,
                                 ),
-                                Container(
-                                  child: Image.asset(
-                                    'images/Line2.png',
-                                    width: screenwidth * 0.01,
-                                    //  height: screenheight * 0.8,
+                                Image.asset(
+                                    'images/arrow.png',
+                                    width: screenwidth * 0.015,
+                                     height: screenheight * 0.28,
                                   ),
-                                ),
+                                
                                 const SizedBox(
                                   width: 5,
                                 ),
@@ -352,7 +358,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                                 height: screenwidth * 0.25,
                                 child: Center(
                                   child: Text(
-                                    'ขนาดรอบเอวของท่านสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(1)} นิ้ว',
+                                    widget.sex
+                                        ? 'ขนาดรอบเอวของท่านสุภาพบุรุษสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(1)} นิ้ว'
+                                        : 'ขนาดรอบเอวของท่านสุภาพสตรีสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(1)} นิ้ว',
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                         fontSize: 18,
@@ -643,23 +651,31 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                   margin: const EdgeInsets.only(left: 10.0, right: 10.0),
                   child: ElevatedButton.icon(
                     onPressed: () async {
-                      try {
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => OpenCamera(
-                              type: isType
-                                  ? MyStyle().footmeasure
-                                  : MyStyle().waistline,
-                              screenwidth: screenwidth,
-                              screenheight: screenheight,
+                      if (isNosave) {
+                        _showAlertDialog(
+                            Icons.access_alarm_outlined,
+                            context,
+                            'ยืนยันถ่ายใหม่',
+                            'ท่านต้องการละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่');
+                      } else {
+                        try {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => OpenCamera(
+                                type: isType
+                                    ? MyStyle().footmeasure
+                                    : MyStyle().waistline,
+                                screenwidth: screenwidth,
+                                screenheight: screenheight,
+                              ),
                             ),
-                          ),
-                        );
-                        SystemChrome.setPreferredOrientations([
-                          DeviceOrientation.portraitUp,
-                        ]);
-                      } catch (e) {
-                        print(e);
+                          );
+                          SystemChrome.setPreferredOrientations([
+                            DeviceOrientation.portraitUp,
+                          ]);
+                        } catch (e) {
+                          print(e);
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -679,6 +695,9 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                   child: ElevatedButton.icon(
                     onPressed: () {
                       screenshotAndSave();
+                      setState(() {
+                        isNosave = false;
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -822,6 +841,200 @@ class _MeasurementResultsState extends State<MeasurementResults> {
       },
     );
     return result;
+  }
+
+  void _showAlertDialog(
+    IconData icon,
+    BuildContext context,
+    String textTitle,
+    String textContent,
+  ) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Column(
+          children: [
+            Row(
+              children: [
+                Icon(icon),
+                const SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  textTitle,
+                  style: const TextStyle(
+                    overflow: TextOverflow.clip,
+                    fontSize: 20.0,
+                    color: Colors.black45,
+                    fontFamily: 'FC-Minimal-Regular',
+                  ),
+                ),
+              ],
+            ),
+            const Divider(
+              thickness: 0,
+              height: 5,
+              color: Colors.black38,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
+        content: Text(
+          textContent,
+          style: const TextStyle(
+            overflow: TextOverflow.clip,
+            fontSize: 20.0,
+            color: Colors.black45,
+            fontFamily: 'FC-Minimal-Regular',
+          ),
+        ),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+              onPressed: () async {
+                Navigator.pop(context);
+                isNosave = true;
+                try {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => OpenCamera(
+                        type: isType
+                            ? MyStyle().footmeasure
+                            : MyStyle().waistline,
+                        screenwidth: screenwidth,
+                        screenheight: screenheight,
+                      ),
+                    ),
+                  );
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                  ]);
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: const Text(
+                'ใช่',
+                style: TextStyle(color: Colors.blue),
+              )),
+          CupertinoDialogAction(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              'ไม่',
+              style: TextStyle(color: Colors.red),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<bool> _onBackPressed() async {
+    bool onTab = false;
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Column(
+          children: [
+            Row(
+              // ignore: prefer_const_literals_to_create_immutables
+              children: [
+                const Icon(Icons.exit_to_app_outlined),
+                const SizedBox(
+                  width: 5,
+                ),
+                const Text(
+                  'ออก',
+                  style: const TextStyle(
+                    overflow: TextOverflow.clip,
+                    fontSize: 20.0,
+                    color: Colors.black45,
+                    fontFamily: 'FC-Minimal-Regular',
+                  ),
+                ),
+              ],
+            ),
+            const Divider(
+              thickness: 0,
+              height: 5,
+              color: Colors.black38,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
+        content: const Text(
+          'คุณต้องการออกจากแอพใช่หรือไม่',
+          style: TextStyle(
+            overflow: TextOverflow.clip,
+            fontSize: 20.0,
+            color: Colors.black45,
+            fontFamily: 'FC-Minimal-Regular',
+          ),
+        ),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+              onPressed: () async {
+                Navigator.pop(context);
+                setState(() {
+                  onTab = true;
+                  if (onTab) {
+                    if (Platform.isAndroid) {
+                      SystemNavigator.pop();
+                    } else if (Platform.isIOS) {
+                      exit(0);
+                    }
+                  }
+                });
+              },
+              child: const Text(
+                'ใช่',
+                style: TextStyle(color: Colors.blue),
+              )),
+          CupertinoDialogAction(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              'ไม่',
+              style: TextStyle(color: Colors.red),
+            ),
+          )
+        ],
+      ),
+    );
+
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     title: const Text('Are you sure?'),
+    //     content: const Text('Do you want to exit an App'),
+    //     actions: <Widget>[
+    //       GestureDetector(
+    //         onTap: () {
+    //           Navigator.of(context).pop();
+    //           setState(() {
+    //             onTab = false;
+    //           });
+    //         },
+    //         child: const Text("NO"),
+    //       ),
+    //       const SizedBox(height: 16),
+    //       GestureDetector(
+    //         onTap: () {
+    //           // Navigator.of(context).pop(true);
+
+    //         },
+    //         child: const Text("YES"),
+    //       ),
+    //     ],
+    //   ),
+    // );
+    return onTab;
   }
 
   Widget appbar() => Row(
