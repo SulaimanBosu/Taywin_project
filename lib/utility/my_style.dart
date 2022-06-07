@@ -257,6 +257,7 @@ class MyStyle {
               color: Colors.black45,
               fontFamily: 'FC-Minimal-Regular',
             ),
+            textAlign: TextAlign.center,
           ),
           actions: <Widget>[
             // ignore: deprecated_member_use

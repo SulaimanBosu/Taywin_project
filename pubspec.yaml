@@ -40,7 +40,6 @@ dependencies:
   gallery_saver: any
   image_gallery_saver: '^1.7.1'
   flash: ^2.0.3+2
-  permission_handler: ^9.2.0
   flutter_share: ^2.0.0
   screenshot: ^1.2.3
   file_picker: ^4.5.1

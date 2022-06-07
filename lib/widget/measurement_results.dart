@@ -260,7 +260,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                                     'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )',
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         color: Colors.black54,
                                         fontFamily: 'FC-Minimal-Regular',
                                         fontWeight: FontWeight.bold),
@@ -303,7 +303,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                                   padding: EdgeInsets.only(
                                       right: screenwidth * 0.15),
                                   child:
-                                      Text('${inch.toStringAsFixed(0)} นิ้ว'),
+                                      Text('${inch.toStringAsFixed(1)} นิ้ว'),
                                 ),
                               ],
                             ),
@@ -363,7 +363,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                                         : 'ขนาดรอบเอวของท่านสุภาพสตรีสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(1)} นิ้ว',
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         color: Colors.black54,
                                         fontFamily: 'FC-Minimal-Regular',
                                         fontWeight: FontWeight.bold),
@@ -889,6 +889,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
             color: Colors.black45,
             fontFamily: 'FC-Minimal-Regular',
           ),
+          textAlign: TextAlign.center,
         ),
         actions: <CupertinoDialogAction>[
           CupertinoDialogAction(

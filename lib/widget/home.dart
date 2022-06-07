@@ -7,7 +7,7 @@ import 'package:appcenter_crashes/appcenter_crashes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/widget/camera.dart';
@@ -33,30 +33,30 @@ class _MyHomeState extends State<MyHome> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    getPermissionStatus();
+    // getPermissionStatus();
     super.initState();
   }
 
-  getPermissionStatus() async {
-    await Permission.camera.request();
-    var status = await Permission.camera.status;
-    await Permission.storage.request();
-    var status_storage = await Permission.storage.status;
+  // getPermissionStatus() async {
+  //   await Permission.camera.request();
+  //   var status = await Permission.camera.status;
+  //   await Permission.storage.request();
+  //   var status_storage = await Permission.storage.status;
 
 
-    if (status.isGranted && status_storage.isGranted) {
-      log('Camera Permission: GRANTED');
-      setState(() {
-        _isCameraPermissionGranted = true;
-      });
-      // Set and initialize the new camera
-    } else {
-            setState(() {
-        _isCameraPermissionGranted = true;
-      });
-      log('Camera Permission: DENIED');
-    }
-  }
+  //   if (status.isGranted && status_storage.isGranted) {
+  //     log('Camera Permission: GRANTED');
+  //     setState(() {
+  //       _isCameraPermissionGranted = true;
+  //     });
+  //     // Set and initialize the new camera
+  //   } else {
+  //           setState(() {
+  //       _isCameraPermissionGranted = true;
+  //     });
+  //     log('Camera Permission: DENIED');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +65,10 @@ class _MyHomeState extends State<MyHome> {
     device = ScreenSize().screenwidth(screenwidth);
     return Scaffold(
       backgroundColor: const Color.fromRGBO(30, 29, 89, 1),
-      body: _isCameraPermissionGranted
-          ? Row(
+      body: 
+     // _isCameraPermissionGranted
+     //     ? 
+          Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
@@ -117,7 +119,7 @@ class _MyHomeState extends State<MyHome> {
                 ),
               ],
             )
-          : Container(),
+        //  : Container(),
     );
   }
 

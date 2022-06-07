@@ -48,7 +48,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   double sizeheight = 28.6;
   bool isColor = false;
   bool isType = false;
-  bool _isCameraPermissionGranted = false;
   late Timer timer;
   double alignmentValue_b = 0;
   late double waistwidth;
@@ -105,7 +104,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
         },
       ),
     );
-    initCamera(cameras[0]);
     WidgetsBinding.instance!.addObserver(this);
     isType
         ? SystemChrome.setPreferredOrientations([
@@ -121,18 +119,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   void delaydialog() {
     Future.delayed(const Duration(milliseconds: 1000), () {
       setState(() {
-        // isMan
-        //     ? showdialog(
-        //         const AssetImage('images/man.png'),
-        //         context,
-        //         'วัดรอบเอวบุรุษ',
-        //         'กรุณาถือกล้องให้ห่างจากตัวบุคคล 40 ซม.หรือ 15 นิ้วเท่านั้น')
-        //     : showdialog(
-        //         const AssetImage('images/woman.png'),
-        //         context,
-        //         'วัดรอบเอวสตรี',
-        //         'กรุณาถือกล้องให้ห่างจากตัวบุคคล 30 ซม.หรือ 12 นิ้วเท่านั้น');
-
         _showAlertDialog(true, const AssetImage('images/man.png'), context,
             'เลือกเพศ', 'กรุณาเลือกเพศและอ่านคำแนะนำก่อนทำการวัดรอบเอว');
       });
@@ -142,10 +128,12 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   void type() {
     if (widget.type == MyStyle().footmeasure) {
       setState(() {
+        initCamera(cameras[0]);
         isType = true;
       });
     } else if (widget.type == MyStyle().waistline) {
       setState(() {
+        initCamera(cameras[1]);
         delaydialog();
         isType = false;
         //size = (((offset.dx * 100) / 665) + 4);
@@ -159,12 +147,19 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
         // }
         // waistwidth = size + 15;
         // inch = waistwidth / 2.54;
+        // if (isMan) {
+        //   size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) * 2;
+        // } else {
+        //   size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.65) * 2;
+        // }
+
         if (isMan) {
-          size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) * 2;
+          size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2;
         } else {
-          size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.65) * 2;
+          size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
         }
-        waistwidth = size + 33;
+        waistwidth = size + 23;
+        // waistwidth = size + 33;
         inch = (waistwidth / 2.54);
       });
     } else {
@@ -1001,14 +996,15 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               // inch = waistwidth / 2.54;
               if (isMan) {
                 size =
-                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) *
+                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) *
                         2;
               } else {
                 size =
-                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.65) *
+                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) *
                         2;
               }
-              waistwidth = size + 33;
+              waistwidth = size + 23;
+              // waistwidth = size + 33;
               inch = (waistwidth / 2.54);
             });
           },
@@ -1134,28 +1130,30 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             if (offset.dx >= (widget.screenheight * 91 / 100)) {
               offset = Offset(widget.screenheight * 91 / 100, 0);
               MyStyle().showBasicsFlash(
-                  context: context,
-                  text: 'เพิ่มขนาดสูงสุดแล้ว',
-                  flashStyle: FlashBehavior.fixed,
-                  duration: const Duration(seconds: 2));
+                context: context,
+                text: 'เพิ่มขนาดสูงสุดแล้ว',
+                flashStyle: FlashBehavior.fixed,
+                duration: const Duration(seconds: 2),
+              );
             } else if (offset.dx <= widget.screenheight * 30 / 100) {
               offset = Offset(widget.screenheight * 30 / 100, 0);
               MyStyle().showBasicsFlash(
-                  context: context,
-                  text: 'ลดขนาดต่ำสุดแล้ว',
-                  flashStyle: FlashBehavior.fixed,
-                  duration: const Duration(seconds: 2));
+                context: context,
+                text: 'ลดขนาดต่ำสุดแล้ว',
+                flashStyle: FlashBehavior.fixed,
+                duration: const Duration(seconds: 2),
+              );
             }
             //else {}
             if (isMan) {
               size =
-                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) * 2;
+                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2;
             } else {
               size =
-                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.65) * 2;
+                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
             }
-            waistwidth = size + 33;
-            //waistwidth = size;
+            waistwidth = size + 23;
+            // waistwidth = size + 33;
             inch = (waistwidth / 2.54);
             print('endIndent ======> ${endIndent.toString()}');
             print('offset.dx ======> ${offset.dx.toString()}');
@@ -1464,7 +1462,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                 queryData = MediaQuery.of(context);
                 var screen = queryData.size.height;
                 print('screen ==== ${screen.toString()}');
-                initCamera(cameras[_isRearCameraSelected ? 1 : 0]);
+                initCamera(cameras[_isRearCameraSelected ? 0 : 1]);
                 _isRearCameraSelected = !_isRearCameraSelected;
               });
             },
@@ -1547,6 +1545,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               color: Colors.black45,
               fontFamily: 'FC-Minimal-Regular',
             ),
+            textAlign: TextAlign.center,
           ),
           actions: <Widget>[
             // ignore: deprecated_member_use
@@ -1615,6 +1614,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             color: Colors.black45,
             fontFamily: 'FC-Minimal-Regular',
           ),
+          textAlign: TextAlign.center,
         ),
         actions: <CupertinoDialogAction>[
           CupertinoDialogAction(
@@ -1622,7 +1622,22 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               onPressed: () {
                 if (isAction) {
                   Navigator.pop(context);
-                  isMan = true;
+                  setState(() {
+                    isMan = true;
+
+                    if (isMan) {
+                      size = (((offset.dx - 73.2) * 100 / widget.screenheight) /
+                              2.08) *
+                          2;
+                    } else {
+                      size = (((offset.dx - 73.2) * 100 / widget.screenheight) /
+                              2.79) *
+                          2;
+                    }
+                    waistwidth = size + 23;
+                    inch = (waistwidth / 2.54);
+                  });
+
                   _showAlertDialog(
                       false,
                       const AssetImage('images/man.png'),
@@ -1630,30 +1645,30 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                       'วัดรอบเอวบุรุษ',
                       'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 40 ซม.หรือ 15 นิ้วเท่านั้น');
                 } else {
-                  Future.delayed(const Duration(milliseconds: 2000), () {
-                    controller.showTooltip();
-                    Future.delayed(const Duration(milliseconds: 4000), () {
-                      setState(() {
-                        controller.hideTooltip();
-                        Future.delayed(const Duration(milliseconds: 1000), () {
-                          selectcameraTooltip.showTooltip();
-                          Future.delayed(const Duration(milliseconds: 4000),
-                              () {
-                            setState(() {
-                              selectcameraTooltip.hideTooltip();
-                            });
-                          });
-                        });
-                      });
-                    });
-                  });
+                  // Future.delayed(const Duration(milliseconds: 2000), () {
+                  //   controller.showTooltip();
+                  //   Future.delayed(const Duration(milliseconds: 4000), () {
+                  //     setState(() {
+                  //       controller.hideTooltip();
+                  //       Future.delayed(const Duration(milliseconds: 1000), () {
+                  //         selectcameraTooltip.showTooltip();
+                  //         Future.delayed(const Duration(milliseconds: 4000),
+                  //             () {
+                  //           setState(() {
+                  //             selectcameraTooltip.hideTooltip();
+                  //           });
+                  //         });
+                  //       });
+                  //     });
+                  //   });
+                  // });
 
                   Navigator.pop(context);
                 }
               },
               child: isAction
                   ? const Text(
-                      'ชาย',
+                      'บุรุษ',
                       style: TextStyle(color: Colors.red),
                     )
                   : const Text(
@@ -1664,6 +1679,18 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             CupertinoDialogAction(
               onPressed: () {
                 Navigator.pop(context);
+                isMan = false;
+                if (isMan) {
+                  size =
+                      (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.1) *
+                          2;
+                } else {
+                  size = (((offset.dx - 73.2) * 100 / widget.screenheight) /
+                          2.79) *
+                      2;
+                }
+                waistwidth = size + 23;
+                inch = (waistwidth / 2.54);
                 _showAlertDialog(
                     false,
                     const AssetImage('images/woman.png'),
@@ -1672,7 +1699,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 30 ซม.หรือ 12 นิ้วเท่านั้น');
               },
               child: const Text(
-                'หญิง',
+                'สตรี',
                 style: TextStyle(color: Colors.red),
               ),
             )
@@ -1727,6 +1754,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
             color: Colors.black45,
             fontFamily: 'FC-Minimal-Regular',
           ),
+          textAlign: TextAlign.center,
         ),
         actions: <CupertinoDialogAction>[
           CupertinoDialogAction(
