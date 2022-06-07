@@ -1,17 +1,12 @@
 // ignore_for_file: avoid_unnecessary_containers, deprecated_member_use, avoid_print, non_constant_identifier_names
 import 'dart:developer';
-
-import 'package:appcenter/appcenter.dart';
-import 'package:appcenter_analytics/appcenter_analytics.dart';
-import 'package:appcenter_crashes/appcenter_crashes.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/widget/camera.dart';
-import 'package:taywin_project/widget/measure_foot_size.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({
@@ -30,6 +25,7 @@ class _MyHomeState extends State<MyHome> {
 
   @override
   void initState() {
+    getPermissionStatus();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -37,26 +33,37 @@ class _MyHomeState extends State<MyHome> {
     super.initState();
   }
 
-  // getPermissionStatus() async {
-  //   await Permission.camera.request();
-  //   var status = await Permission.camera.status;
-  //   await Permission.storage.request();
-  //   var status_storage = await Permission.storage.status;
+  getPermissionStatus() async {
+    await Permission.camera.request();
+    var status = await Permission.camera.status;
+    await Permission.storage.request();
+    var status_storage = await Permission.storage.status;
+    await Permission.microphone.request();
+    var microphone = await Permission.microphone.status;
+    await Permission.mediaLibrary.request();
+    var mediaLibrary = await Permission.mediaLibrary.status;
+    await Permission.photosAddOnly.request();
+    var photosAddOnly = await Permission.photosAddOnly.status;
 
-
-  //   if (status.isGranted && status_storage.isGranted) {
-  //     log('Camera Permission: GRANTED');
-  //     setState(() {
-  //       _isCameraPermissionGranted = true;
-  //     });
-  //     // Set and initialize the new camera
-  //   } else {
-  //           setState(() {
-  //       _isCameraPermissionGranted = true;
-  //     });
-  //     log('Camera Permission: DENIED');
-  //   }
-  // }
+    if (status.isGranted &&
+        status_storage.isGranted &&
+        microphone.isGranted &&
+        mediaLibrary.isGranted &&
+        photosAddOnly.isGranted) {
+      log('Camera Permission: GRANTED');
+      debugPrint('Camera Permission: GRANTED');
+      setState(() {
+        _isCameraPermissionGranted = true;
+      });
+      // Set and initialize the new camera
+    } else {
+      setState(() {
+        _isCameraPermissionGranted = true;
+      });
+      log('Camera Permission: DENIED');
+      debugPrint('Camera Permission: DENIED');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +72,8 @@ class _MyHomeState extends State<MyHome> {
     device = ScreenSize().screenwidth(screenwidth);
     return Scaffold(
       backgroundColor: const Color.fromRGBO(30, 29, 89, 1),
-      body: 
-     // _isCameraPermissionGranted
-     //     ? 
-          Row(
+      body: _isCameraPermissionGranted
+          ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
@@ -119,7 +124,7 @@ class _MyHomeState extends State<MyHome> {
                 ),
               ],
             )
-        //  : Container(),
+          : Container(),
     );
   }
 

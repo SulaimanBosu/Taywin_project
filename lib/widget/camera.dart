@@ -73,20 +73,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
 
   double endIndent = 0;
 
-  // getPermissionStatus() async {
-  //   await Permission.camera.request();
-  //   var status = await Permission.camera.status;
-  //   if (status.isGranted) {
-  //     log('Camera Permission: GRANTED');
-  //     setState(() {
-  //       _isCameraPermissionGranted = true;
-  //     });
-  //     // Set and initialize the new camera
-  //   } else {
-  //     log('Camera Permission: DENIED');
-  //   }
-  // }
-
   // AssetImage(isMan ? 'images/man.png' : 'images/woman.png')
 
   @override
@@ -136,22 +122,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
         initCamera(cameras[1]);
         delaydialog();
         isType = false;
-        //size = (((offset.dx * 100) / 665) + 4);
-        // if (isMan) {
-        //   size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 1.65) * 2;
-        //   //size = (((offset.dx + 30) * 100 / widget.screenheight) / 1.7) * 2;
-        // } else {
-        //   size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) * 2;
-        //   // size = (((offset.dx + 30) * 100 / widget.screenheight) / 2.1) * 2;
-
-        // }
-        // waistwidth = size + 15;
-        // inch = waistwidth / 2.54;
-        // if (isMan) {
-        //   size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) * 2;
-        // } else {
-        //   size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.65) * 2;
-        // }
 
         if (isMan) {
           size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2;
