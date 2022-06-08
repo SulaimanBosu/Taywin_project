@@ -969,7 +969,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
           ],
         ),
         content: const Text(
-          'คุณต้องการออกจากแอพใช่หรือไม่',
+          'ท่านต้องการออกจากแอพใช่หรือไม่',
           style: TextStyle(
             overflow: TextOverflow.clip,
             fontSize: 20.0,

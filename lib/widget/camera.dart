@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:taywin_project/main.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
@@ -68,37 +69,72 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   final controller = JustTheController();
   final selectcameraTooltip = JustTheController();
   bool _istooltip = true;
+  bool _isCameraPermissionGranted = false;
 
   late MediaQueryData queryData;
 
   double endIndent = 0;
 
-  // AssetImage(isMan ? 'images/man.png' : 'images/woman.png')
+  getPermissionStatus() async {
+    var status = await Permission.camera.status;
+
+    var status_storage = await Permission.storage.status;
+
+    var microphone = await Permission.microphone.status;
+
+    if (status.isGranted && status_storage.isGranted && microphone.isGranted) {
+      debugPrint('Camera ==============>>> Permission: GRANTED');
+      setState(() {
+        _isCameraPermissionGranted = true;
+        _state();
+      });
+      // Set and initialize the new camera
+    } else {
+      setState(() async {
+        debugPrint('Camera ==============>> Permission: DENIED');
+        await Permission.camera.request();
+        await Permission.storage.request();
+        await Permission.microphone.request();
+        await Permission.mediaLibrary.request();
+        await Permission.photosAddOnly.request();
+        _isCameraPermissionGranted = true;
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          _state();
+        });
+      });
+      // debugPrint('Camera ==============>> Permission: DENIED');
+    }
+  }
+
+  void _state() {
+    setState(() {
+      type();
+      timer = Timer.periodic(
+        const Duration(milliseconds: 300),
+        (Timer t) => setState(
+          () {
+            if (isColor == true) {
+              isColor = false;
+            } else {
+              isColor = true;
+            }
+          },
+        ),
+      );
+      WidgetsBinding.instance!.addObserver(this);
+      isType
+          ? SystemChrome.setPreferredOrientations([
+              DeviceOrientation.portraitUp,
+            ])
+          : SystemChrome.setPreferredOrientations([
+              DeviceOrientation.landscapeLeft,
+            ]);
+    });
+  }
 
   @override
   void initState() {
-    type();
-    timer = Timer.periodic(
-      const Duration(milliseconds: 300),
-      (Timer t) => setState(
-        () {
-          if (isColor == true) {
-            isColor = false;
-          } else {
-            isColor = true;
-          }
-        },
-      ),
-    );
-    WidgetsBinding.instance!.addObserver(this);
-    isType
-        ? SystemChrome.setPreferredOrientations([
-            DeviceOrientation.portraitUp,
-          ])
-        : SystemChrome.setPreferredOrientations([
-            DeviceOrientation.landscapeLeft,
-          ]);
-
+    getPermissionStatus();
     super.initState();
   }
 
@@ -128,7 +164,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
         } else {
           size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
         }
-        waistwidth = size + 23;
+        waistwidth = size + 26;
         // waistwidth = size + 33;
         inch = (waistwidth / 2.54);
       });
@@ -219,7 +255,11 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     screenheight = MediaQuery.of(context).size.height;
     device = ScreenSize().screenwidth(screenwidth);
     return Scaffold(
-      body: newContent(),
+      body: !_isCameraPermissionGranted
+          ? Container(
+              color: Colors.black,
+            )
+          : newContent(),
     );
   }
 
@@ -249,7 +289,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                           _cameraWidget(context),
                           Column(
                             children: [
-                              // isType ? Container() : _isSlider(context),
+                              
                               isType
                                   ? Container()
                                   : Row(
@@ -284,6 +324,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     ],
                   ),
                   action_button(context),
+                  //_isSlider(context)
                 ],
               ),
             ],
@@ -378,113 +419,50 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   }
 
   Widget _isSlider(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.topCenter,
-      children: [
-        Padding(
-          padding:
-              const EdgeInsets.only(top: 30.0, bottom: 30, left: 10, right: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                padding: const EdgeInsets.only(left: 30),
-                onPressed: () {
-                  if (offset.dx <= 124.0) {
-                    MyStyle().showBasicsFlash(
-                        context: context,
-                        text: 'ลดขนาดต่ำสุดแล้ว',
-                        flashStyle: FlashBehavior.fixed,
-                        duration: const Duration(seconds: 2));
-                  } else {
-                    setState(
-                      () {
-                        offset = Offset(offset.dx - 3, 0);
-                        waistwidth = offset.dx * 100 / 300;
-                        inch = waistwidth / 2.5;
-                        //  alignmentwidth -= 0.05;
-                        // waistwidth -= 1;
-                        // inch = waistwidth / 2.5;
-                      },
-                    );
-                  }
-                },
-                icon: const Icon(
-                  Icons.remove_circle_outline,
-                  color: Colors.red,
-                  size: 30,
-                ),
-              ),
-              Slider(
-                activeColor: const Color.fromARGB(255, 247, 166, 61),
-                inactiveColor: const Color.fromARGB(255, 247, 243, 243),
-                thumbColor: isColor ? Colors.green : Colors.red,
-                // min: -3.5,
-                // max: 1.0,
-                min: 120,
-                max: 314,
-                value: offset.dx,
-                onChanged: (value) {
-                  if (value <= 124) {
-                    MyStyle().showBasicsFlash(
-                        context: context,
-                        text: 'ลดขนาดต่ำสุดแล้ว',
-                        flashStyle: FlashBehavior.fixed,
-                        duration: const Duration(seconds: 2));
-                  } else if (value >= 310) {
-                    MyStyle().showBasicsFlash(
-                        context: context,
-                        text: 'เพิ่มขนาดสูงสุดแล้ว',
-                        flashStyle: FlashBehavior.fixed,
-                        duration: const Duration(seconds: 2));
-                  } else {
-                    setState(
-                      () {
-                        offset = Offset(value, 0);
-                        waistwidth = offset.dx * 100 / 300;
-                        inch = waistwidth / 2.5;
+    return RotatedBox(
+      quarterTurns: 5,
+      child: Container(
+        height: 30,
+        child: Slider(
+          activeColor: const Color.fromARGB(255, 247, 166, 61),
+          inactiveColor: const Color.fromARGB(255, 247, 243, 243),
+          thumbColor: isColor ? Colors.green : Colors.red,
+          // min: -3.5,
+          // max: 1.0,
+          min: 20,
+          max: 1314,
+          value: offset.dx,
+          onChanged: (value) {
+            debugPrint('Value ========= ${value.toString()}');
+            // if (value <= 124) {
+            //   MyStyle().showBasicsFlash(
+            //       context: context,
+            //       text: 'ลดขนาดต่ำสุดแล้ว',
+            //       flashStyle: FlashBehavior.fixed,
+            //       duration: const Duration(seconds: 2));
+            // } else if (value >= 310) {
+            //   MyStyle().showBasicsFlash(
+            //       context: context,
+            //       text: 'เพิ่มขนาดสูงสุดแล้ว',
+            //       flashStyle: FlashBehavior.fixed,
+            //       duration: const Duration(seconds: 2));
+            // } else {
+            //   setState(
+            //     () {
+            //       offset = Offset(value, 0);
+            //       waistwidth = offset.dx * 100 / 300;
+            //       inch = waistwidth / 2.5;
 
-                        // alignmentwidth = value;
-                        // waistwidth = (value * 100 / 5) + 20;
-                        // inch = waistwidth / 2.5;
-                        // print('alignmentwidth ===> $alignmentwidth');
-                      },
-                    );
-                  }
-                },
-              ),
-              IconButton(
-                padding: const EdgeInsets.only(right: 30),
-                onPressed: () {
-                  if (offset.dx >= 310) {
-                    MyStyle().showBasicsFlash(
-                        context: context,
-                        text: 'เพิ่มขนาดสูงสุดแล้ว',
-                        flashStyle: FlashBehavior.fixed,
-                        duration: const Duration(seconds: 2));
-                  } else {
-                    setState(
-                      () {
-                        offset = Offset(offset.dx + 3, 0);
-                        waistwidth = offset.dx * 100 / 300;
-                        inch = waistwidth / 2.5;
-                        // alignmentwidth += 0.05;
-                        // waistwidth += 1;
-                        // inch = waistwidth / 2.5;
-                      },
-                    );
-                  }
-                },
-                icon: const Icon(
-                  Icons.add_circle_outline,
-                  color: Colors.green,
-                  size: 30,
-                ),
-              ),
-            ],
-          ),
+            //       // alignmentwidth = value;
+            //       // waistwidth = (value * 100 / 5) + 20;
+            //       // inch = waistwidth / 2.5;
+            //       // print('alignmentwidth ===> $alignmentwidth');
+            //     },
+            //   );
+            // }
+          },
         ),
-      ],
+      ),
     );
   }
 
@@ -973,7 +951,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) *
                         2;
               }
-              waistwidth = size + 23;
+              waistwidth = size + 26;
               // waistwidth = size + 33;
               inch = (waistwidth / 2.54);
             });
@@ -1122,7 +1100,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
               size =
                   (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
             }
-            waistwidth = size + 23;
+            waistwidth = size + 26;
             // waistwidth = size + 33;
             inch = (waistwidth / 2.54);
             print('endIndent ======> ${endIndent.toString()}');
@@ -1236,21 +1214,21 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     setState(
                       () {
                         alignmentValue_b -= 0.4;
-                        alignment_a -= 0.075;
-                        alignment_b += 0.075;
-                        alignment_c += 0.075;
+                        // alignment_a -= 0.075;
+                        // alignment_b += 0.075;
+                        alignment_c += 0.15;
                         alignment_d -= 0.060;
-                        alignment_e += 0.075;
-                        alignment_f -= 0.080;
-                        alignment_g -= 0.075;
-                        alignment_h += 0.080;
+                        alignment_e += 0.15;
+                        alignment_f -= 0.182;
+                        // alignment_g -= 0.075;
+                        // alignment_h += 0.080;
                         sizewidth += 0.2;
                         sizeheight += 0.5;
 
-                        indent_a -= 3.2;
-                        endIndent_b -= 4.0;
-                        indent_c -= 1.85;
-                        endIndent_d -= 1.85;
+                        indent_a -= 7.7;
+                        // endIndent_b -= 4.0;
+                        // indent_c -= 1.85;
+                        endIndent_d -= 3.70;
                         print(
                             'alignment_a ===> $alignment_a\n alignment_b ===> $alignment_b\nalignment_c ===> $alignment_c\n alignment_d ===> $alignment_d\nalignment_e ===> $alignment_e\n alignment_f ===> $alignment_f\nalignment_g ===> $alignment_g\n alignment_h ===> $alignment_h');
                       },
@@ -1282,18 +1260,19 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                     setState(
                       () {
                         alignmentValue_b += 0.4;
-                        alignment_a += 0.075;
-                        alignment_b -= 0.075;
-                        alignment_c -= 0.075;
-                        alignment_d += 0.075;
-                        alignment_e -= 0.075;
-                        alignment_f += 0.080;
-                        alignment_g += 0.075;
-                        alignment_h -= 0.080;
-                        indent_a += 3.2;
-                        endIndent_b += 4.0;
-                        indent_c += 1.85;
-                        endIndent_d += 1.85;
+                        // alignment_a += 0.075;
+                        // alignment_b -= 0.075;
+                        alignment_c -= 0.15;
+                        alignment_d += 0.060;
+                        alignment_e -= 0.15;
+                        alignment_f += 0.182;
+                        // alignment_g += 0.075;
+                        // alignment_h -= 0.080;
+
+                        indent_a += 7.7;
+                        // endIndent_b += 4.0;
+                        // indent_c += 1.85;
+                        endIndent_d += 3.70;
 
                         sizewidth -= 0.2;
                         sizeheight -= 0.5;
@@ -1604,7 +1583,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                               2.79) *
                           2;
                     }
-                    waistwidth = size + 23;
+                    waistwidth = size + 26;
                     inch = (waistwidth / 2.54);
                   });
 
