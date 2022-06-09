@@ -29,9 +29,7 @@ Future<void> main() async {
           ),
         ),
       ),
-      home:
-          const Camera2()
-          //const MyHome(),
+      home: const MyHome(),
     ),
   );
 }

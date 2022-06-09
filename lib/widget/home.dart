@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/widget/camera.dart';
+import 'package:taywin_project/widget/camera2.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({
@@ -177,7 +178,7 @@ class _MyHomeState extends State<MyHome> {
                     try {
                       await Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => OpenCamera(
+                          builder: (context) => Camera2(
                             type: text,
                             screenwidth: screenwidth,
                             screenheight: screenheight,

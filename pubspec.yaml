@@ -48,6 +48,7 @@ dependencies:
   appcenter_crashes: ^0.2.1
   just_the_tooltip: ^0.0.11+2
   permission_handler: ^9.2.0
+  rulers: "^1.0.7"
   #arkit_plugin: ^1.0.5
   
 
