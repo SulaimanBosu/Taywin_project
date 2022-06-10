@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/utility/size.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:taywin_project/widget/camera.dart';
+import 'package:taywin_project/widget/camera2.dart';
 import 'package:taywin_project/widget/home.dart';
 
 class MeasurementResults extends StatefulWidget {
@@ -60,6 +62,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
       const MethodChannel('image_gallery_saver');
 
   final moreControler = TextEditingController();
+  bool isUpload = true;
 
   void type() {
     if (widget.type == MyStyle().footmeasure) {
@@ -102,6 +105,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
 
   @override
   void initState() {
+    getPermissionStatus();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -110,16 +114,23 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     sizeheight = widget.height;
     type();
     size();
-    Timer.periodic(
-      const Duration(milliseconds: 2000),
-      (Timer t) => setState(
-        () {
-          onLoading = true;
-        },
-      ),
-    );
-
     super.initState();
+  }
+
+  getPermissionStatus() async {
+    await Permission.storage.request();
+    var status_storage = await Permission.storage.status;
+    if (status_storage.isGranted) {
+      debugPrint('Camera Permission: GRANTED');
+      setState(() {
+        onLoading = true;
+      });
+    } else {
+      setState(() {
+        onLoading = true;
+      });
+      debugPrint('Camera Permission: DENIED');
+    }
   }
 
   @override
@@ -153,7 +164,11 @@ class _MeasurementResultsState extends State<MeasurementResults> {
         backgroundColor: Colors.white,
         body: Container(
           color: Colors.white,
-          child: onLoading ? content() : MyStyle().progress(context),
+          child: onLoading
+              ? isUpload
+                  ? content()
+                  : progress(context)
+              : MyStyle().progress(context),
         ),
       ),
     );
@@ -175,30 +190,30 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                             const SizedBox(
                               height: 30,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizedBox(
-                                  width: 60,
-                                ),
-                                Text('${sizewidth.toStringAsFixed(1)} ซม.'),
-                              ],
-                            ),
-                            Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const SizedBox(
-                                    width: 60,
-                                  ),
-                                  Image.asset(
-                                    'images/arrow2.png',
-                                    width: screenwidth * 0.35,
-                                    height: screenheight * 0.06,
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: [
+                            //     const SizedBox(
+                            //       width: 60,
+                            //     ),
+                            //     Text('${sizewidth.toStringAsFixed(1)} ซม.'),
+                            //   ],
+                            // ),
+                            // Container(
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: [
+                            //       const SizedBox(
+                            //         width: 60,
+                            //       ),
+                            //       Image.asset(
+                            //         'images/arrow2.png',
+                            //         width: screenwidth * 0.35,
+                            //         height: screenheight * 0.06,
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -211,11 +226,10 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                                   width: 10,
                                 ),
                                 Image.asset(
-                                    'images/arrow.png',
-                                    width: screenwidth * 0.015,
-                                     height: screenheight * 0.28,
-                                  ),
-                                
+                                  'images/arrow.png',
+                                  width: screenwidth * 0.015,
+                                  height: screenheight * 0.28,
+                                ),
                                 const SizedBox(
                                   width: 5,
                                 ),
@@ -658,24 +672,30 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                             'ยืนยันถ่ายใหม่',
                             'ท่านต้องการละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่');
                       } else {
-                        try {
+                        if (isType) {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => OpenCamera(
-                                type: isType
-                                    ? MyStyle().footmeasure
-                                    : MyStyle().waistline,
+                              builder: (context) => Camera2(
+                                type: MyStyle().footmeasure,
                                 screenwidth: screenwidth,
                                 screenheight: screenheight,
                               ),
                             ),
                           );
-                          SystemChrome.setPreferredOrientations([
-                            DeviceOrientation.portraitUp,
-                          ]);
-                        } catch (e) {
-                          print(e);
+                        } else {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => OpenCamera(
+                                type: MyStyle().waistline,
+                                screenwidth: screenwidth,
+                                screenheight: screenheight,
+                              ),
+                            ),
+                          );
                         }
+                        SystemChrome.setPreferredOrientations([
+                          DeviceOrientation.portraitUp,
+                        ]);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -696,7 +716,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                     onPressed: () {
                       screenshotAndSave();
                       setState(() {
-                        isNosave = false;
+                        isUpload = false;
                       });
                     },
                     style: ElevatedButton.styleFrom(
@@ -744,12 +764,15 @@ class _MeasurementResultsState extends State<MeasurementResults> {
       );
 
       if (result == false) {
+        isUpload = true;
         setState(() {
           MyStyle().showdialog(Icons.save_alt_outlined, context, 'ล้มเหลว!',
               'กรุณาอณุญาตให้แอพสามารถเข้าถึงรูปภาพได้ จึงจะสามารถบันทึกได้สำเร็จ');
         });
       } else {
         setState(() {
+          isNosave = false;
+          isUpload = true;
           MyStyle().showdialog(Icons.save_alt_outlined, context, 'บันทึก',
               'บันทึกไปยังคลังรูปภาพเรียบร้อย');
         });
@@ -896,24 +919,31 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               onPressed: () async {
                 Navigator.pop(context);
                 isNosave = true;
-                try {
+
+                if (isType) {
                   await Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => OpenCamera(
-                        type: isType
-                            ? MyStyle().footmeasure
-                            : MyStyle().waistline,
+                      builder: (context) => Camera2(
+                        type: MyStyle().footmeasure,
                         screenwidth: screenwidth,
                         screenheight: screenheight,
                       ),
                     ),
                   );
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitUp,
-                  ]);
-                } catch (e) {
-                  print(e);
+                } else {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => OpenCamera(
+                        type: MyStyle().waistline,
+                        screenwidth: screenwidth,
+                        screenheight: screenheight,
+                      ),
+                    ),
+                  );
                 }
+                SystemChrome.setPreferredOrientations([
+                  DeviceOrientation.portraitUp,
+                ]);
               },
               child: const Text(
                 'ใช่',
@@ -1036,6 +1066,60 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     //   ),
     // );
     return onTab;
+  }
+
+  Widget progress(BuildContext context) {
+    return Container(
+        child: Stack(
+      children: <Widget>[
+        content(),
+        Container(
+          alignment: AlignmentDirectional.center,
+          decoration: const BoxDecoration(
+            color: Colors.white70,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10.0)),
+            width: MediaQuery.of(context).size.width * 0.4,
+            height: MediaQuery.of(context).size.width * 0.3,
+            alignment: AlignmentDirectional.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.width * 0.1,
+                    width: MediaQuery.of(context).size.width * 0.1,
+                    child: const CircularProgressIndicator(
+                      value: null,
+                      backgroundColor: Colors.white,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                      strokeWidth: 5.0,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 25.0),
+                  child: const Center(
+                    child: Text(
+                      'กำลังบันทึก...',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.black45,
+                        fontFamily: 'FC-Minimal-Regular',
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ));
   }
 
   Widget appbar() => Row(

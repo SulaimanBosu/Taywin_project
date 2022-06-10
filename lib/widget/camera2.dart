@@ -3,10 +3,13 @@ import 'package:camera/camera.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_scale_ruler/flutter_scale_ruler.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rulers/rulers.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:taywin_project/main.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
@@ -37,8 +40,8 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
   late double screenheight;
 
   double alignment_e = -0.22000000000000003;
-  double alignment_f = 1.0570809011803468; // 2,
-  double sizeheight = 28.6;
+  double alignment_f = 2;
+  double sizeheight = 25.8;
   bool isColor = false;
   bool isType = false;
   late Timer timer;
@@ -55,14 +58,14 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
   bool _istooltip = true;
   bool _isCameraPermissionGranted = false;
 
+  ScaleValue? _scaleValue;
+  ScaleValue? _scaleValueCms;
+
   getPermissionStatus() async {
     var status = await Permission.camera.status;
-
-    var status_storage = await Permission.storage.status;
-
     var microphone = await Permission.microphone.status;
 
-    if (status.isGranted && status_storage.isGranted && microphone.isGranted) {
+    if (status.isGranted && microphone.isGranted) {
       debugPrint('Camera ==============>>> Permission: GRANTED');
       setState(() {
         _isCameraPermissionGranted = true;
@@ -73,10 +76,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
       setState(() async {
         debugPrint('Camera ==============>> Permission: DENIED');
         await Permission.camera.request();
-        await Permission.storage.request();
         await Permission.microphone.request();
-        await Permission.mediaLibrary.request();
-        await Permission.photosAddOnly.request();
         _isCameraPermissionGranted = true;
         Future.delayed(const Duration(milliseconds: 1000), () {
           _state();
@@ -228,7 +228,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                                         ? Colors.transparent
                                         : isColor
                                             ? Colors.white
-                                            : Colors.green,
+                                            : Colors.blue,
                                     height: 2,
                                   ),
                                 ),
@@ -255,7 +255,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                               endIndent: 8,
                               thickness: 5,
                               height: 5,
-                              color: Colors.red,
+                              color: Colors.orange,
                             ),
                           ),
                         ],
@@ -301,39 +301,131 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
       child: Stack(
         children: [
           newContent(),
-          // Column(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     Container(
-          //       padding: const EdgeInsets.only(left: 10, top: 50),
-          //       height: 650,
-          //       margin: const EdgeInsets.only(top: 1.0),
-          //       alignment: Alignment.centerLeft,
-          //       child: RulerWidget(
-          //         scaleBackgroundColor: Colors.transparent,
-          //         height: 300,
-          //         largeScaleBarsInterval: 30,
-          //         smallScaleBarsInterval: 0,
-          //         lowerIndicatorLimit: 20,
-          //         lowerMidIndicatorLimit: 30,
-          //         upperMidIndicatorLimit: 0,
-          //         upperIndicatorLimit: 0,
-          //         barsColor: Colors.white,
-          //         axis: Axis.vertical,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          Container(
-            padding: const EdgeInsets.only(left: 45, top: 10),
-            alignment: Alignment.centerLeft,
-            child: Image.asset(
-              'images/image10.png',
-              // color: Colors.greenAccent,
-              // width: 150,
-              height: screenheight * 0.7,
-            ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 20, left: 30),
+                    height: screenheight * 0.69,
+                    child: SfLinearGauge(
+                      minorTicksPerInterval: 3,
+                      interval: 5,
+                      minorTickStyle:
+                          const LinearTickStyle(color: Colors.white),
+                      majorTickStyle: const LinearTickStyle(
+                        length: 10,
+                        color: Colors.red,
+                      ),
+                      axisTrackStyle: const LinearAxisTrackStyle(
+                        borderColor: Colors.white,
+                      ),
+                      axisLabelStyle: const TextStyle(color: Colors.white),
+                      orientation: LinearGaugeOrientation.vertical,
+                      minimum: 0,
+                      maximum: 30,
+                      axisTrackExtent: 0,
+                      markerPointers: const <LinearMarkerPointer>[],
+                      // ranges: const <LinearGaugeRange>[
+                      //   LinearGaugeRange(
+                      //       startValue: 0, endValue: 20.5, color: Colors.green),
+                      //   LinearGaugeRange(
+                      //       startValue: 20.6, endValue: 30, color: Colors.blue)
+                      // ],
+                    ),
+                  ),
+                ],
+              )
+
+              // Container(
+              //   width: screenwidth,
+              //   height: screenheight,
+              //   child: Center(
+              //     child: ListView.builder(
+              //           itemCount: 1,
+              //           //physics: NeverScrollableScrollPhysics(),
+              //           scrollDirection: Axis.vertical,
+              //           itemBuilder: (context1, index) {
+              //             return ScaleRuler.lengthMeasurement(
+              //               maxValue: 29,
+              //               minValue: 20,
+              //               backgroundColor: Colors.transparent,
+              //               sliderActiveColor: Colors.green[500],
+              //               sliderInactiveColor: Colors.greenAccent,
+              //               onChanged: (
+              //                 ScaleValue? scaleValue,
+              //                 Axis? vertical
+              //               ) {
+              //                 setState(() {
+              //                   _scaleValueCms = scaleValue;
+              //                 });
+              //                 print("${scaleValue?.cms} cms");
+              //               },
+              //             );
+              //           }),
+              //     ),
+
+              // ),
+
+              // ScaleRuler.lengthMeasurement(
+              //   maxValue: 29,
+              //   minValue: 20,
+              //   backgroundColor: Colors.transparent,
+              //   sliderActiveColor: Colors.green[500],
+              //   sliderInactiveColor: Colors.greenAccent,
+              //   onChanged: (
+              //     ScaleValue? scaleValue,
+              //     Axis? scrollDirection
+              //   ) {
+              //     setState(() {
+              //       _scaleValueCms = scaleValue;
+              //     });
+              //     print("${scaleValue?.cms} cms");
+              //   },
+              // ),
+              // const SizedBox(
+              //   height: 20.0,
+              // ),
+              // Text(
+              //   "${_scaleValueCms?.cms ?? "0"} cms",
+              //   style: const TextStyle(fontSize: 18.0),
+              // ),
+
+              // Container(
+              //   padding: const EdgeInsets.only(left: 10, top: 50),
+              //   height: 650,
+              //   margin: const EdgeInsets.only(top: 1.0),
+              //   alignment: Alignment.centerLeft,
+              //   child: RulerWidget(
+              //     scaleBackgroundColor: Colors.transparent,
+              //     height: 300,
+              //     largeScaleBarsInterval: 1,
+              //     smallScaleBarsInterval: 0,
+              //     lowerIndicatorLimit: 0,
+              //     lowerMidIndicatorLimit: 0,
+              //     upperMidIndicatorLimit: 0,
+              //     upperIndicatorLimit: 0,
+              //     barsColor: Colors.white,
+              //     inRangeBarColor: Colors.green,
+              //     behindRangeBarColor: Colors.grey,
+              //     outRangeBarColor: Colors.red,
+              //     axis: Axis.vertical,
+              //   ),
+              // ),
+            ],
           ),
+          // Container(
+          //   padding: const EdgeInsets.only(left: 45, top: 10),
+          //   alignment: Alignment.centerLeft,
+          //   child: Image.asset(
+          //     'images/image10.png',
+          //     // color: Colors.greenAccent,
+          //     // width: 150,
+          //     height: screenheight * 0.7,
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.fromLTRB(
               16.0,
@@ -372,19 +464,32 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                 ),
                 Expanded(
                   child: RotatedBox(
-                    quarterTurns: 5,
+                    quarterTurns: 3,
                     child: Container(
                       height: 30,
                       child: Slider(
                         value: alignment_f,
-                        min: 1.0570809011803468, // 2,
-                        max: 3.7686147023598, // 4.8
-                        activeColor: Colors.green,
+                        min: 2, // 2,
+                        max: 4.8, // 4.8
+                        activeColor: Colors.blue,
                         inactiveColor: Colors.white30,
                         onChanged: (value) async {
                           setState(() {
+                            if (value >= 4.8) {
+                              MyStyle().showBasicsFlash(
+                                  context: context,
+                                  text: 'ลดขนาดต่ำสุดแล้ว',
+                                  flashStyle: FlashBehavior.fixed,
+                                  duration: const Duration(seconds: 2));
+                            } else if (value <= 2) {
+                              MyStyle().showBasicsFlash(
+                                  context: context,
+                                  text: 'เพิ่มขนาดสูงสุดแล้ว',
+                                  flashStyle: FlashBehavior.fixed,
+                                  duration: const Duration(seconds: 2));
+                            }
                             sizeheight = 28.6 - (value * 100 / 35) + 5.7;
-                            // sizeheight = 28.6 - (value * 100 / 35) + 3;
+                            //sizeheight = 28.6 - (value * 100 / 35) + 2.9;
                             alignment_f = value;
                             debugPrint('value =========>>>>> $value');
                           });
@@ -446,12 +551,12 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                         color: Colors.yellow,
                       ),
           ),
-          Container(
-            alignment: const Alignment(0, -1),
-            width: screenwidth * 0.3,
-            height: screenheight * 0.05,
-            child: _textcontainer(),
-          ),
+          // Container(
+          //   alignment: const Alignment(0, -1),
+          //   width: screenwidth * 0.3,
+          //   height: screenheight * 0.05,
+          //   child: _textcontainer(),
+          // ),
           IconButton(
             onPressed: () {
               Navigator.pop(context);

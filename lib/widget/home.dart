@@ -176,15 +176,28 @@ class _MyHomeState extends State<MyHome> {
                 RaisedButton.icon(
                   onPressed: () async {
                     try {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => Camera2(
-                            type: text,
-                            screenwidth: screenwidth,
-                            screenheight: screenheight,
+                      if (text == MyStyle().footmeasure) {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Camera2(
+                              type: text,
+                              screenwidth: screenwidth,
+                              screenheight: screenheight,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => OpenCamera(
+                              type: text,
+                              screenwidth: screenwidth,
+                              screenheight: screenheight,
+                            ),
+                          ),
+                        );
+                      }
+
                       SystemChrome.setPreferredOrientations([
                         DeviceOrientation.portraitUp,
                       ]);
