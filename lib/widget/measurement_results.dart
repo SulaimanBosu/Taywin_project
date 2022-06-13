@@ -1093,16 +1093,13 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.width * 0.1,
                     width: MediaQuery.of(context).size.width * 0.1,
-                    child: const CircularProgressIndicator(
-                      value: null,
-                      backgroundColor: Colors.white,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                      strokeWidth: 5.0,
+                    child: const CupertinoActivityIndicator(
+                      radius: 20,
                     ),
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 25.0),
+                  margin: const EdgeInsets.only(top: 5.0),
                   child: const Center(
                     child: Text(
                       'กำลังบันทึก...',

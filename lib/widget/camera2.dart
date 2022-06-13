@@ -39,9 +39,8 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
   late double screenwidth;
   late double screenheight;
 
-  double alignment_e = -0.22000000000000003;
-  double alignment_f = 2;
-  double sizeheight = 25.8;
+  double alignment = 2.4699999988300005;
+  double sizeheight = 25.0;
   bool isColor = false;
   bool isType = false;
   late Timer timer;
@@ -215,8 +214,8 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            alignment: Alignment(alignment_e, alignment_f),
-                            width: screenwidth * 0.62,
+                            alignment: Alignment(-0.22, alignment),
+                            width: screenwidth * 0.65,
                             height: screenheight * 0.14,
                             // color: Colors.red,
                             child: Row(
@@ -229,30 +228,23 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                                         : isColor
                                             ? Colors.white
                                             : Colors.blue,
-                                    height: 2,
+                                    height: 4,
                                   ),
                                 ),
                               ),
                             ),
-
-                            //  Divider(
-                            //   indent: indent_c,
-                            //   endIndent: endIndent_d,
-                            //   thickness: 10,
-                            //   color: isColor ? Colors.green : Colors.red,
-                            // ),
                           ),
                           SizedBox(
                             height: screenheight * 0.5,
                           ),
                           Container(
-                            alignment: const Alignment(0, 0.3),
+                            alignment: const Alignment(0, 0.24),
                             width: screenwidth * 0.62,
                             height: screenheight * 0.257,
                             // color: Colors.red,
                             child: const Divider(
                               indent: 8,
-                              endIndent: 8,
+                             // endIndent: 8,
                               thickness: 5,
                               height: 5,
                               color: Colors.orange,
@@ -269,28 +261,27 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
           );
         } else {
           return Container(
-              color: Colors.black,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    const CircularProgressIndicator(
-                      backgroundColor: Colors.white,
-                      color: Colors.red,
+            color: Colors.black,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                   const CupertinoActivityIndicator(
+                      radius: 20,
+                      color: Colors.white,
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      'Loading.....',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ],
-                ),
-              )
-              // CircularProgressIndicator(),
-              );
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    'Loading...',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          );
         }
       },
     );
@@ -309,9 +300,9 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(top: 20, left: 30),
-                    height: screenheight * 0.69,
+                    height: screenheight * 0.68,
                     child: SfLinearGauge(
-                      minorTicksPerInterval: 3,
+                      minorTicksPerInterval: 4,
                       interval: 5,
                       minorTickStyle:
                           const LinearTickStyle(color: Colors.white),
@@ -327,13 +318,31 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                       minimum: 0,
                       maximum: 30,
                       axisTrackExtent: 0,
-                      markerPointers: const <LinearMarkerPointer>[],
-                      // ranges: const <LinearGaugeRange>[
-                      //   LinearGaugeRange(
-                      //       startValue: 0, endValue: 20.5, color: Colors.green),
-                      //   LinearGaugeRange(
-                      //       startValue: 20.6, endValue: 30, color: Colors.blue)
-                      // ],
+                      markerPointers: <LinearMarkerPointer>[
+                        LinearShapePointer(
+                          value: sizeheight,
+                          color: Colors.blue,
+                          onChanged: (double value) {
+                            setState(() {
+                              value = sizeheight;
+                            });
+                          },
+                        ),
+                      ],
+                      barPointers: [
+                        LinearBarPointer(
+                          value: sizeheight,
+                          color: Colors.red,
+                        )
+                      ],
+                      ranges: const <LinearGaugeRange>[
+                        LinearGaugeRange(
+                            startValue: 0, endValue: 20.5, color: Colors.green),
+                        LinearGaugeRange(
+                            startValue: 20.6,
+                            endValue: 28.6,
+                            color: Colors.blue)
+                      ],
                     ),
                   ),
                 ],
@@ -416,22 +425,12 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
               // ),
             ],
           ),
-          // Container(
-          //   padding: const EdgeInsets.only(left: 45, top: 10),
-          //   alignment: Alignment.centerLeft,
-          //   child: Image.asset(
-          //     'images/image10.png',
-          //     // color: Colors.greenAccent,
-          //     // width: 150,
-          //     height: screenheight * 0.7,
-          //   ),
-          // ),
           Padding(
             padding: const EdgeInsets.fromLTRB(
               16.0,
               80.0,
               16.0,
-              80.0,
+              100.0,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -446,7 +445,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(5.0),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -468,30 +467,33 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                     child: Container(
                       height: 30,
                       child: Slider(
-                        value: alignment_f,
-                        min: 2, // 2,
-                        max: 4.8, // 4.8
+                        value: sizeheight,
+                        min: 20.6, // 2,
+                        max: 28.6, // 4.8
                         activeColor: Colors.blue,
                         inactiveColor: Colors.white30,
                         onChanged: (value) async {
                           setState(() {
-                            if (value >= 4.8) {
+                            if (alignment >= 3.8999999974) {
                               MyStyle().showBasicsFlash(
                                   context: context,
                                   text: 'ลดขนาดต่ำสุดแล้ว',
                                   flashStyle: FlashBehavior.fixed,
                                   duration: const Duration(seconds: 2));
-                            } else if (value <= 2) {
+                            } else if (alignment <= 1.3) {
                               MyStyle().showBasicsFlash(
                                   context: context,
                                   text: 'เพิ่มขนาดสูงสุดแล้ว',
                                   flashStyle: FlashBehavior.fixed,
                                   duration: const Duration(seconds: 2));
                             }
-                            sizeheight = 28.6 - (value * 100 / 35) + 5.7;
-                            //sizeheight = 28.6 - (value * 100 / 35) + 2.9;
-                            alignment_f = value;
+                            //  sizeheight = 28.6 - (value * 100 / 35) + 5.7; 6.15384615
+                            sizeheight = value;
+                           // ค่าที่ตั้งค่าของสัดส่วนของขนาด
+                            alignment = (28.6 - value) / 3.07692308 + 1.3;
                             debugPrint('value =========>>>>> $value');
+                            debugPrint(
+                                'alignment =========>>>>> $alignment');
                           });
                         },
                       ),
@@ -506,6 +508,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
     );
   }
 
+  // ignore: non_constant_identifier_names
   Widget action_button(BuildContext context) {
     return Padding(
       padding:

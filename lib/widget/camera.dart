@@ -337,15 +337,15 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                   mainAxisAlignment: MainAxisAlignment.center,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const CircularProgressIndicator(
-                      backgroundColor: Colors.white,
-                      color: Colors.red,
+                     const CupertinoActivityIndicator(
+                      radius: 20,
+                      color: Colors.white,
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     const Text(
-                      'Loading.....',
+                      'Loading...',
                       style: TextStyle(color: Colors.white),
                     ),
                   ],

@@ -1,6 +1,7 @@
 // ignore_for_file: sized_box_for_whitespace, unnecessary_string_interpolations, avoid_unnecessary_containers, unused_element
 
 import 'package:flash/flash.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyStyle {
@@ -316,11 +317,8 @@ class MyStyle {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.width * 0.1,
                     width: MediaQuery.of(context).size.width * 0.1,
-                    child: const CircularProgressIndicator(
-                      value: null,
-                      backgroundColor: Colors.white,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                      strokeWidth: 5.0,
+                    child: const CupertinoActivityIndicator(
+                      radius: 20,
                     ),
                   ),
                 ),
