@@ -39,7 +39,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
   late double screenwidth;
   late double screenheight;
 
-  double alignment = 2.4699999988300005;
+  double alignment = 2.5204030082605557;
   double sizeheight = 25.0;
   bool isColor = false;
   bool isType = false;
@@ -56,7 +56,12 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
   final selectcameraTooltip = JustTheController();
   bool _istooltip = true;
   bool _isCameraPermissionGranted = false;
-
+  Offset offset = const Offset(480, 0.0);
+  bool isMan = false;
+  late MediaQueryData queryData;
+  double indent_a = 0;
+  double endIndent_b = 0;
+  double endIndent = 0;
   ScaleValue? _scaleValue;
   ScaleValue? _scaleValueCms;
 
@@ -123,20 +128,47 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
         initCamera(cameras[0]);
         isType = true;
       });
+    } else if (widget.type == MyStyle().waistline) {
+      setState(() {
+        initCamera(cameras[1]);
+        delaydialog();
+        isType = false;
+        if (isMan) {
+          size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2;
+        } else {
+          size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
+        }
+        waistwidth = size + 26;
+        // waistwidth = size + 33;
+        inch = (waistwidth / 2.54);
+      });
+    } else {
+      print('เกิดผิดพลาด');
     }
+  }
+
+  void delaydialog() {
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      setState(() {
+        _showAlertDialog(true, const AssetImage('images/man.png'), context,
+            'เลือกเพศ', 'กรุณาเลือกเพศและอ่านคำแนะนำก่อนทำการวัดรอบเอว');
+      });
+    });
   }
 
   @override
   void dispose() {
-    //     SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.landscapeRight,
-    //   DeviceOrientation.landscapeLeft,
-    //   DeviceOrientation.portraitUp,
-    //   DeviceOrientation.portraitDown,
-    // ]);
     WidgetsBinding.instance?.removeObserver(this);
     _controller.dispose();
     super.dispose();
+  }
+
+  void _ondelay() {
+    Future.delayed(const Duration(milliseconds: 3000), () {
+      setState(() {
+        Navigator.pop(context);
+      });
+    });
   }
 
   @override
@@ -190,6 +222,160 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
     );
   }
 
+    Widget content() {
+    // ignore: avoid_unnecessary_containers
+    return Container(
+      child: Stack(
+        children: [
+          newContent(),
+          isType
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 20, left: 30),
+                          height: screenheight * 0.68,
+                          child: SfLinearGauge(
+                            minorTicksPerInterval: 4,
+                            interval: 5,
+                            minorTickStyle:
+                                const LinearTickStyle(color: Colors.white),
+                            majorTickStyle: const LinearTickStyle(
+                              length: 10,
+                              color: Colors.red,
+                            ),
+                            axisTrackStyle: const LinearAxisTrackStyle(
+                              borderColor: Colors.white,
+                            ),
+                            axisLabelStyle:
+                                const TextStyle(color: Colors.white),
+                            orientation: LinearGaugeOrientation.vertical,
+                            minimum: 0,
+                            maximum: 30,
+                            axisTrackExtent: 0,
+                            markerPointers: <LinearMarkerPointer>[
+                              LinearShapePointer(
+                                value: sizeheight,
+                                color: Colors.blue,
+                                onChanged: (double value) {
+                                  setState(() {
+                                    value = sizeheight;
+                                  });
+                                },
+                              ),
+                            ],
+                            barPointers: [
+                              LinearBarPointer(
+                                value: sizeheight,
+                                color: Colors.transparent,
+                              )
+                            ],
+                            // ranges: const <LinearGaugeRange>[
+                            //   LinearGaugeRange(
+                            //       startValue: 0, endValue: 20.5, color: Colors.green),
+                            //   LinearGaugeRange(
+                            //       startValue: 20.6,
+                            //       endValue: 28.6,
+                            //       color: Colors.blue)
+                            // ],
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              : Container(),
+          isType
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    16.0,
+                    80.0,
+                    16.0,
+                    100.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(),
+                      ),
+                      // Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            // ignore: unnecessary_const
+                            child: Text(
+                              '${sizeheight.toStringAsFixed(1)} ซม.',
+                              style: const TextStyle(
+                                color: Colors.orange,
+                                fontSize: 14.0,
+                                fontFamily: 'FC-Minimal-Regular',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: RotatedBox(
+                          quarterTurns: 3,
+                          child: Container(
+                            height: 30,
+                            child: Slider(
+                              value: sizeheight,
+                              min: 20.6, // 2,
+                              max: 28.6, // 4.8
+                              activeColor: Colors.blue,
+                              inactiveColor: Colors.white30,
+                              onChanged: (value) async {
+                                setState(() {
+                                  if (alignment >= 3.9499999974000004) {
+                                    MyStyle().showBasicsFlash(
+                                      context: context,
+                                      text: 'ลดขนาดต่ำสุดแล้ว',
+                                      flashStyle: FlashBehavior.fixed,
+                                      duration: const Duration(seconds: 2),
+                                    );
+                                  } else if (alignment <= 1.35) {
+                                    MyStyle().showBasicsFlash(
+                                      context: context,
+                                      text: 'เพิ่มขนาดสูงสุดแล้ว',
+                                      flashStyle: FlashBehavior.fixed,
+                                      duration: const Duration(seconds: 2),
+                                    );
+                                  }
+                                  //  sizeheight = 28.6 - (value * 100 / 35) + 5.7; 6.15384615
+                                  sizeheight = value;
+                                  // ค่าที่ตั้งค่าของสัดส่วนของขนาด
+                                  alignment =
+                                      (28.6 - value) / 3.07692308 + 1.35;
+                                  debugPrint('value =========>>>>> $value');
+                                  debugPrint(
+                                      'alignment =========>>>> $alignment');
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
+        ],
+      ),
+    );
+  }
+
   Widget newContent() {
     return FutureBuilder(
       future: _initcontroler,
@@ -207,51 +393,79 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                         alignment: AlignmentDirectional.bottomCenter,
                         children: [
                           _cameraWidget(context),
-                          icon(),
+                          isType ? icon() : Container(),
+                          Column(
+                            children: [
+                              isType
+                                  ? Container()
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        isType
+                                            ? Container()
+                                            : iconCameraSelected(),
+
+                                        Container(
+                                          child: icon(),
+                                        ),
+                                        isType ? Container() : typeButton(),
+                                        // Container(
+                                        //   margin:
+                                        //       const EdgeInsets.only(right: 10),
+                                        // ),
+                                      ],
+                                    ),
+                            ],
+                          ),
                         ],
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            alignment: Alignment(-0.22, alignment),
-                            width: screenwidth * 0.65,
-                            height: screenheight * 0.14,
-                            // color: Colors.red,
-                            child: Row(
-                              children: List.generate(
-                                150 ~/ 10,
-                                (index) => Expanded(
-                                  child: Container(
-                                    color: index % 2 == 0
-                                        ? Colors.transparent
-                                        : isColor
-                                            ? Colors.white
-                                            : Colors.blue,
-                                    height: 4,
+                      isType
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  alignment: Alignment(-0.22, alignment),
+                                  width: screenwidth * 0.65,
+                                  height: screenheight * 0.14,
+                                  // color: Colors.red,
+                                  child: Row(
+                                    children: List.generate(
+                                      150 ~/ 10,
+                                      (index) => Expanded(
+                                        child: Container(
+                                          color: index % 2 == 0
+                                              ? Colors.transparent
+                                              : isColor
+                                                  ? Colors.white
+                                                  : Colors.blue,
+                                          height: 4,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: screenheight * 0.5,
-                          ),
-                          Container(
-                            alignment: const Alignment(0, 0.24),
-                            width: screenwidth * 0.62,
-                            height: screenheight * 0.257,
-                            // color: Colors.red,
-                            child: const Divider(
-                              indent: 8,
-                             // endIndent: 8,
-                              thickness: 5,
-                              height: 5,
-                              color: Colors.orange,
-                            ),
-                          ),
-                        ],
-                      ),
+                                SizedBox(
+                                  height: screenheight * 0.5,
+                                ),
+                                Container(
+                                  alignment: const Alignment(0, 0.24),
+                                  width: screenwidth * 0.62,
+                                  height: screenheight * 0.257,
+                                  // color: Colors.red,
+                                  child: const Divider(
+                                    indent: 8,
+                                    // endIndent: 8,
+                                    thickness: 5,
+                                    height: 5,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(),
+                      isType ? Container() : divider(),
+                      isType ? Container() : _isGestureDetector(),
                     ],
                   ),
                   action_button(context),
@@ -267,10 +481,10 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                 mainAxisAlignment: MainAxisAlignment.center,
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
-                   const CupertinoActivityIndicator(
-                      radius: 20,
-                      color: Colors.white,
-                    ),
+                  const CupertinoActivityIndicator(
+                    radius: 20,
+                    color: Colors.white,
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -284,227 +498,6 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
           );
         }
       },
-    );
-  }
-
-  Widget content() {
-    return Container(
-      child: Stack(
-        children: [
-          newContent(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 20, left: 30),
-                    height: screenheight * 0.68,
-                    child: SfLinearGauge(
-                      minorTicksPerInterval: 4,
-                      interval: 5,
-                      minorTickStyle:
-                          const LinearTickStyle(color: Colors.white),
-                      majorTickStyle: const LinearTickStyle(
-                        length: 10,
-                        color: Colors.red,
-                      ),
-                      axisTrackStyle: const LinearAxisTrackStyle(
-                        borderColor: Colors.white,
-                      ),
-                      axisLabelStyle: const TextStyle(color: Colors.white),
-                      orientation: LinearGaugeOrientation.vertical,
-                      minimum: 0,
-                      maximum: 30,
-                      axisTrackExtent: 0,
-                      markerPointers: <LinearMarkerPointer>[
-                        LinearShapePointer(
-                          value: sizeheight,
-                          color: Colors.blue,
-                          onChanged: (double value) {
-                            setState(() {
-                              value = sizeheight;
-                            });
-                          },
-                        ),
-                      ],
-                      barPointers: [
-                        LinearBarPointer(
-                          value: sizeheight,
-                          color: Colors.red,
-                        )
-                      ],
-                      ranges: const <LinearGaugeRange>[
-                        LinearGaugeRange(
-                            startValue: 0, endValue: 20.5, color: Colors.green),
-                        LinearGaugeRange(
-                            startValue: 20.6,
-                            endValue: 28.6,
-                            color: Colors.blue)
-                      ],
-                    ),
-                  ),
-                ],
-              )
-
-              // Container(
-              //   width: screenwidth,
-              //   height: screenheight,
-              //   child: Center(
-              //     child: ListView.builder(
-              //           itemCount: 1,
-              //           //physics: NeverScrollableScrollPhysics(),
-              //           scrollDirection: Axis.vertical,
-              //           itemBuilder: (context1, index) {
-              //             return ScaleRuler.lengthMeasurement(
-              //               maxValue: 29,
-              //               minValue: 20,
-              //               backgroundColor: Colors.transparent,
-              //               sliderActiveColor: Colors.green[500],
-              //               sliderInactiveColor: Colors.greenAccent,
-              //               onChanged: (
-              //                 ScaleValue? scaleValue,
-              //                 Axis? vertical
-              //               ) {
-              //                 setState(() {
-              //                   _scaleValueCms = scaleValue;
-              //                 });
-              //                 print("${scaleValue?.cms} cms");
-              //               },
-              //             );
-              //           }),
-              //     ),
-
-              // ),
-
-              // ScaleRuler.lengthMeasurement(
-              //   maxValue: 29,
-              //   minValue: 20,
-              //   backgroundColor: Colors.transparent,
-              //   sliderActiveColor: Colors.green[500],
-              //   sliderInactiveColor: Colors.greenAccent,
-              //   onChanged: (
-              //     ScaleValue? scaleValue,
-              //     Axis? scrollDirection
-              //   ) {
-              //     setState(() {
-              //       _scaleValueCms = scaleValue;
-              //     });
-              //     print("${scaleValue?.cms} cms");
-              //   },
-              // ),
-              // const SizedBox(
-              //   height: 20.0,
-              // ),
-              // Text(
-              //   "${_scaleValueCms?.cms ?? "0"} cms",
-              //   style: const TextStyle(fontSize: 18.0),
-              // ),
-
-              // Container(
-              //   padding: const EdgeInsets.only(left: 10, top: 50),
-              //   height: 650,
-              //   margin: const EdgeInsets.only(top: 1.0),
-              //   alignment: Alignment.centerLeft,
-              //   child: RulerWidget(
-              //     scaleBackgroundColor: Colors.transparent,
-              //     height: 300,
-              //     largeScaleBarsInterval: 1,
-              //     smallScaleBarsInterval: 0,
-              //     lowerIndicatorLimit: 0,
-              //     lowerMidIndicatorLimit: 0,
-              //     upperMidIndicatorLimit: 0,
-              //     upperIndicatorLimit: 0,
-              //     barsColor: Colors.white,
-              //     inRangeBarColor: Colors.green,
-              //     behindRangeBarColor: Colors.grey,
-              //     outRangeBarColor: Colors.red,
-              //     axis: Axis.vertical,
-              //   ),
-              // ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              16.0,
-              80.0,
-              16.0,
-              100.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Container(),
-                ),
-                // Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      // ignore: unnecessary_const
-                      child: Text(
-                        '${sizeheight.toStringAsFixed(1)} ซม.',
-                        style: const TextStyle(
-                          color: Colors.orange,
-                          fontSize: 14.0,
-                          fontFamily: 'FC-Minimal-Regular',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: RotatedBox(
-                    quarterTurns: 3,
-                    child: Container(
-                      height: 30,
-                      child: Slider(
-                        value: sizeheight,
-                        min: 20.6, // 2,
-                        max: 28.6, // 4.8
-                        activeColor: Colors.blue,
-                        inactiveColor: Colors.white30,
-                        onChanged: (value) async {
-                          setState(() {
-                            if (alignment >= 3.8999999974) {
-                              MyStyle().showBasicsFlash(
-                                  context: context,
-                                  text: 'ลดขนาดต่ำสุดแล้ว',
-                                  flashStyle: FlashBehavior.fixed,
-                                  duration: const Duration(seconds: 2));
-                            } else if (alignment <= 1.3) {
-                              MyStyle().showBasicsFlash(
-                                  context: context,
-                                  text: 'เพิ่มขนาดสูงสุดแล้ว',
-                                  flashStyle: FlashBehavior.fixed,
-                                  duration: const Duration(seconds: 2));
-                            }
-                            //  sizeheight = 28.6 - (value * 100 / 35) + 5.7; 6.15384615
-                            sizeheight = value;
-                           // ค่าที่ตั้งค่าของสัดส่วนของขนาด
-                            alignment = (28.6 - value) / 3.07692308 + 1.3;
-                            debugPrint('value =========>>>>> $value');
-                            debugPrint(
-                                'alignment =========>>>>> $alignment');
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -574,18 +567,282 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
     );
   }
 
+  Widget divider() {
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        Container(
+          alignment: const Alignment(0, -5),
+          width: screenwidth * 0.3,
+          height: screenheight * 0.085,
+          child: _textcontainer(),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Stack(
+          alignment: const Alignment(0, 0),
+          children: [
+            Container(
+              padding: EdgeInsets.only(left: screenwidth * 11 / 100),
+              width: screenwidth * 95 / 100,
+              //width: screenwidth * 99 / 100,
+              height: screenheight * 0.24,
+              // color: Colors.red,
+              child: Divider(
+                indent: screenwidth * 0.5 / 100,
+                endIndent: endIndent,
+                thickness: 5,
+                color: const Color.fromARGB(255, 247, 166, 61),
+              ),
+            ),
+            //  groupButton(),
+          ],
+        ),
+        Stack(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Container(
+                  alignment: const Alignment(-2.1, -1.0),
+                  //  alignment: const Alignment(-4.1, -1.0),
+                  width: screenwidth * 0.14,
+                  height: screenheight * 0.25,
+                  child: VerticalDivider(
+                    thickness: 10,
+                    indent: indent_a,
+                    endIndent: endIndent_b,
+                    width: 5,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget typeButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isMan = !isMan;
+              isMan
+                  ? _showtDialog(
+                      const AssetImage('images/man.png'),
+                      context,
+                      'วัดรอบเอวบุรุษ',
+                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 40 ซม.หรือ 15 นิ้วเท่านั้น')
+                  : _showtDialog(
+                      const AssetImage('images/woman.png'),
+                      context,
+                      'วัดรอบเอวสตรี',
+                      'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 30 ซม.หรือ 12 นิ้วเท่านั้น');
+              // if (isMan) {
+              //   size =
+              //       (((offset.dx - 73.2) * 100 / widget.screenheight) / 1.65) *
+              //           2;
+              // } else {
+              //   size =
+              //       (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) *
+              //           2;
+              // }
+              // waistwidth = size + 15;
+              // inch = waistwidth / 2.54;
+              if (isMan) {
+                size =
+                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) *
+                        2;
+              } else {
+                size =
+                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) *
+                        2;
+              }
+              waistwidth = size + 26;
+              // waistwidth = size + 33;
+              inch = (waistwidth / 2.54);
+            });
+          },
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                JustTheTooltip(
+                  controller: controller,
+                  onShow: controller.showTooltip,
+                  onDismiss: controller.hideTooltip,
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      isMan
+                          ? 'กดปุ่มนี้หากต้องการสลับไปวัดรอบเอวสตรี'
+                          : 'กดปุ่มนี้หากต้องการสลับไปวัดรอบเอวบุรุษ',
+                      style: const TextStyle(
+                        fontFamily: 'FC-Minimal-Regular',
+                        fontSize: 16,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ImageIcon(
+                          AssetImage(
+                              isMan ? 'images/man.png' : 'images/woman.png'),
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                        const ImageIcon(
+                          AssetImage('images/icons-circle.png'),
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Text(
+                  isMan ? 'วัดรอบเอวบุรุษ' : 'วัดรอบเอวสตรี',
+                  style: const TextStyle(
+                    fontFamily: 'FC-Minimal-Regular',
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _isGestureDetector() {
+    return Positioned(
+      left: offset.dx,
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            offset = Offset(offset.dx + details.delta.dx, 0);
+            if (offset.dx >= (widget.screenheight * 91 / 100)) {
+              offset = Offset(widget.screenheight * 91 / 100, 0);
+              MyStyle().showBasicsFlash(
+                context: context,
+                text: 'เพิ่มขนาดสูงสุดแล้ว',
+                flashStyle: FlashBehavior.fixed,
+                duration: const Duration(seconds: 2),
+              );
+            } else if (offset.dx <= widget.screenheight * 30 / 100) {
+              offset = Offset(widget.screenheight * 30 / 100, 0);
+              MyStyle().showBasicsFlash(
+                context: context,
+                text: 'ลดขนาดต่ำสุดแล้ว',
+                flashStyle: FlashBehavior.fixed,
+                duration: const Duration(seconds: 2),
+              );
+            }
+            //else {}
+            if (isMan) {
+              size =
+                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2;
+            } else {
+              size =
+                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
+            }
+            waistwidth = size + 26;
+            // waistwidth = size + 33;
+            inch = (waistwidth / 2.54);
+            print('endIndent ======> ${endIndent.toString()}');
+            print('offset.dx ======> ${offset.dx.toString()}');
+            print('screenwidth ======> ${screenwidth.toString()}');
+          });
+        },
+        child: Container(
+          width: screenwidth * 0.14,
+          height: screenheight * 0.25,
+          child: VerticalDivider(
+            indent: 5,
+            endIndent: 5,
+            thickness: 12,
+            width: 5,
+            color: isColor ? Colors.green : Colors.red,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget iconCameraSelected() => JustTheTooltip(
+        controller: selectcameraTooltip,
+        onShow: selectcameraTooltip.showTooltip,
+        onDismiss: selectcameraTooltip.hideTooltip,
+        content: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            _isRearCameraSelected
+                ? 'กดปุ่มนี้หากต้องการสลับไปใช้กล้องหน้า'
+                : 'กดปุ่มนี้หากต้องการสลับไปใช้กล้องหลัง',
+            style: const TextStyle(
+              fontFamily: 'FC-Minimal-Regular',
+              fontSize: 16,
+              color: Colors.black54,
+            ),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: InkWell(
+            child: Image.asset(
+              'images/switch_camera.png',
+              color: Colors.white,
+              scale: 12,
+            ),
+            onTap: () {
+              setState(() {
+                queryData = MediaQuery.of(context);
+                var screen = queryData.size.height;
+                print('screen ==== ${screen.toString()}');
+                initCamera(cameras[_isRearCameraSelected ? 0 : 1]);
+                _isRearCameraSelected = !_isRearCameraSelected;
+              });
+            },
+          ),
+        ),
+      );
+
   Widget _textcontainer() {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadiusDirectional.circular(5)),
-      width: screenwidth * 0.2,
-      height: screenheight * 0.03,
+      width: screenwidth * 0.16,
+      height: screenheight * 0.06,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '${sizeheight.toStringAsFixed(1)} ซม.',
+            '${waistwidth.toStringAsFixed(0)} ซม.',
+            style: const TextStyle(
+              color: Colors.green,
+              fontSize: 14.0,
+              fontFamily: 'FC-Minimal-Regular',
+            ),
+          ),
+          const Text(' | '),
+          Text(
+            '${inch.toStringAsFixed(1)} นิ้ว',
             style: const TextStyle(
               color: Colors.orange,
               fontSize: 14.0,
@@ -633,12 +890,13 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                 width: isType ? 0 : waistwidth,
                 height: isType ? sizeheight : 0,
                 type: widget.type,
-                sex: true,
+                sex: isMan ? true : false,
               ),
             )),
             (route) => false);
         _controller.setFlashMode(FlashMode.auto);
         setState(() {
+          _ondelay();
           flash_on = false;
           flash_off = false;
         });
@@ -703,6 +961,21 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
               onPressed: () {
                 if (isAction) {
                   Navigator.pop(context);
+                  setState(() {
+                    isMan = true;
+
+                    if (isMan) {
+                      size = (((offset.dx - 73.2) * 100 / widget.screenheight) /
+                              2.08) *
+                          2;
+                    } else {
+                      size = (((offset.dx - 73.2) * 100 / widget.screenheight) /
+                              2.79) *
+                          2;
+                    }
+                    waistwidth = size + 26;
+                    inch = (waistwidth / 2.54);
+                  });
 
                   _showAlertDialog(
                       false,
@@ -727,6 +1000,18 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
             CupertinoDialogAction(
               onPressed: () {
                 Navigator.pop(context);
+                isMan = false;
+                if (isMan) {
+                  size =
+                      (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.1) *
+                          2;
+                } else {
+                  size = (((offset.dx - 73.2) * 100 / widget.screenheight) /
+                          2.79) *
+                      2;
+                }
+                waistwidth = size + 23;
+                inch = (waistwidth / 2.54);
                 _showAlertDialog(
                     false,
                     const AssetImage('images/woman.png'),
@@ -739,6 +1024,68 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                 style: TextStyle(color: Colors.red),
               ),
             )
+        ],
+      ),
+    );
+  }
+
+  void _showtDialog(
+    AssetImage icon,
+    BuildContext context,
+    String textTitle,
+    String textContent,
+  ) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Column(
+          children: [
+            Row(
+              children: [
+                ImageIcon(icon),
+                const SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  textTitle,
+                  style: const TextStyle(
+                    overflow: TextOverflow.clip,
+                    fontSize: 20.0,
+                    color: Colors.black45,
+                    fontFamily: 'FC-Minimal-Regular',
+                  ),
+                ),
+              ],
+            ),
+            const Divider(
+              thickness: 1,
+              height: 5,
+              color: Colors.black54,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
+        content: Text(
+          textContent,
+          style: const TextStyle(
+            overflow: TextOverflow.clip,
+            fontSize: 20.0,
+            color: Colors.black45,
+            fontFamily: 'FC-Minimal-Regular',
+          ),
+          textAlign: TextAlign.center,
+        ),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.blue),
+              )),
         ],
       ),
     );

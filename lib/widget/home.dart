@@ -189,7 +189,7 @@ class _MyHomeState extends State<MyHome> {
                       } else {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => OpenCamera(
+                            builder: (context) => Camera2(
                               type: text,
                               screenwidth: screenwidth,
                               screenheight: screenheight,

@@ -122,12 +122,16 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     var status_storage = await Permission.storage.status;
     if (status_storage.isGranted) {
       debugPrint('Camera Permission: GRANTED');
-      setState(() {
-        onLoading = true;
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        setState(() {
+          onLoading = true;
+        });
       });
     } else {
-      setState(() {
-        onLoading = true;
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        setState(() {
+          onLoading = true;
+        });
       });
       debugPrint('Camera Permission: DENIED');
     }

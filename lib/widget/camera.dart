@@ -1447,72 +1447,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
     });
   }
 
-  showdialog(
-    AssetImage icon,
-    BuildContext context,
-    String textTitle,
-    String textContent,
-  ) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  ImageIcon(
-                    icon,
-                    color: Colors.black45,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    textTitle,
-                    style: const TextStyle(
-                      fontSize: 22.0,
-                      color: Colors.black45,
-                      fontFamily: 'FC-Minimal-Regular',
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(
-                thickness: 1,
-                height: 5,
-                color: Colors.black54,
-              )
-            ],
-          ),
-          content: Text(
-            textContent,
-            style: const TextStyle(
-              overflow: TextOverflow.clip,
-              fontSize: 20.0,
-              color: Colors.black45,
-              fontFamily: 'FC-Minimal-Regular',
-            ),
-            textAlign: TextAlign.center,
-          ),
-          actions: <Widget>[
-            // ignore: deprecated_member_use
-            FlatButton(
-              child: const Text("ตกลง"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            // ignore: deprecated_member_use
-          ],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-        );
-      },
-    );
-  }
+
 
   void _showAlertDialog(
     bool isAction,
