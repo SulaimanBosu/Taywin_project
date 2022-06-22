@@ -154,12 +154,21 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               children: [
                 IconButton(
                     onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          (MaterialPageRoute(
-                            builder: (context) => const MyHome(),
-                          )),
-                          (route) => false);
+                      if (isNosave) {
+                        _showAlertDialog(
+                            Icons.access_alarm_outlined,
+                            context,
+                            'ยืนยันถ่ายใหม่',
+                            'ท่านต้องการละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่',
+                            false);
+                      } else {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            (MaterialPageRoute(
+                              builder: (context) => const MyHome(),
+                            )),
+                            (route) => false);
+                      }
                     },
                     icon: const Icon(Icons.arrow_back_ios_new_outlined)),
                 appbar(),
@@ -674,7 +683,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                             Icons.access_alarm_outlined,
                             context,
                             'ยืนยันถ่ายใหม่',
-                            'ท่านต้องการละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่');
+                            'ท่านต้องการละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่',
+                            true);
                       } else {
                         if (isType) {
                           await Navigator.of(context).push(
@@ -870,12 +880,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     return result;
   }
 
-  void _showAlertDialog(
-    IconData icon,
-    BuildContext context,
-    String textTitle,
-    String textContent,
-  ) {
+  void _showAlertDialog(IconData icon, BuildContext context, String textTitle,
+      String textContent, bool pageRoute) {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
@@ -923,31 +929,39 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               onPressed: () async {
                 Navigator.pop(context);
                 isNosave = true;
-
-                if (isType) {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Camera2(
-                        type: MyStyle().footmeasure,
-                        screenwidth: screenwidth,
-                        screenheight: screenheight,
+                if (pageRoute) {
+                  if (isType) {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => Camera2(
+                          type: MyStyle().footmeasure,
+                          screenwidth: screenwidth,
+                          screenheight: screenheight,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => Camera2(
+                          type: MyStyle().waistline,
+                          screenwidth: screenwidth,
+                          screenheight: screenheight,
+                        ),
+                      ),
+                    );
+                  }
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.portraitUp,
+                  ]);
                 } else {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => OpenCamera(
-                        type: MyStyle().waistline,
-                        screenwidth: screenwidth,
-                        screenheight: screenheight,
-                      ),
-                    ),
-                  );
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      (MaterialPageRoute(
+                        builder: (context) => const MyHome(),
+                      )),
+                      (route) => false);
                 }
-                SystemChrome.setPreferredOrientations([
-                  DeviceOrientation.portraitUp,
-                ]);
               },
               child: const Text(
                 'ใช่',
