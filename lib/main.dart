@@ -2,6 +2,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:taywin_project/widget/camera2.dart';
 import 'package:taywin_project/widget/home.dart';
 
@@ -16,8 +17,29 @@ Future<void> main() async {
     print('Error in fetching the cameras: $e');
   }
   final firstCamera = cameras.first;
-  runApp(
-    MaterialApp(
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Widget splashScreen = SplashScreenView(
+      navigateRoute: const MyHome(),
+      pageRouteTransition:PageRouteTransition.CupertinoPageRoute,
+      duration: 5000,
+      imageSize: 200,
+      imageSrc: "images/logo2.png",
+     // text: "Taywin Original Style",
+      textType: TextType.TyperAnimatedText,
+      textStyle: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.indigo.shade900,
+        fontSize: 26.0,
+      ),
+      backgroundColor: Colors.white,
+    );
+
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         //  brightness: Brightness.dark,
@@ -29,7 +51,7 @@ Future<void> main() async {
           ),
         ),
       ),
-      home: const MyHome(),
-    ),
-  );
+      home: splashScreen,
+    );
+  }
 }
