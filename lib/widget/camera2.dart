@@ -14,6 +14,7 @@ import 'package:taywin_project/main.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/widget/measurement_results.dart';
+import 'package:wakelock/wakelock.dart';
 
 class Camera2 extends StatefulWidget {
   const Camera2({
@@ -64,6 +65,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
   double endIndent = 0;
   ScaleValue? _scaleValue;
   ScaleValue? _scaleValueCms;
+  double sizeUp = 26;
 
   getPermissionStatus() async {
     var status = await Permission.camera.status;
@@ -120,6 +122,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
   void initState() {
     getPermissionStatus();
     super.initState();
+    Wakelock.enable();
   }
 
   void type() {
@@ -127,18 +130,22 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
       setState(() {
         initCamera(cameras[0]);
         isType = true;
+        Wakelock.enable();
       });
     } else if (widget.type == MyStyle().waistline) {
       setState(() {
+        Wakelock.enable();
         initCamera(cameras[1]);
         delaydialog();
         isType = false;
         if (isMan) {
-          size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2;
+          size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2 +
+              2.54;
         } else {
           size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
         }
-        waistwidth = size + 26;
+
+        waistwidth = size + sizeUp;
         // waistwidth = size + 33;
         inch = (waistwidth / 2.54);
       });
@@ -222,7 +229,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
     );
   }
 
-    Widget content() {
+  Widget content() {
     // ignore: avoid_unnecessary_containers
     return Container(
       child: Stack(
@@ -635,14 +642,17 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
         GestureDetector(
           onTap: () {
             setState(() {
+              Wakelock.enable();
               isMan = !isMan;
               isMan
-                  ? _showtDialog(
+                  ? _showAlertDialog(
+                      false,
                       const AssetImage('images/man.png'),
                       context,
                       'วัดรอบเอวบุรุษ',
                       'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 40 ซม.หรือ 15 นิ้วเท่านั้น')
-                  : _showtDialog(
+                  : _showAlertDialog(
+                      false,
                       const AssetImage('images/woman.png'),
                       context,
                       'วัดรอบเอวสตรี',
@@ -661,13 +671,15 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
               if (isMan) {
                 size =
                     (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) *
-                        2;
+                            2 +
+                        2.54;
               } else {
                 size =
                     (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) *
                         2;
               }
-              waistwidth = size + 26;
+
+              waistwidth = size + sizeUp;
               // waistwidth = size + 33;
               inch = (waistwidth / 2.54);
             });
@@ -735,6 +747,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
       child: GestureDetector(
         onPanUpdate: (details) {
           setState(() {
+            Wakelock.enable();
             offset = Offset(offset.dx + details.delta.dx, 0);
             if (offset.dx >= (widget.screenheight * 91 / 100)) {
               offset = Offset(widget.screenheight * 91 / 100, 0);
@@ -755,13 +768,14 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
             }
             //else {}
             if (isMan) {
-              size =
-                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2;
+              size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) *
+                      2 +
+                  2.54;
             } else {
               size =
                   (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
             }
-            waistwidth = size + 26;
+            waistwidth = size + sizeUp;
             // waistwidth = size + 33;
             inch = (waistwidth / 2.54);
             print('endIndent ======> ${endIndent.toString()}');
@@ -899,6 +913,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
           _ondelay();
           flash_on = false;
           flash_off = false;
+          Wakelock.disable();
         });
       }
     });
@@ -1029,65 +1044,65 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
     );
   }
 
-  void _showtDialog(
-    AssetImage icon,
-    BuildContext context,
-    String textTitle,
-    String textContent,
-  ) {
-    showCupertinoModalPopup<void>(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: Column(
-          children: [
-            Row(
-              children: [
-                ImageIcon(icon),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  textTitle,
-                  style: const TextStyle(
-                    overflow: TextOverflow.clip,
-                    fontSize: 20.0,
-                    color: Colors.black45,
-                    fontFamily: 'FC-Minimal-Regular',
-                  ),
-                ),
-              ],
-            ),
-            const Divider(
-              thickness: 1,
-              height: 5,
-              color: Colors.black54,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
-        content: Text(
-          textContent,
-          style: const TextStyle(
-            overflow: TextOverflow.clip,
-            fontSize: 20.0,
-            color: Colors.black45,
-            fontFamily: 'FC-Minimal-Regular',
-          ),
-          textAlign: TextAlign.center,
-        ),
-        actions: <CupertinoDialogAction>[
-          CupertinoDialogAction(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.blue),
-              )),
-        ],
-      ),
-    );
-  }
+  // void _showtDialog(
+  //   AssetImage icon,
+  //   BuildContext context,
+  //   String textTitle,
+  //   String textContent,
+  // ) {
+  //   showCupertinoModalPopup<void>(
+  //     context: context,
+  //     builder: (BuildContext context) => CupertinoAlertDialog(
+  //       title: Column(
+  //         children: [
+  //           Row(
+  //             children: [
+  //               ImageIcon(icon),
+  //               const SizedBox(
+  //                 width: 5,
+  //               ),
+  //               Text(
+  //                 textTitle,
+  //                 style: const TextStyle(
+  //                   overflow: TextOverflow.clip,
+  //                   fontSize: 20.0,
+  //                   color: Colors.black45,
+  //                   fontFamily: 'FC-Minimal-Regular',
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           const Divider(
+  //             thickness: 1,
+  //             height: 5,
+  //             color: Colors.black54,
+  //           ),
+  //           const SizedBox(
+  //             height: 10,
+  //           ),
+  //         ],
+  //       ),
+  //       content: Text(
+  //         textContent,
+  //         style: const TextStyle(
+  //           overflow: TextOverflow.clip,
+  //           fontSize: 20.0,
+  //           color: Colors.black45,
+  //           fontFamily: 'FC-Minimal-Regular',
+  //         ),
+  //         textAlign: TextAlign.center,
+  //       ),
+  //       actions: <CupertinoDialogAction>[
+  //         CupertinoDialogAction(
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //             },
+  //             child: const Text(
+  //               'OK',
+  //               style: TextStyle(color: Colors.blue),
+  //             )),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

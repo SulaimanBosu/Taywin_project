@@ -51,6 +51,7 @@ dependencies:
   rulers: "^1.0.7"
   flutter_scale_ruler: ^0.0.3
   syncfusion_flutter_gauges: ^19.4.55
+  wakelock: ^0.6.1+2
   #arkit_plugin: ^1.0.5
   
 
