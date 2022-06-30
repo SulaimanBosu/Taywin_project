@@ -1433,7 +1433,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                 width: isType ? sizewidth : waistwidth,
                 height: isType ? sizeheight : 0,
                 type: widget.type,
-                sex: isMan ? true : false,
+                isMan: isMan ? true : false,
               ),
             )),
             (route) => false);

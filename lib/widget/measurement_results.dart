@@ -26,14 +26,14 @@ class MeasurementResults extends StatefulWidget {
   final double width;
   final double height;
   final String type;
-  final bool sex;
+  final bool isMan;
   const MeasurementResults({
     Key? key,
     required this.image,
     required this.width,
     required this.height,
     required this.type,
-    required this.sex,
+    required this.isMan,
   }) : super(key: key);
 
   @override
@@ -68,6 +68,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     if (widget.type == MyStyle().footmeasure) {
       setState(() {
         isType = true;
+        isMan = widget.isMan;
       });
     } else if (widget.type == MyStyle().waistline) {
       setState(() {
@@ -80,14 +81,14 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     if (isType) {
       if (isMan) {
         setState(() {
-          sizes = Size().man(sizeheight);
+          sizes = Sizes().man(sizeheight);
           sizeTH = sizes[0];
           sizeUS = sizes[1];
           sizeUK = sizes[2];
         });
       } else {
         setState(() {
-          sizes = Size().woman(sizeheight);
+          sizes = Sizes().woman(sizeheight);
           sizeTH = sizes[0];
           sizeUS = sizes[1];
           sizeUK = sizes[2];
@@ -385,7 +386,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                                 height: screenwidth * 0.25,
                                 child: Center(
                                   child: Text(
-                                    widget.sex
+                                    widget.isMan
                                         ? 'ขนาดรอบเอวของท่านสุภาพบุรุษสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(1)} นิ้ว'
                                         : 'ขนาดรอบเอวของท่านสุภาพสตรีสำหรับใส่เข็มขัด คือ \n${waistwidth.toStringAsFixed(0)} ซม. หรือ ${inch.toStringAsFixed(1)} นิ้ว',
                                     textAlign: TextAlign.center,
