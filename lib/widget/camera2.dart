@@ -601,7 +601,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                                   height: screenheight * 0.257,
                                   // color: Colors.red,
                                   child: const Divider(
-                                    indent: 16,
+                                    indent: 10,
                                     // endIndent: 8,
                                     thickness: 5,
                                     height: 5,
