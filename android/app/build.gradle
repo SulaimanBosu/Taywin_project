@@ -46,8 +46,8 @@ android {
         applicationId "com.example.taywin_project"
         minSdkVersion 22
         targetSdkVersion 31
-        versionCode 15
-        versionName '1.2.1'
+        versionCode 17
+        versionName '1.2.3'
     }
 
     buildTypes {

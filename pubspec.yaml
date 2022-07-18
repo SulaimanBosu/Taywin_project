@@ -53,6 +53,7 @@ dependencies:
   syncfusion_flutter_gauges: ^19.4.55
   wakelock: ^0.6.1+2
   splash_screen_view: ^3.0.0
+  sizer: ^2.0.15
   #arkit_plugin: ^1.0.5
   
 

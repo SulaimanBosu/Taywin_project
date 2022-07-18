@@ -1,18 +1,16 @@
 import 'dart:async';
-import 'dart:ffi';
+import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_scale_ruler/flutter_scale_ruler.dart';
 import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:rulers/rulers.dart';
+import 'package:sizer/sizer.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:taywin_project/main.dart';
-import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/utility/size.dart';
 import 'package:taywin_project/widget/measurement_results.dart';
@@ -62,14 +60,12 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
   bool _istooltip = true;
   bool _isCameraPermissionGranted = false;
   Offset offset = const Offset(480, 0.0);
-  Offset _offset = const Offset(0, 162);
+  late Offset _offset;
   bool isMan = false;
   late MediaQueryData queryData;
   double indent_a = 0;
   double endIndent_b = 0;
   double endIndent = 0;
-  ScaleValue? _scaleValue;
-  ScaleValue? _scaleValueCms;
   double sizeUp = 26;
   late List<String> sizes = [];
   late String sizeTH;
@@ -103,7 +99,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
 
   void _state() {
     setState(() {
-      type();
+      // type();
       timer = Timer.periodic(
         const Duration(milliseconds: 300),
         (Timer t) => setState(
@@ -129,8 +125,16 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    type();
     getPermissionStatus();
     super.initState();
+    // widget.screenheight > 750
+    //     ? _offset = const Offset(0, 212.00911458333323)
+    //     : _offset = const Offset(0, 161.36881510416683);
+
+    _offset = Offset(0, widget.screenheight * 0.22);
+
+    // widget.screenheight > 730 ? 212.00911458333323 : 162
     Wakelock.enable();
   }
 
@@ -163,12 +167,19 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
         initCamera(cameras[1]);
         delaydialog('กรุณาเลือกเพศและอ่านคำแนะนำก่อนทำการวัดรอบเอว');
         isType = false;
+        // if (isMan) {
+        //   size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2 + 2.54;
+        // } else {
+        //   size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
+        // }
+
         if (isMan) {
           size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) * 2 +
               2.54;
         } else {
           size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
         }
+        print('screenwidth ==== ${widget.screenheight.toString()}');
 
         waistwidth = size + sizeUp;
         // waistwidth = size + 33;
@@ -289,17 +300,17 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                             minimum: 0,
                             maximum: 30,
                             axisTrackExtent: 0,
-                            markerPointers: <LinearMarkerPointer>[
-                              LinearShapePointer(
-                                value: sizeheight,
-                                color: Colors.blue,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    value = sizeheight;
-                                  });
-                                },
-                              ),
-                            ],
+                            // markerPointers: <LinearMarkerPointer>[
+                            //   LinearShapePointer(
+                            //     value: sizeheight,
+                            //     color: Colors.blue,
+                            //     onChanged: (double value) {
+                            //       setState(() {
+                            //         value = sizeheight;
+                            //       });
+                            //     },
+                            //   ),
+                            // ],
                             barPointers: [
                               LinearBarPointer(
                                 value: sizeheight,
@@ -325,8 +336,8 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
               ? Padding(
                   padding: EdgeInsets.fromLTRB(
                     16.0,
-                    80.0,
-                    56.0,
+                    screenheight * 0.08,
+                    screenwidth * 0.12,
                     screenheight * 0.115,
                   ),
                   child: Column(
@@ -341,7 +352,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
+                            padding: EdgeInsets.only(top: screenheight * 0.03),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -365,7 +376,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                             width: 10,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
+                            padding: EdgeInsets.only(top: screenheight * 0.03),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -389,20 +400,20 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                       ),
                       Expanded(
                         child: Stack(
-                          alignment: const Alignment(1, -0.4),
+                          alignment: Alignment(1, screenheight - screenheight),
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Container(
-                                 // alignment: const Alignment(-2.1, -0.5),
+                                  // alignment: const Alignment(-2.1, -0.5),
                                   //  alignment: const Alignment(-4.1, -1.0),
                                   width: screenwidth * 0.1,
-                                  height: screenheight * 0.656,
-                                  child:  const VerticalDivider(
+                                  height: 67.h,
+                                  child: const VerticalDivider(
                                     thickness: 5,
-                                   // indent: indent_a,
-                                  // endIndent: endIndent_b,
+                                    // indent: indent_a,
+                                    // endIndent: screenheight < 753 ? 16 : 0,
                                     width: 1,
                                     color: Colors.black12,
                                   ),
@@ -535,6 +546,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                         children: [
                           _cameraWidget(context),
                           isType ? icon() : Container(),
+                          isType ? typegender() : Container(),
                           Column(
                             children: [
                               isType
@@ -565,44 +577,17 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                           ? Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                // Container(
-                                //   alignment: Alignment(offset.dx, offset.dy),
-                                //   child: isGestureDetector(),
-                                // ),
-                                // GestureDetector(
-                                //   child: Container(
-                                //     alignment: Alignment(-0.22, alignment),
-                                //     width: screenwidth * 0.65,
-                                //     height: screenheight * 0.14,
-                                //     // color: Colors.red,
-                                //     child: Row(
-                                //       children: List.generate(
-                                //         150 ~/ 10,
-                                //         (index) => Expanded(
-                                //           child: Container(
-                                //             color: index % 2 == 0
-                                //                 ? Colors.transparent
-                                //                 : isColor
-                                //                     ? Colors.white
-                                //                     : Colors.blue,
-                                //             height: 4,
-                                //           ),
-                                //         ),
-                                //       ),
-                                //     ),
-                                //   ),
-                                // ),
                                 SizedBox(
                                   height: screenheight * 0.5,
                                 ),
                                 Container(
                                   alignment: const Alignment(0, 0.77),
-                                  width: screenwidth * 0.64,
+                                  width: screenwidth * 0.65,
                                   height: screenheight * 0.257,
                                   // color: Colors.red,
                                   child: const Divider(
-                                    indent: 10,
-                                    // endIndent: 8,
+                                    //indent: 18,
+                                    // endIndent: screenwidth <= 362.0 ? 8 : 0,
                                     thickness: 5,
                                     height: 5,
                                     color: Colors.orange,
@@ -645,6 +630,114 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
           );
         }
       },
+    );
+  }
+
+  Widget typegender() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              Wakelock.enable();
+              isMan = !isMan;
+              // isMan
+              //     ? _showAlertDialog(
+              //         false,
+              //         const AssetImage('images/man.png'),
+              //         context,
+              //         'วัดขนาดเท้าบุรุษ',
+              //         'กรุณาถือกล้องให้ห่างจากเท้าในระยะ 40 ซม.หรือ 16 นิ้วเท่านั้น')
+              //     : _showAlertDialog(
+              //         false,
+              //         const AssetImage('images/woman.png'),
+              //         context,
+              //         'วัดขนาดเท้าสตรี',
+              //         'กรุณาถือกล้องให้ห่างจากเท้าในระยะ 40 ซม.หรือ 16 นิ้วเท่านั้น');
+              if (screenheight > 750) {
+                sizeheight =
+                    (((screenheight - _offset.dy) - screenwidth) / 21.95) +
+                        12.07;
+              } else {
+                sizeheight = (screenheight - _offset.dy) / 16.2 - 10.2;
+              }
+
+              // sizeheight = (screenheight - _offset.dy) / 16.2 - 10.2;
+
+              //  sizeheight =
+              //       (((screenheight + screenheight * 101.5 / 100 +((screenheight +_offset.dy) * 32 / 100) / 204.555) / _offset.dy)+14.3);
+
+              if (isMan) {
+                sizes = Sizes().man(sizeheight);
+                sizeTH = sizes[0];
+                sizeUS = sizes[1];
+                sizeUK = sizes[2];
+              } else {
+                sizes = Sizes().woman(sizeheight);
+                sizeTH = sizes[0];
+                sizeUS = sizes[1];
+                sizeUK = sizes[2];
+              }
+            });
+          },
+          child: Center(
+            child: Container(
+              margin: const EdgeInsets.only(right: 20, bottom: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  JustTheTooltip(
+                    controller: controller,
+                    onShow: controller.showTooltip,
+                    onDismiss: controller.hideTooltip,
+                    content: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        isMan
+                            ? 'กดปุ่มนี้หากต้องการสลับไปวัดเท้าเอวสตรี'
+                            : 'กดปุ่มนี้หากต้องการสลับไปวัดเท้าบุรุษ',
+                        style: const TextStyle(
+                          fontFamily: 'FC-Minimal-Regular',
+                          fontSize: 16,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ImageIcon(
+                            AssetImage(
+                                isMan ? 'images/man.png' : 'images/woman.png'),
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                          const ImageIcon(
+                            AssetImage('images/icons-circle.png'),
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Text(
+                    isMan ? 'วัดเท้าบุรุษ' : 'วัดเท้าสตรี',
+                    style: const TextStyle(
+                      fontFamily: 'FC-Minimal-Regular',
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -783,16 +876,16 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
           setState(() {
             Wakelock.enable();
             _offset = Offset(0, _offset.dy + details.delta.dy);
-            if (_offset.dy <= (103)) {
-              _offset = Offset(0, 103);
+            if (_offset.dy <= (widget.screenheight * 14.1 / 100)) {
+              _offset = Offset(0, widget.screenheight * 14.1 / 100);
               // MyStyle().showBasicsFlash(
               //   context: context,
               //   text: 'เพิ่มขนาดสูงสุดแล้ว',
               //   flashStyle: FlashBehavior.fixed,
               //   duration: const Duration(seconds: 2),
               // );
-            } else if (_offset.dy >= 232) {
-              _offset = Offset(0, 232);
+            } else if (_offset.dy >= widget.screenheight * 32 / 100) {
+              _offset = Offset(0, widget.screenheight * 32 / 100);
               // MyStyle().showBasicsFlash(
               //   context: context,
               //   text: 'ลดขนาดต่ำสุดแล้ว',
@@ -800,7 +893,36 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
               //   duration: const Duration(seconds: 2),
               // );
             }
-            sizeheight = (screenheight - _offset.dy) / 16.2 - 10.2;
+            // if (screenheight > 1100) {
+            //   sizeheight = (((screenheight - _offset.dy)) / 25) - 9.93;
+            // } else if (screenheight > 1020) {
+            //   sizeheight = (((screenheight - _offset.dy)) / 22.95) - 9.73;
+            // } else if (screenheight > 816) {
+            //   sizeheight =
+            //       (((screenheight - _offset.dy) - screenwidth) / 21.95) + 12.07;
+            // } else if (screenheight > 750) {
+            //   sizeheight = (screenheight - _offset.dy) / 16.85 - 9.7;
+            // } else {
+            //   sizeheight = (screenheight - _offset.dy) / 16.2 - 10.2;
+            // }
+
+ //ค่าใกล้เคียงสุด  // sizeheight =
+            //     (((((screenheight * screenwidth) * 90 / _offset.dy * 30 / 100) /
+            //                     100) /
+            //                 _offset.dy) /
+            //             21.95) +
+            //         12.07;
+
+              sizeheight =
+                ((((((screenheight * screenwidth) * 90 / _offset.dy * 30 / 100) /
+                                100) /
+                            _offset.dy) /
+                        21.95) +
+                    12.07) ;
+
+            //  sizeheight =
+            //       (((screenheight + screenheight * 101.5 / 100 +((screenheight +_offset.dy) * 32 / 100) / 204.555) / _offset.dy)+14.3);
+
             if (isMan) {
               sizes = Sizes().man(sizeheight);
               sizeTH = sizes[0];
@@ -815,13 +937,14 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
             print('sizeheight ======> ${sizeheight.toString()}');
             print('offset.dy ======> ${_offset.dy.toString()}');
             print('screenheight ======> ${screenheight.toString()}');
+            print('screenwidth ======> ${screenwidth.toString()}');
           });
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              margin: EdgeInsets.only(left: 55),
+              margin: const EdgeInsets.only(left: 55),
               // alignment: Alignment(-0.22, alignment),
               width: screenwidth * 0.65,
               height: screenheight * 0.14,
@@ -904,26 +1027,11 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                       context,
                       'วัดรอบเอวสตรี',
                       'กรุณาถือกล้องให้ห่างจากตัวบุคคล\n 30 ซม.หรือ 12 นิ้วเท่านั้น');
-              // if (isMan) {
-              //   size =
-              //       (((offset.dx - 73.2) * 100 / widget.screenheight) / 1.65) *
-              //           2;
-              // } else {
-              //   size =
-              //       (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.05) *
-              //           2;
-              // }
-              // waistwidth = size + 15;
-              // inch = waistwidth / 2.54;
               if (isMan) {
-                size =
-                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) *
-                            2 +
-                        2.54;
+                size = (((offset.dx - 73.2) * 100 / screenwidth) / 2.08) * 2 +
+                    2.54;
               } else {
-                size =
-                    (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) *
-                        2;
+                size = (((offset.dx - 73.2) * 100 / screenwidth) / 2.79) * 2;
               }
 
               waistwidth = size + sizeUp;
@@ -996,16 +1104,16 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
           setState(() {
             Wakelock.enable();
             offset = Offset(offset.dx + details.delta.dx, 0);
-            if (offset.dx >= (widget.screenheight * 91 / 100)) {
-              offset = Offset(widget.screenheight * 91 / 100, 0);
+            if (offset.dx >= (screenwidth * 91 / 100)) {
+              offset = Offset(screenwidth * 91 / 100, 0);
               MyStyle().showBasicsFlash(
                 context: context,
                 text: 'เพิ่มขนาดสูงสุดแล้ว',
                 flashStyle: FlashBehavior.fixed,
                 duration: const Duration(seconds: 2),
               );
-            } else if (offset.dx <= widget.screenheight * 30 / 100) {
-              offset = Offset(widget.screenheight * 30 / 100, 0);
+            } else if (offset.dx <= screenwidth * 30 / 100) {
+              offset = Offset(screenwidth * 30 / 100, 0);
               MyStyle().showBasicsFlash(
                 context: context,
                 text: 'ลดขนาดต่ำสุดแล้ว',
@@ -1015,12 +1123,10 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
             }
             //else {}
             if (isMan) {
-              size = (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.08) *
-                      2 +
-                  2.54;
-            } else {
               size =
-                  (((offset.dx - 73.2) * 100 / widget.screenheight) / 2.79) * 2;
+                  (((offset.dx - 73.2) * 100 / screenwidth) / 2.08) * 2 + 2.54;
+            } else {
+              size = (((offset.dx - 73.2) * 100 / screenwidth) / 2.79) * 2;
             }
             waistwidth = size + sizeUp;
             // waistwidth = size + 33;
@@ -1237,16 +1343,16 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
 
                       if (isMan) {
                         size =
-                            (((offset.dx - 73.2) * 100 / widget.screenheight) /
-                                    2.08) *
-                                2;
+                            (((offset.dx - 73.2) * 100 / screenwidth) / 2.08) *
+                                    2 +
+                                2.54;
                       } else {
                         size =
-                            (((offset.dx - 73.2) * 100 / widget.screenheight) /
-                                    2.79) *
+                            (((offset.dx - 73.2) * 100 / screenwidth) / 2.79) *
                                 2;
                       }
-                      waistwidth = size + 26;
+                      waistwidth = size + sizeUp;
+                      // waistwidth = size + 33;
                       inch = (waistwidth / 2.54);
                     });
                   }
@@ -1287,15 +1393,15 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                 } else {
                   isMan = false;
                   if (isMan) {
-                    size = (((offset.dx - 73.2) * 100 / widget.screenheight) /
-                            2.1) *
-                        2;
+                    size =
+                        (((offset.dx - 73.2) * 100 / screenwidth) / 2.08) * 2 +
+                            2.54;
                   } else {
-                    size = (((offset.dx - 73.2) * 100 / widget.screenheight) /
-                            2.79) *
-                        2;
+                    size =
+                        (((offset.dx - 73.2) * 100 / screenwidth) / 2.79) * 2;
                   }
-                  waistwidth = size + 23;
+                  waistwidth = size + sizeUp;
+                  // waistwidth = size + 33;
                   inch = (waistwidth / 2.54);
                   _showAlertDialog(
                       false,

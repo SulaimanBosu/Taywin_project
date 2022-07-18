@@ -135,6 +135,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
   @override
   void initState() {
     getPermissionStatus();
+    debugPrint('screenheight =========${widget.screenheight}');
     super.initState();
   }
 
@@ -289,7 +290,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                           _cameraWidget(context),
                           Column(
                             children: [
-                              
                               isType
                                   ? Container()
                                   : Row(
@@ -337,7 +337,7 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
                   mainAxisAlignment: MainAxisAlignment.center,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                     const CupertinoActivityIndicator(
+                    const CupertinoActivityIndicator(
                       radius: 20,
                       color: Colors.white,
                     ),
@@ -1446,8 +1446,6 @@ class _OpenCameraState extends State<OpenCamera> with WidgetsBindingObserver {
       }
     });
   }
-
-
 
   void _showAlertDialog(
     bool isAction,

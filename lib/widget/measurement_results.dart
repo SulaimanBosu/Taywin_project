@@ -159,8 +159,8 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         _showAlertDialog(
                             Icons.access_alarm_outlined,
                             context,
-                            'ยืนยันถ่ายใหม่',
-                            'ท่านต้องการละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่',
+                            'กลับสู่หน้าแรก',
+                            'ท่านต้องกลับสู่หน้าแรกและละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่',
                             false);
                       } else {
                         Navigator.pushAndRemoveUntil(

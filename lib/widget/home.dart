@@ -19,8 +19,8 @@ class MyHome extends StatefulWidget {
 }
 
 class _MyHomeState extends State<MyHome> {
-  late double screenwidth = MediaQuery.of(context).size.width;
-  late double screenheight = MediaQuery.of(context).size.height;
+  double screenwidth = 0.0;
+  double screenheight = 0.0;
   bool _isCameraPermissionGranted = false;
   String device = '';
 

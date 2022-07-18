@@ -2,6 +2,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sizer/sizer.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:taywin_project/widget/camera2.dart';
 import 'package:taywin_project/widget/home.dart';
@@ -25,11 +26,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget splashScreen = SplashScreenView(
       navigateRoute: const MyHome(),
-      pageRouteTransition:PageRouteTransition.CupertinoPageRoute,
+      pageRouteTransition: PageRouteTransition.CupertinoPageRoute,
       duration: 5000,
       imageSize: 200,
       imageSrc: "images/logo2.png",
-     // text: "Taywin Original Style",
+      // text: "Taywin Original Style",
       textType: TextType.TyperAnimatedText,
       textStyle: TextStyle(
         fontWeight: FontWeight.bold,
@@ -39,19 +40,21 @@ class MyApp extends StatelessWidget {
       backgroundColor: Colors.white,
     );
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        //  brightness: Brightness.dark,
-        primaryColor: const Color.fromRGBO(30, 29, 89, 1),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            onPrimary: Colors.white,
-            primary: const Color.fromRGBO(30, 29, 89, 1),
+    return Sizer(builder: (context, orientation, deviceType) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          //  brightness: Brightness.dark,
+          primaryColor: const Color.fromRGBO(30, 29, 89, 1),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              onPrimary: Colors.white,
+              primary: const Color.fromRGBO(30, 29, 89, 1),
+            ),
           ),
         ),
-      ),
-      home: splashScreen,
-    );
+        home: splashScreen,
+      );
+    });
   }
 }
