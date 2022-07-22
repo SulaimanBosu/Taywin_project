@@ -8,6 +8,7 @@ import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/widget/camera.dart';
 import 'package:taywin_project/widget/camera2.dart';
+import 'package:taywin_project/widget/camera3.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({
@@ -179,7 +180,7 @@ class _MyHomeState extends State<MyHome> {
                       if (text == MyStyle().footmeasure) {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => Camera2(
+                            builder: (context) => Camera3(
                               type: text,
                               screenwidth: screenwidth,
                               screenheight: screenheight,

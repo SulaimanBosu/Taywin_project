@@ -16,8 +16,8 @@ import 'package:taywin_project/utility/size.dart';
 import 'package:taywin_project/widget/measurement_results.dart';
 import 'package:wakelock/wakelock.dart';
 
-class Camera2 extends StatefulWidget {
-  const Camera2({
+class Camera3 extends StatefulWidget {
+  const Camera3({
     Key? key,
     required this.screenwidth,
     required this.screenheight,
@@ -29,10 +29,10 @@ class Camera2 extends StatefulWidget {
   final double screenheight;
 
   @override
-  State<Camera2> createState() => _Camera2State();
+  State<Camera3> createState() => _Camera3State();
 }
 
-class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
+class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
   late CameraController _controller;
   late Future<void> _initcontroler;
   bool _isRearCameraSelected = true;
@@ -40,7 +40,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
   late double screenwidth;
   late double screenheight;
 
-  double alignment = 2.5204030082605557;
+  double alignment = -3.0308192821863513;
   double alignmentvalue = -0.14;
   double textalignment = -0.118;
   double sizeheight = 25.0;
@@ -132,7 +132,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
     //     ? _offset = const Offset(0, 212.00911458333323)
     //     : _offset = const Offset(0, 161.36881510416683);
 
-    _offset = Offset(0, widget.screenheight * 0.22);
+    _offset = Offset(-0.5, widget.screenheight * 0.22);
 
     // widget.screenheight > 730 ? 212.00911458333323 : 162
     Wakelock.enable();
@@ -337,8 +337,8 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                   padding: EdgeInsets.fromLTRB(
                     16.0,
                     screenheight * 0.08,
-                    screenwidth * 0.12,
-                    screenheight * 0.115,
+                    screenwidth * 0.13,
+                    screenheight * 0.126,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -398,127 +398,73 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                           ),
                         ],
                       ),
+
                       Expanded(
                         child: Stack(
-                          alignment: Alignment(1, screenheight - screenheight),
+                          alignment: Alignment(_offset.dx, _offset.dy),
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  // alignment: const Alignment(-2.1, -0.5),
-                                  //  alignment: const Alignment(-4.1, -1.0),
-                                  width: screenwidth * 0.1,
-                                  height: 67.h,
-                                  child: const VerticalDivider(
-                                    thickness: 5,
-                                    // indent: indent_a,
-                                    // endIndent: screenheight < 753 ? 16 : 0,
-                                    width: 1,
-                                    color: Colors.black12,
-                                  ),
+                            RotatedBox(
+                              quarterTurns: 3,
+                              child: Container(
+                                height: 30,
+                                child: Slider(
+                                  label: "เบอร์รองเท้า: ${sizeTH.toString()}",
+                                  divisions: 60,
+                                  value: sizeheight,
+                                  min: 0.0, // 2,
+                                  max: 30.0, // 4.8
+                                  activeColor: Colors.black12,
+                                  inactiveColor: Colors.black12,
+                                  onChanged: (value) async {
+                                    setState(() {
+                                      // if (alignment >= 3.9499999974000004) {
+                                      //   MyStyle().showBasicsFlash(
+                                      //     context: context,
+                                      //     text: 'ลดขนาดต่ำสุดแล้ว',
+                                      //     flashStyle: FlashBehavior.fixed,
+                                      //     duration: const Duration(seconds: 2),
+                                      //   );
+                                      // } else if (alignment <= 1.35) {
+                                      //   MyStyle().showBasicsFlash(
+                                      //     context: context,
+                                      //     text: 'เพิ่มขนาดสูงสุดแล้ว',
+                                      //     flashStyle: FlashBehavior.fixed,
+                                      //     duration: const Duration(seconds: 2),
+                                      //   );
+                                      // }
+                                      if (isMan) {
+                                        sizes = Sizes().man(value);
+                                        sizeTH = sizes[0];
+                                        sizeUS = sizes[1];
+                                        sizeUK = sizes[2];
+                                      } else {
+                                        sizes = Sizes().woman(value);
+                                        sizeTH = sizes[0];
+                                        sizeUS = sizes[1];
+                                        sizeUK = sizes[2];
+                                      }
+                                      //  sizeheight = 28.6 - (value * 100 / 35) + 5.7; 6.15384615
+                                      sizeheight = value;
+                                      // ค่าที่ตั้งค่าของสัดส่วนของขนาด
+                                      alignment =
+                                          (11.5 - value) / 3.07692308 + 1.35;
+                                      debugPrint('value =========>>>>> $value');
+                                      debugPrint(
+                                          'alignment =========>>>> $alignment');
+                                      alignmentvalue =
+                                          (28.6 - value) / 4.232 - 0.99;
+                                      textalignment =
+                                          (28.6 - value) / 4.13008 - 0.99;
+                                      debugPrint(
+                                          'text =========>>>> $textalignment');
+                                    });
+                                  },
                                 ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
-                      )
-                      // Expanded(
-                      //   child: Stack(
-                      //     alignment: Alignment(_offset.dx, _offset.dy),
-                      //     children: [
-                      //       // RotatedBox(
-                      //       //   quarterTurns: 3,
-                      //       //   child: Container(
-                      //       //     height: 30,
-                      //       //     child: Slider(
-                      //       //       label: 'เลื่อน',
-                      //       //       value: sizeheight,
-                      //       //       min: 20.6, // 2,
-                      //       //       max: 28.6, // 4.8
-                      //       //       activeColor: Colors.blue,
-                      //       //       inactiveColor: Colors.black12,
-                      //       //       onChanged: (value) async {
-                      //       //         setState(() {
-                      //       //           if (alignment >= 3.9499999974000004) {
-                      //       //             MyStyle().showBasicsFlash(
-                      //       //               context: context,
-                      //       //               text: 'ลดขนาดต่ำสุดแล้ว',
-                      //       //               flashStyle: FlashBehavior.fixed,
-                      //       //               duration: const Duration(seconds: 2),
-                      //       //             );
-                      //       //           } else if (alignment <= 1.35) {
-                      //       //             MyStyle().showBasicsFlash(
-                      //       //               context: context,
-                      //       //               text: 'เพิ่มขนาดสูงสุดแล้ว',
-                      //       //               flashStyle: FlashBehavior.fixed,
-                      //       //               duration: const Duration(seconds: 2),
-                      //       //             );
-                      //       //           }
-                      //       //           if (isMan) {
-                      //       //             sizes = Sizes().man(value);
-                      //       //             sizeTH = sizes[0];
-                      //       //             sizeUS = sizes[1];
-                      //       //             sizeUK = sizes[2];
-                      //       //           } else {
-                      //       //             sizes = Sizes().woman(value);
-                      //       //             sizeTH = sizes[0];
-                      //       //             sizeUS = sizes[1];
-                      //       //             sizeUK = sizes[2];
-                      //       //           }
-                      //       //           //  sizeheight = 28.6 - (value * 100 / 35) + 5.7; 6.15384615
-                      //       //           sizeheight = value;
-                      //       //           // ค่าที่ตั้งค่าของสัดส่วนของขนาด
-                      //       //           alignment =
-                      //       //               (28.6 - value) / 3.07692308 + 1.35;
-                      //       //           debugPrint('value =========>>>>> $value');
-                      //       //           debugPrint(
-                      //       //               'alignment =========>>>> $alignment');
-                      //       //           alignmentvalue =
-                      //       //               (28.6 - value) / 4.232 - 0.99;
-                      //       //           textalignment =
-                      //       //               (28.6 - value) / 4.13008 - 0.99;
-                      //       //           debugPrint(
-                      //       //               'text =========>>>> $textalignment');
-                      //       //         });
-                      //       //       },
-                      //       //     ),
-                      //       //   ),
-                      //       // ),
-                      //       Container(
-                      //         // alignment: Alignment(1.1, alignmentvalue),
-                      //         child: CustomPaint(
-                      //           painter: TrianglePainter(
-                      //             strokeColor: Colors.blue,
-                      //             strokeWidth: 10,
-                      //             paintingStyle: PaintingStyle.fill,
-                      //           ),
-                      //           child: Container(
-                      //             height: 20,
-                      //             width: 20,
-                      //           ),
-
-                      //           //const Text(
-                      //           //     'เลื่อน',
-                      //           //     style: TextStyle(color: Colors.white),
-                      //         ),
-                      //       ),
-                      //       Container(
-                      //         // alignment: Alignment(1.3, textalignment),
-                      //         child: Container(
-                      //           //  margin: EdgeInsets.only(top: 7),
-                      //           color: Colors.blue,
-                      //           width: 35,
-                      //           height: 25,
-                      //           child: const Text(
-                      //             'เลื่อน',
-                      //             style: TextStyle(color: Colors.white),
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      //  ),
+                      ),
                     ],
                   ),
                 )
@@ -582,7 +528,7 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                                 ),
                                 Container(
                                   alignment: const Alignment(0, 0.77),
-                                  width: screenwidth * 0.65,
+                                  width: screenwidth * 0.67,
                                   height: screenheight * 0.257,
                                   // color: Colors.red,
                                   child: const Divider(
@@ -596,7 +542,63 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
                               ],
                             )
                           : Container(),
-                      isType ? isGestureDetector() : divider(),
+                      isType
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.only(left: 55),
+                                  alignment: Alignment(-0.22, alignment),
+                                  width: screenwidth * 0.65,
+                                  height: screenheight * 0.14,
+                                  // color: Colors.red,
+                                  child: Row(
+                                    children: List.generate(
+                                      160 ~/ 10,
+                                      (index) => Expanded(
+                                        child: Container(
+                                          color: index % 2 == 0
+                                              ? Colors.transparent
+                                              : isColor
+                                                  ? Colors.white
+                                                  : Colors.blue,
+                                          height: 4,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  alignment: Alignment(0, alignment),
+                                  child: CustomPaint(
+                                    painter: TrianglePainter(
+                                      strokeColor: Colors.blue,
+                                      strokeWidth: 10,
+                                      paintingStyle: PaintingStyle.fill,
+                                    ),
+                                    child: Container(
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment(1.3, alignment),
+                                  child: Container(
+                                    // margin: EdgeInsets.only(top: 0),
+                                    color: Colors.blue,
+                                    width: 35,
+                                    height: 25,
+                                    child: const Text(
+                                      'เลื่อน',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : divider(),
                       isType ? Container() : _isGestureDetector(),
                     ],
                   ),
@@ -908,36 +910,29 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
             //   sizeheight = (screenheight - _offset.dy) / 16.2 - 10.2;
             //  }
 
-
-
-
-
-
-            if (screenheight > 1020 && screenwidth > 700.0){
-              sizeheight =
-                (((screenheight * 0.0001 / 100) - (_offset.dy * 0.0001 / 100) * 10000)*4.375)+34.9;
-
-            }else if(screenheight >= 980){
-               sizeheight =
-                (((screenheight * 0.0001 / 100) - (_offset.dy * 0.0001 / 100) * 10000)*5.35)+35.9;
-
-            }else if(screenheight <= 742){
-              sizeheight =
-                (((screenheight * 0.0001 / 100) - (_offset.dy * 0.0001 / 100) * 10000)*6.1)+34.9;
-
-            }else{
-              sizeheight =
-                (((screenheight * 0.0001 / 100) - (_offset.dy * 0.0001 / 100) * 10000)*4.51)+34.8;
+            if (screenheight > 1020 && screenwidth > 700.0) {
+              sizeheight = (((screenheight * 0.0001 / 100) -
+                          (_offset.dy * 0.0001 / 100) * 10000) *
+                      4.375) +
+                  34.9;
+            } else if (screenheight >= 980) {
+              sizeheight = (((screenheight * 0.0001 / 100) -
+                          (_offset.dy * 0.0001 / 100) * 10000) *
+                      5.35) +
+                  35.9;
+            } else if (screenheight <= 742) {
+              sizeheight = (((screenheight * 0.0001 / 100) -
+                          (_offset.dy * 0.0001 / 100) * 10000) *
+                      6.1) +
+                  34.9;
+            } else {
+              sizeheight = (((screenheight * 0.0001 / 100) -
+                          (_offset.dy * 0.0001 / 100) * 10000) *
+                      4.51) +
+                  34.8;
             }
 
-
-
-
-
-
-
-
-           // sizeheight = widget.screenheight * 5 / 140 - _offset.dy / 8;
+            // sizeheight = widget.screenheight * 5 / 140 - _offset.dy / 8;
 
             //ค่าใกล้เคียงสุด  // sizeheight =
             //     (((((screenheight * screenwidth) * 90 / _offset.dy * 30 / 100) /
