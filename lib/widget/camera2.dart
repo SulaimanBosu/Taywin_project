@@ -893,9 +893,10 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
               //   duration: const Duration(seconds: 2),
               // );
             }
+
             // if (screenheight > 1100) {
             //   sizeheight = (((screenheight - _offset.dy)) / 25) - 9.93;
-            // } else if (screenheight > 1020) {
+            // } else if (screenheight > 1020 && screenwidth > 700.0) {
             //   sizeheight = (((screenheight - _offset.dy)) / 22.95) - 9.73;
             // } else if (screenheight > 816) {
             //   sizeheight =
@@ -904,24 +905,40 @@ class _Camera2State extends State<Camera2> with WidgetsBindingObserver {
             //   sizeheight = (screenheight - _offset.dy) / 16.85 - 9.7;
             // } else {
             //   sizeheight = (screenheight - _offset.dy) / 16.2 - 10.2;
-            // }
+            //  }
 
- //ค่าใกล้เคียงสุด  // sizeheight =
+
+
+
+
+            if (screenheight > 1020 && screenwidth > 700.0){
+              sizeheight =
+                (((screenheight * 0.0001 / 100) - (_offset.dy * 0.0001 / 100) * 10000)*4.375)+34.9;
+              
+            }else if(screenheight <= 742){
+              sizeheight =
+                (((screenheight * 0.0001 / 100) - (_offset.dy * 0.0001 / 100) * 10000)*6.1)+34.9;
+
+            }else{
+              sizeheight =
+                (((screenheight * 0.0001 / 100) - (_offset.dy * 0.0001 / 100) * 10000)*4.51)+34.8;
+
+            }
+
+            
+            // sizeheight =
+            //     (((screenheight * 0.0001 / 918) - screenheight * 10 /100 - (_offset.dy * 0.0001 / 100) * 10000));
+
+
+            //ค่าใกล้เคียงสุด  // sizeheight =
             //     (((((screenheight * screenwidth) * 90 / _offset.dy * 30 / 100) /
             //                     100) /
             //                 _offset.dy) /
             //             21.95) +
             //         12.07;
 
-              sizeheight =
-                ((((((screenheight * screenwidth) * 90 / _offset.dy * 30 / 100) /
-                                100) /
-                            _offset.dy) /
-                        21.95) +
-                    12.07) ;
-
-            //  sizeheight =
-            //       (((screenheight + screenheight * 101.5 / 100 +((screenheight +_offset.dy) * 32 / 100) / 204.555) / _offset.dy)+14.3);
+            //  sizeheight = 
+            //       14.3 +(((screenheight * 918 / 1000 +((screenheight * (918  + _offset.dy / 100)) * 30 / 100)) / _offset.dy)/1.47) / 93.1;
 
             if (isMan) {
               sizes = Sizes().man(sizeheight);
