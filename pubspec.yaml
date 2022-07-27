@@ -54,6 +54,7 @@ dependencies:
   wakelock: ^0.6.1+2
   splash_screen_view: ^3.0.0
   sizer: ^2.0.15
+  intro_slider: ^3.0.4
   #arkit_plugin: ^1.0.5
   
 

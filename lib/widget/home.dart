@@ -2,6 +2,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intro_slider/intro_slider.dart';
+import 'package:intro_slider/slide_object.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:taywin_project/utility/screen_size.dart';
@@ -9,6 +11,7 @@ import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/widget/camera.dart';
 import 'package:taywin_project/widget/camera2.dart';
 import 'package:taywin_project/widget/camera3.dart';
+import 'package:taywin_project/widget/intro_slider.dart';
 
 class MyHome extends StatefulWidget {
   const MyHome({
@@ -24,6 +27,7 @@ class _MyHomeState extends State<MyHome> {
   double screenheight = 0.0;
   bool _isCameraPermissionGranted = false;
   String device = '';
+
 
   @override
   void initState() {
@@ -72,7 +76,8 @@ class _MyHomeState extends State<MyHome> {
     screenwidth = MediaQuery.of(context).size.width;
     screenheight = MediaQuery.of(context).size.height;
     device = ScreenSize().screenwidth(screenwidth);
-    return Scaffold(
+    return 
+    Scaffold(
       backgroundColor: const Color.fromRGBO(30, 29, 89, 1),
       body: _isCameraPermissionGranted
           ? Row(
@@ -89,8 +94,17 @@ class _MyHomeState extends State<MyHome> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
                       onPressed: () async {
-                        dialog(MyStyle().imageFootmeasure, MyStyle().detail1,
-                            MyStyle().footmeasure);
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => IntroSliders(
+                              type: MyStyle().footmeasure,
+                              screenwidth: screenwidth,
+                              screenheight: screenheight,
+                            ),
+                          ),
+                        );
+                        // dialog(MyStyle().imageFootmeasure, MyStyle().detail1,
+                        //     MyStyle().footmeasure);
                       },
                       child: const Text(
                         'วัดขนาดเท้า',
@@ -250,4 +264,5 @@ class _MyHomeState extends State<MyHome> {
       ),
     );
   }
+
 }

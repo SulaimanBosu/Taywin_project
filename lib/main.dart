@@ -6,6 +6,7 @@ import 'package:sizer/sizer.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
 import 'package:taywin_project/widget/camera2.dart';
 import 'package:taywin_project/widget/home.dart';
+import 'package:taywin_project/widget/intro_slider.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget splashScreen = SplashScreenView(
       navigateRoute: const MyHome(),
+     // navigateRoute: const IntroSliders(),
       pageRouteTransition: PageRouteTransition.CupertinoPageRoute,
       duration: 5000,
       imageSize: 200,

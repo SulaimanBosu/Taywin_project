@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sizer/sizer.dart';
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/utility/size.dart';
@@ -19,6 +20,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:taywin_project/widget/camera.dart';
 import 'package:taywin_project/widget/camera2.dart';
+import 'package:taywin_project/widget/camera3.dart';
 import 'package:taywin_project/widget/home.dart';
 
 class MeasurementResults extends StatefulWidget {
@@ -160,7 +162,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                             Icons.access_alarm_outlined,
                             context,
                             'กลับสู่หน้าแรก',
-                            'ท่านต้องกลับสู่หน้าแรกและละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่',
+                            'ท่านต้องการกลับสู่หน้าแรกและละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่',
                             false);
                       } else {
                         Navigator.pushAndRemoveUntil(
@@ -282,16 +284,45 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                               color: Colors.white,
                               child: Container(
                                 width: screenwidth * 0.85,
-                                height: screenwidth * 0.25,
+                                height: screenwidth * 0.28,
                                 child: Center(
-                                  child: Text(
-                                    'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )',
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.black54,
-                                        fontFamily: 'FC-Minimal-Regular',
-                                        fontWeight: FontWeight.bold),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.black54,
+                                            fontFamily: 'FC-Minimal-Regular',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          showdialog(
+                                              context,
+                                              isMan
+                                                  ? 'ตารางเทียบไซส์รองเท้าสุภาพบุรุษ'
+                                                  : 'ตารางเทียบไซส์รองเท้าสุภาพสตรี',
+                                              isMan
+                                                  ? 'images/mansize.jpg'
+                                                  : 'images/womansize.jpg');
+                                        },
+                                        child: const Text(
+                                          'ดูตารางไซส์รองเท้า',
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              fontSize: 16,
+                                              color: Colors.lightBlue,
+                                              fontFamily: 'FC-Minimal-Regular',
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -422,6 +453,87 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               ),
             ),
           );
+  }
+
+  showdialog(BuildContext context, String type, String image) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          //insetPadding: const EdgeInsets.only(left: 2, right: 2,top: 10,bottom: 10),
+          title: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //   IconButton(
+                //   onPressed: () {},
+                //   icon: const Icon(Icons.close),
+                // ),
+
+                Text(
+                  type,
+                  style: const TextStyle(
+                    fontSize: 22.0,
+                    color: Colors.black45,
+                    fontFamily: 'FC-Minimal-Regular',
+                  ),
+                ),
+
+                const Divider(
+                  thickness: 1,
+                  height: 5,
+                  color: Colors.black54,
+                )
+              ],
+            ),
+          ),
+          contentPadding:
+              EdgeInsets.only(left: 2, right: 2, top: 0.1.h.h, bottom: 5.h),
+          content: isMan
+              ? Image.asset(image)
+              : Image.asset(
+                  image,
+                  // fit: BoxFit.cover,
+                  width: 100.w,
+                  height: 42.h,
+                ),
+          actions: [
+           
+               InkWell(
+                onTap: (() => Navigator.of(context).pop()),
+                 child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 15 .w,
+                        height: 3 .h,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.close,color: Colors.red,),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text('ปิด'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+               ),
+              
+          
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        );
+      },
+    );
   }
 
   Row typeButton2() {
@@ -690,7 +802,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         if (isType) {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => Camera2(
+                              builder: (context) => Camera3(
                                 type: MyStyle().footmeasure,
                                 screenwidth: screenwidth,
                                 screenheight: screenheight,
@@ -700,7 +812,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                         } else {
                           await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => OpenCamera(
+                              builder: (context) => Camera3(
                                 type: MyStyle().waistline,
                                 screenwidth: screenwidth,
                                 screenheight: screenheight,
@@ -934,7 +1046,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                   if (isType) {
                     await Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => Camera2(
+                        builder: (context) => Camera3(
                           type: MyStyle().footmeasure,
                           screenwidth: screenwidth,
                           screenheight: screenheight,
@@ -944,7 +1056,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                   } else {
                     await Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => Camera2(
+                        builder: (context) => Camera3(
                           type: MyStyle().waistline,
                           screenwidth: screenwidth,
                           screenheight: screenheight,
