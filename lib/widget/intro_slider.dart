@@ -25,9 +25,13 @@ class IntroSliders extends StatefulWidget {
 
 class _IntroSlidersState extends State<IntroSliders> {
   List<Slide> slides = [];
+  late double screenwidth;
+  late double screenheight;
 
   @override
   void initState() {
+    screenwidth = widget.screenwidth;
+    screenheight = widget.screenheight;
     super.initState();
 
     slides.add(
@@ -57,8 +61,8 @@ class _IntroSlidersState extends State<IntroSliders> {
           ],
         ),
         marginTitle: const EdgeInsets.only(bottom: 15, top: 5),
-        widthImage: 380,
-        heightImage: 380,
+        widthImage: screenwidth * 0.8,
+        heightImage: screenheight * 0.6,
         //foregroundImageFit:BoxFit.cover,
         styleTitle: const TextStyle(
           color: Colors.white,
@@ -126,8 +130,8 @@ class _IntroSlidersState extends State<IntroSliders> {
         ),
         //title: "ขั้นตอนการวัดขนาดเท้า",
         marginTitle: const EdgeInsets.only(bottom: 15, top: 5),
-        widthImage: 380,
-        heightImage: 380,
+        widthImage: screenwidth * 0.8,
+        heightImage: screenheight * 0.55,
         styleTitle: const TextStyle(
           color: Colors.white,
           fontSize: 25.0,
@@ -230,6 +234,8 @@ class _IntroSlidersState extends State<IntroSliders> {
 
   @override
   Widget build(BuildContext context) {
+    //     screenwidth = MediaQuery.of(context).size.width;
+    // screenheight = MediaQuery.of(context).size.height;
     return IntroSlider(
       // List slides
       slides: slides,

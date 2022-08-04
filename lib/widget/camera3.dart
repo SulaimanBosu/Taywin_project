@@ -40,11 +40,11 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
   late double screenwidth;
   late double screenheight;
 
-  double alignment = -3.096167232630559;
-  double alignment2 = -3.9342867984586034;
-  double alignment3 = -3.5831924301974327;
-  double alignmentvalue = -0.14;
-  double textalignment = -0.118;
+  double alignment = -3.089694133119556;
+  // double alignment2 = -3.9342867984586034;
+  // double alignment3 = -3.5831924301974327;
+  //double alignmentvalue = -0.14;
+  // double textalignment = -0.118;
   double sizeheight = 25.0;
   bool isColor = false;
   bool isType = false;
@@ -230,7 +230,11 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
     scale = sizeScreen.aspectRatio * camera.aspectRatio;
 
     if (scale < 1) {
+      // if (screenwidth == 796.8) {
+      //   scale = 1;
+      // } else {
       scale = 1 / scale;
+      // }
       // print('scale ======= $scale');
     } else if (scale > 1) {
       scale = 1;
@@ -282,8 +286,10 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                       children: [
                         Container(
                           margin: EdgeInsets.only(
-                              top: 20, left: screenwidth * 0.167),
-                          height: screenheight * 0.68,
+                              top: 20,
+                              left: screenwidth * 0.167,
+                              bottom: screenheight * 0.007),
+                          height: screenheight * 0.67,
                           child: SfLinearGauge(
                             minorTicksPerInterval: 4,
                             interval: 5,
@@ -340,7 +346,7 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                     16.0,
                     screenheight * 0.08,
                     screenwidth * 0.13,
-                    screenheight * 0.126,
+                    screenheight * 0.132,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -418,7 +424,7 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                             RotatedBox(
                               quarterTurns: 3,
                               child: Container(
-                                height: screenwidth >= 700 ? 50 : 30,
+                                height: screenwidth >= 700 ? 50 : 35,
                                 child: Slider(
                                   //  label: "${sizeTH.toString()}",
                                   //  divisions: 60,
@@ -455,67 +461,22 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                                         sizeUS = sizes[1];
                                         sizeUK = sizes[2];
                                       }
-                                      //  sizeheight = 28.6 - (value * 100 / 35) + 5.7; 6.15384615
-                                      // if (sizeheight >= 20) {
-                                      //   sizeheight = value;
-                                      //   // ค่าที่ตั้งค่าของสัดส่วนของขนาด
-                                      //   alignment =
-                                      //       (11 - sizeheight) / 3.07692308 +
-                                      //           1.5;
-                                      //   alignment2 =
-                                      //       (20 - sizeheight) / 2.58 - 2;
-                                      //   alignment3 =
-                                      //       (20 - sizeheight) / 2.65 - 1.7;
-                                      //   debugPrint(
-                                      //       'sizeheight =========>>>>> $sizeheight');
-                                      //   debugPrint(
-                                      //       'alignment =========>>>> $alignment');
-                                      //   debugPrint(
-                                      //       'alignment2 =========>>>> $alignment2');
-                                      //   debugPrint(
-                                      //       'alignment3 =========>>>> $alignment3');
-                                      //   alignmentvalue =
-                                      //       (28.6 - value) / 4.232 - 0.99;
-                                      //   textalignment =
-                                      //       (28.6 - value) / 4.13008 - 0.99;
-                                      //   debugPrint(
-                                      //       'text =========>>>> $textalignment');
 
-                                      //   print(
-                                      //       'offset.dy ======> ${_offset.dy.toString()}');
-                                      //   print(
-                                      //       'screenheight ======> ${screenheight.toString()}');
-                                      //   print(
-                                      //       'screenwidth ======> ${screenwidth.toString()}');
-                                      // } else
                                       if (value <= 20) {
                                         value = 20;
                                         sizeheight = 20;
-                                        alignment = -1.4177650555408925;
+                                        alignment = -1.5046430442742222;
                                       } else {
                                         sizeheight = value;
                                         // ค่าที่ตั้งค่าของสัดส่วนของขนาด
                                         alignment =
                                             (11 - sizeheight) / 3.07692308 +
-                                                1.5;
-                                        alignment2 =
-                                            (20 - sizeheight) / 2.58 - 2;
-                                        alignment3 =
-                                            (20 - sizeheight) / 2.65 - 1.7;
+                                                1.45;
+
                                         debugPrint(
                                             'sizeheight =========>>>>> $sizeheight');
                                         debugPrint(
                                             'alignment =========>>>> $alignment');
-                                        debugPrint(
-                                            'alignment2 =========>>>> $alignment2');
-                                        debugPrint(
-                                            'alignment3 =========>>>> $alignment3');
-                                        alignmentvalue =
-                                            (28.6 - value) / 4.232 - 0.99;
-                                        textalignment =
-                                            (28.6 - value) / 4.13008 - 0.99;
-                                        debugPrint(
-                                            'text =========>>>> $textalignment');
 
                                         print(
                                             'offset.dy ======> ${_offset.dy.toString()}');
@@ -591,7 +552,7 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  height: screenheight * 0.5,
+                                  height: screenheight * 0.47,
                                 ),
                                 Container(
                                   alignment: const Alignment(0, 0.77),
@@ -639,70 +600,6 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                                     ),
                                   ),
                                 ),
-                                // Container(
-                                //   alignment: Alignment(0, alignment2),
-                                //   width: screenwidth * 0.05,
-                                //   height: screenheight * 0.14,
-                                //   // color: Colors.red,
-                                //   child: CustomPaint(
-                                //     painter: TrianglePainter(
-                                //       strokeColor: Colors.blue,
-                                //       strokeWidth: 10,
-                                //       paintingStyle: PaintingStyle.fill,
-                                //     ),
-                                //     child: Container(
-                                //       height: 20,
-                                //       width: 20,
-                                //     ),
-                                //   ),
-                                // ),
-                                // Container(
-                                //   alignment: Alignment(-1.92, alignment3),
-                                //   width: screenwidth * 0.10,
-                                //   height: screenheight * 0.15,
-                                //   // color: Colors.red,
-                                //   child: Container(
-                                //     //  margin: EdgeInsets.only(top: 0),
-                                //     color: Colors.blue,
-                                //     width: 35,
-                                //     height: 25,
-                                //     child: const Text(
-                                //       'เลื่อน',
-                                //       style: TextStyle(color: Colors.white),
-                                //     ),
-                                //   ),
-                                // ),
-
-                                // Container(
-                                //   // padding: const EdgeInsets.only(bottom: 20),
-                                //   // margin: EdgeInsets.only(bottom: 20),
-                                //   alignment: Alignment(0, alignment),
-
-                                //   child: CustomPaint(
-                                //     painter: TrianglePainter(
-                                //       strokeColor: Colors.blue,
-                                //       strokeWidth: 10,
-                                //       paintingStyle: PaintingStyle.fill,
-                                //     ),
-                                //     child: Container(
-                                //       height: 20,
-                                //       width: 20,
-                                //     ),
-                                //   ),
-                                // ),
-                                // Container(
-                                //   alignment: Alignment(1.3, alignment),
-                                //   child: Container(
-                                //    //  margin: EdgeInsets.only(top: 0),
-                                //     color: Colors.blue,
-                                //     width: 35,
-                                //     height: 25,
-                                //     child: const Text(
-                                //       'เลื่อน',
-                                //       style: TextStyle(color: Colors.white),
-                                //     ),
-                                //   ),
-                                // ),
                               ],
                             )
                           : divider(),
@@ -752,8 +649,8 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
               Wakelock.enable();
               isMan = !isMan;
               alignment = (11 - sizeheight) / 3.07692308 + 1.5;
-              alignment2 = (20 - sizeheight) / 2.58 - 2;
-              alignment3 = (20 - sizeheight) / 2.65 - 1.7;
+              // alignment2 = (20 - sizeheight) / 2.58 - 2;
+              // alignment3 = (20 - sizeheight) / 2.65 - 1.7;
               // isMan
               //     ? _showAlertDialog(
               //         false,
@@ -1253,6 +1150,7 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
             print('endIndent ======> ${endIndent.toString()}');
             print('offset.dx ======> ${offset.dx.toString()}');
             print('screenwidth ======> ${screenwidth.toString()}');
+            print('screenheight ======> ${screenheight.toString()}');
           });
         },
         child: Container(

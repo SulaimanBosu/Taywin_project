@@ -204,7 +204,7 @@ class _MyHomeState extends State<MyHome> {
                       } else {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => Camera2(
+                            builder: (context) => Camera3(
                               type: text,
                               screenwidth: screenwidth,
                               screenheight: screenheight,
