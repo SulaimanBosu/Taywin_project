@@ -339,9 +339,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Screenshot(
-                      controller: screenshotController,
-                      child: Container(
+                    Container(
                         color: Colors.white,
                         child: Column(
                           children: [
@@ -442,7 +440,7 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                           ],
                         ),
                       ),
-                    ),
+                  
                     groupbutton(),
                   ],
                 ),
