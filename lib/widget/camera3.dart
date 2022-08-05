@@ -40,7 +40,7 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
   late double screenwidth;
   late double screenheight;
 
-  double alignment = -3.089694133119556;
+  double alignment = -3.019699078362456;
   // double alignment2 = -3.9342867984586034;
   // double alignment3 = -3.5831924301974327;
   //double alignmentvalue = -0.14;
@@ -230,11 +230,13 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
     scale = sizeScreen.aspectRatio * camera.aspectRatio;
 
     if (scale < 1) {
-      // if (screenwidth == 796.8) {
-      //   scale = 1;
-      // } else {
-      scale = 1 / scale;
-      // }
+      if (screenheight == 825.4545454545455) {
+        scale = 1;
+        //scale = 1 / scale;
+      } else {
+        //scale = 1 / scale;
+        scale = 1;
+      }
       // print('scale ======= $scale');
     } else if (scale > 1) {
       scale = 1;
@@ -278,75 +280,83 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
         children: [
           newContent(),
           isType
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: 20,
-                              left: screenwidth * 0.167,
-                              bottom: screenheight * 0.007),
-                          height: screenheight * 0.67,
-                          child: SfLinearGauge(
-                            minorTicksPerInterval: 4,
-                            interval: 5,
-                            minorTickStyle:
-                                const LinearTickStyle(color: Colors.white),
-                            majorTickStyle: const LinearTickStyle(
-                              length: 10,
-                              color: Colors.red,
+              ? Container(
+                  //margin: EdgeInsets.only(top: screenheight * 0.03),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: screenheight * 0.03,
+                                left: screenwidth * 0.167,
+                                bottom: screenheight * 0.007),
+                            height: screenheight * 0.66,
+                            child: SfLinearGauge(
+                              minorTicksPerInterval: 4,
+                              interval: 5,
+                              minorTickStyle:
+                                  const LinearTickStyle(color: Colors.white),
+                              majorTickStyle: const LinearTickStyle(
+                                length: 10,
+                                color: Colors.red,
+                              ),
+                              axisTrackStyle: const LinearAxisTrackStyle(
+                                borderColor: Colors.white,
+                              ),
+                              axisLabelStyle:
+                                  const TextStyle(color: Colors.white),
+                              orientation: LinearGaugeOrientation.vertical,
+                              minimum: 0,
+                              maximum: 30,
+                              axisTrackExtent: 0,
+                              // markerPointers: <LinearMarkerPointer>[
+                              //   LinearShapePointer(
+                              //     value: sizeheight,
+                              //     color: Colors.blue,
+                              //     onChanged: (double value) {
+                              //       setState(() {
+                              //         value = sizeheight;
+                              //       });
+                              //     },
+                              //   ),
+                              // ],
+                              barPointers: [
+                                LinearBarPointer(
+                                  value: sizeheight,
+                                  color: Colors.blue,
+                                )
+                              ],
+                              // ranges: const <LinearGaugeRange>[
+                              //   // LinearGaugeRange(
+                              //   //     startValue: 0, endValue: 20.5, color: Colors.red),
+                              //   LinearGaugeRange(
+                              //       startValue: 0,
+                              //       endValue: 30,
+                              //       color: Colors.blue)
+                              // ],
                             ),
-                            axisTrackStyle: const LinearAxisTrackStyle(
-                              borderColor: Colors.white,
-                            ),
-                            axisLabelStyle:
-                                const TextStyle(color: Colors.white),
-                            orientation: LinearGaugeOrientation.vertical,
-                            minimum: 0,
-                            maximum: 30,
-                            axisTrackExtent: 0,
-                            // markerPointers: <LinearMarkerPointer>[
-                            //   LinearShapePointer(
-                            //     value: sizeheight,
-                            //     color: Colors.blue,
-                            //     onChanged: (double value) {
-                            //       setState(() {
-                            //         value = sizeheight;
-                            //       });
-                            //     },
-                            //   ),
-                            // ],
-                            barPointers: [
-                              LinearBarPointer(
-                                value: sizeheight,
-                                color: Colors.blue,
-                              )
-                            ],
-                            // ranges: const <LinearGaugeRange>[
-                            //   // LinearGaugeRange(
-                            //   //     startValue: 0, endValue: 20.5, color: Colors.red),
-                            //   LinearGaugeRange(
-                            //       startValue: 0,
-                            //       endValue: 30,
-                            //       color: Colors.blue)
-                            // ],
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 )
               : Container(),
           isType
               ? Padding(
-                  padding: EdgeInsets.fromLTRB(
+                  padding: screenheight >= 750 ? EdgeInsets.fromLTRB(
+                    16.0,
+                    screenheight * 0.07,
+                    screenwidth * 0.13,
+                    screenheight * 0.142,
+                  ) :  EdgeInsets.fromLTRB(
                     16.0,
                     screenheight * 0.08,
                     screenwidth * 0.13,
-                    screenheight * 0.132,
+                    screenheight * 0.135,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -414,6 +424,23 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
+                          SizedBox(
+                            width: screenwidth * 0.03,
+                          ),
+                          isType
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      top: screenwidth >= 700
+                                          ? screenheight * 0.05
+                                          : screenheight >= 750
+                                              ? screenheight * 0.02
+                                              : screenheight * 0.00),
+                                  child: typegender(),
+                                )
+                              : Container(),
+                          SizedBox(
+                            width: screenwidth * 0.03,
+                          ),
                         ],
                       ),
 
@@ -465,13 +492,13 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                                       if (value <= 20) {
                                         value = 20;
                                         sizeheight = 20;
-                                        alignment = -1.5046430442742222;
+                                        alignment = -1.4304458952373114;
                                       } else {
                                         sizeheight = value;
                                         // ค่าที่ตั้งค่าของสัดส่วนของขนาด
                                         alignment =
                                             (11 - sizeheight) / 3.07692308 +
-                                                1.45;
+                                                1.55;
 
                                         debugPrint(
                                             'sizeheight =========>>>>> $sizeheight');
@@ -520,7 +547,7 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                         children: [
                           _cameraWidget(context),
                           isType ? icon() : Container(),
-                          isType ? typegender() : Container(),
+                          // isType ? typegender() : Container(),
                           Column(
                             children: [
                               isType
@@ -648,7 +675,7 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
             setState(() {
               Wakelock.enable();
               isMan = !isMan;
-              alignment = (11 - sizeheight) / 3.07692308 + 1.5;
+              alignment = (11 - sizeheight) / 3.07692308 + 1.55;
               // alignment2 = (20 - sizeheight) / 2.58 - 2;
               // alignment3 = (20 - sizeheight) / 2.65 - 1.7;
               // isMan
@@ -680,7 +707,7 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
           },
           child: Center(
             child: Container(
-              margin: const EdgeInsets.only(right: 20, bottom: 10),
+              //  margin: const EdgeInsets.only(right: 20, bottom: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -702,21 +729,24 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 7.0),
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
                           ImageIcon(
                             AssetImage(
                                 isMan ? 'images/man.png' : 'images/woman.png'),
-                            size: 20,
+                            size: 32,
                             color: Colors.white,
                           ),
-                          const ImageIcon(
-                            AssetImage('images/icons-circle.png'),
-                            size: 40,
-                            color: Colors.white,
-                          ),
+                          // Image.asset(
+                          //     isMan ? 'images/man.png' : 'images/woman.png',width: 25,height: 25,),
+
+                          // const ImageIcon(
+                          //   AssetImage('images/icons-circle.png'),
+                          //   size: 40,
+                          //   color: Colors.white,
+                          // ),
                         ],
                       ),
                     ),

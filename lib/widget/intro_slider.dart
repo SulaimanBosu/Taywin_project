@@ -71,7 +71,7 @@ class _IntroSlidersState extends State<IntroSliders> {
           fontFamily: 'RobotoMono',
         ),
         widgetDescription: const Text(
-          '1.  กรุณาเลือกเพศก่อนทำการวัด\n2. ให้กล้องห่างจากเท้าระยะ 40 ซ.ม. หรือ 16 นิ้ว',
+          '1.  กรุณาเลือกเพศก่อนทำการวัด\n2. ให้กล้องห่างจากเท้าระยะ 40 ซม. หรือ 16 นิ้ว',
           textAlign: TextAlign.left,
           style: TextStyle(
             color: Colors.white,

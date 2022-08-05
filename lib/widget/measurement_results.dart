@@ -147,44 +147,43 @@ class _MeasurementResultsState extends State<MeasurementResults> {
     device = ScreenSize().screenwidth(screenwidth);
     return WillPopScope(
       onWillPop: _onBackPressed,
-      child: Scaffold(
-        appBar: AppBar(
-            elevation: 0,
-            iconTheme: const IconThemeData(color: Colors.black54),
-            backgroundColor: Colors.white,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      if (isNosave) {
-                        _showAlertDialog(
-                            Icons.access_alarm_outlined,
-                            context,
-                            'กลับสู่หน้าแรก',
-                            'ท่านต้องการกลับสู่หน้าแรกและละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่',
-                            false);
-                      } else {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            (MaterialPageRoute(
-                              builder: (context) => const MyHome(),
-                            )),
-                            (route) => false);
-                      }
-                    },
-                    icon: const Icon(Icons.arrow_back_ios_new_outlined)),
-                appbar(),
-              ],
-            )),
-        backgroundColor: Colors.white,
-        body: Container(
-          color: Colors.white,
-          child: onLoading
-              ? isUpload
-                  ? content()
-                  : progress(context)
-              : MyStyle().progress(context),
+      child: Screenshot(
+        controller: screenshotController,
+        child: Scaffold(
+          appBar: AppBar(
+              elevation: 0,
+              iconTheme: const IconThemeData(color: Colors.black54),
+              backgroundColor: Colors.white,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        if (isNosave) {
+                          _showAlertDialog(
+                              Icons.access_alarm_outlined,
+                              context,
+                              'กลับสู่หน้าแรก',
+                              'ท่านต้องการกลับสู่หน้าแรกและละทิ้งข้อมูลการวัดขนาดครั้งนี้ใช่หรือไม่',
+                              false);
+                        } else {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              (MaterialPageRoute(
+                                builder: (context) => const MyHome(),
+                              )),
+                              (route) => false);
+                        }
+                      },
+                      icon: const Icon(Icons.arrow_back_ios_new_outlined)),
+                  appbar(),
+                ],
+              )),
+          backgroundColor: Colors.white,
+          body: Container(
+            color: Colors.white,
+            child: onLoading ? content() : MyStyle().progress(context),
+          ),
         ),
       ),
     );
@@ -197,139 +196,136 @@ class _MeasurementResultsState extends State<MeasurementResults> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Screenshot(
-                      controller: screenshotController,
-                      child: Container(
-                        color: Colors.white,
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   children: [
-                            //     const SizedBox(
-                            //       width: 60,
-                            //     ),
-                            //     Text('${sizewidth.toStringAsFixed(1)} ซม.'),
-                            //   ],
-                            // ),
-                            // Container(
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       const SizedBox(
-                            //         width: 60,
-                            //       ),
-                            //       Image.asset(
-                            //         'images/arrow2.png',
-                            //         width: screenwidth * 0.35,
-                            //         height: screenheight * 0.06,
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'images/image3.png',
-                                  width: screenwidth * 0.6,
-                                  height: screenheight * 0.3,
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Image.asset(
-                                  'images/arrow.png',
-                                  width: screenwidth * 0.015,
-                                  height: screenheight * 0.28,
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Text('${sizeheight.toStringAsFixed(1)} ซม.')
-                              ],
-                            ),
+                    Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   children: [
+                          //     const SizedBox(
+                          //       width: 60,
+                          //     ),
+                          //     Text('${sizewidth.toStringAsFixed(1)} ซม.'),
+                          //   ],
+                          // ),
+                          // Container(
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       const SizedBox(
+                          //         width: 60,
+                          //       ),
+                          //       Image.asset(
+                          //         'images/arrow2.png',
+                          //         width: screenwidth * 0.35,
+                          //         height: screenheight * 0.06,
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'images/image3.png',
+                                width: screenwidth * 0.6,
+                                height: screenheight * 0.3,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Image.asset(
+                                'images/arrow.png',
+                                width: screenwidth * 0.015,
+                                height: screenheight * 0.28,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text('${sizeheight.toStringAsFixed(1)} ซม.')
+                            ],
+                          ),
 
-                            const SizedBox(
-                              height: 15,
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 30, right: 30),
+                            child: Text(
+                              'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง จะแสดงเพียงภาพจำลองเท่านั้น',
+                              style: TextStyle(
+                                  color: Colors.redAccent,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 30, right: 30),
-                              child: Text(
-                                'หมายเหตุ : ทางบริษัทจะไม่มีการบันทึกและเก็บรูปภาพจริง จะแสดงเพียงภาพจำลองเท่านั้น',
-                                style: TextStyle(
-                                    color: Colors.redAccent,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          // typeButton2(),
+                          typeButton(),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Card(
+                            semanticContainer: true,
+                            elevation: 5,
+                            margin: const EdgeInsets.all(10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            // typeButton2(),
-                            typeButton(),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Card(
-                              semanticContainer: true,
-                              elevation: 5,
-                              margin: const EdgeInsets.all(10),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              color: Colors.white,
-                              child: Container(
-                                width: screenwidth * 0.85,
-                                height: screenwidth * 0.28,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )',
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black54,
+                            color: Colors.white,
+                            child: Container(
+                              width: screenwidth * 0.85,
+                              height: screenwidth * 0.28,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      'เบอร์รองเท้าของท่านคือเบอร์ ${sizeTH.toString()} (EU) \n( US : ${sizeUS.toString()} , UK : ${sizeUK.toString()} )',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.black54,
+                                          fontFamily: 'FC-Minimal-Regular',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        showdialog(
+                                            context,
+                                            isMan
+                                                ? 'ตารางเทียบไซส์รองเท้าสุภาพบุรุษ'
+                                                : 'ตารางเทียบไซส์รองเท้าสุภาพสตรี',
+                                            isMan
+                                                ? 'images/mansize.jpg'
+                                                : 'images/womansize.jpg');
+                                      },
+                                      child: const Text(
+                                        'ดูตารางไซส์รองเท้า',
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.underline,
+                                            fontSize: 16,
+                                            color: Colors.lightBlue,
                                             fontFamily: 'FC-Minimal-Regular',
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      TextButton(
-                                        onPressed: () {
-                                          showdialog(
-                                              context,
-                                              isMan
-                                                  ? 'ตารางเทียบไซส์รองเท้าสุภาพบุรุษ'
-                                                  : 'ตารางเทียบไซส์รองเท้าสุภาพสตรี',
-                                              isMan
-                                                  ? 'images/mansize.jpg'
-                                                  : 'images/womansize.jpg');
-                                        },
-                                        child: const Text(
-                                          'ดูตารางไซส์รองเท้า',
-                                          textAlign: TextAlign.end,
-                                          style: TextStyle(
-                                              decoration:
-                                                  TextDecoration.underline,
-                                              fontSize: 16,
-                                              color: Colors.lightBlue,
-                                              fontFamily: 'FC-Minimal-Regular',
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            more(),
-                          ],
-                        ),
+                          ),
+                          more(),
+                        ],
                       ),
                     ),
                     groupbutton(),
@@ -499,34 +495,34 @@ class _MeasurementResultsState extends State<MeasurementResults> {
                   height: 42.h,
                 ),
           actions: [
-           
-               InkWell(
-                onTap: (() => Navigator.of(context).pop()),
-                 child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 15 .w,
-                        height: 3 .h,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.close,color: Colors.red,),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text('ปิด'),
-                          ],
+            InkWell(
+              onTap: (() => Navigator.of(context).pop()),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: 15.w,
+                    height: 3.h,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.close,
+                          color: Colors.red,
                         ),
-                      ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text('ปิด'),
+                      ],
                     ),
                   ),
-               ),
-              
-          
+                ),
+              ),
+            ),
           ],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
