@@ -1114,12 +1114,7 @@ class _Camera3State extends State<Camera3> with WidgetsBindingObserver {
                         ImageIcon(
                           AssetImage(
                               isMan ? 'images/man.png' : 'images/woman.png'),
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                        const ImageIcon(
-                          AssetImage('images/icons-circle.png'),
-                          size: 40,
+                          size: 32,
                           color: Colors.white,
                         ),
                       ],
