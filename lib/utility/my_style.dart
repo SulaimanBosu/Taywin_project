@@ -183,7 +183,7 @@ class MyStyle {
           content: Text(textContent),
           actions: <Widget>[
             // ignore: deprecated_member_use
-            FlatButton(
+            OutlinedButton(
               child: const Text("ตกลง"),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -194,7 +194,7 @@ class MyStyle {
               },
             ),
             // ignore: deprecated_member_use
-            FlatButton(
+            OutlinedButton(
               child: const Text("ยกเลิก"),
               onPressed: () {
                 // ใส่เงื่อนไขการกดยกเลิก
@@ -262,7 +262,7 @@ class MyStyle {
           ),
           actions: <Widget>[
             // ignore: deprecated_member_use
-            FlatButton(
+            OutlinedButton(
               child: const Text("ตกลง"),
               onPressed: () {
                 Navigator.of(context).pop();

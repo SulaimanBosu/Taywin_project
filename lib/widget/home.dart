@@ -3,14 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intro_slider/intro_slider.dart';
-import 'package:intro_slider/slide_object.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:taywin_project/utility/screen_size.dart';
 import 'package:taywin_project/utility/my_style.dart';
 import 'package:taywin_project/widget/camera.dart';
-import 'package:taywin_project/widget/camera2.dart';
-import 'package:taywin_project/widget/camera3.dart';
 import 'package:taywin_project/widget/intro_slider.dart';
 
 class MyHome extends StatefulWidget {
@@ -27,7 +24,6 @@ class _MyHomeState extends State<MyHome> {
   double screenheight = 0.0;
   bool _isCameraPermissionGranted = false;
   String device = '';
-
 
   @override
   void initState() {
@@ -76,8 +72,7 @@ class _MyHomeState extends State<MyHome> {
     screenwidth = MediaQuery.of(context).size.width;
     screenheight = MediaQuery.of(context).size.height;
     device = ScreenSize().screenwidth(screenwidth);
-    return 
-    Scaffold(
+    return Scaffold(
       backgroundColor: const Color.fromRGBO(30, 29, 89, 1),
       body: _isCameraPermissionGranted
           ? Row(
@@ -88,11 +83,19 @@ class _MyHomeState extends State<MyHome> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     MyStyle().showlogo(screenwidth),
-                    FlatButton(
-                      minWidth: screenwidth * 0.8,
-                      color: Colors.white, // foreground
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                        minimumSize: MaterialStateProperty.all(
+                          Size(screenwidth * 0.8, 40),
+                        ),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
                       onPressed: () async {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
@@ -118,11 +121,19 @@ class _MyHomeState extends State<MyHome> {
                     const SizedBox(
                       height: 20,
                     ),
-                    FlatButton(
-                      minWidth: screenwidth * 0.8,
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                        minimumSize: MaterialStateProperty.all(
+                          Size(screenwidth * 0.8, 40),
+                        ),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                      ),
                       onPressed: () async {
                         dialog(MyStyle().imageWaistline, MyStyle().detail2,
                             MyStyle().waistline);
@@ -149,6 +160,9 @@ class _MyHomeState extends State<MyHome> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => SimpleDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
           children: [
             Container(
               padding: const EdgeInsetsDirectional.only(start: 0.0, end: 0.0),
@@ -188,7 +202,17 @@ class _MyHomeState extends State<MyHome> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                RaisedButton.icon(
+                ElevatedButton.icon(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.grey.shade300),
+                    foregroundColor: MaterialStateProperty.all(Colors.black87),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
                   onPressed: () async {
                     try {
                       if (text == MyStyle().footmeasure) {
@@ -237,11 +261,18 @@ class _MyHomeState extends State<MyHome> {
                     color: Colors.red,
                   ),
                   label: const Text('เปิดกล้อง'),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
                 ),
-                RaisedButton.icon(
+                ElevatedButton.icon(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.grey.shade300),
+                    foregroundColor: MaterialStateProperty.all(Colors.black87),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -250,19 +281,12 @@ class _MyHomeState extends State<MyHome> {
                     color: Colors.green,
                   ),
                   label: const Text('ยกเลิก'),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
                 ),
               ],
             )
           ],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
         ),
       ),
     );
   }
-
 }

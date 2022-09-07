@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
-import 'package:taywin_project/widget/camera2.dart';
 import 'package:taywin_project/widget/home.dart';
 import 'package:taywin_project/widget/intro_slider.dart';
 

@@ -1,10 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
-import 'package:intro_slider/slide_object.dart';
 import 'package:sizer/sizer.dart';
 import 'package:taywin_project/utility/my_style.dart';
-import 'package:taywin_project/widget/camera3.dart';
+import 'package:taywin_project/widget/camera.dart';
 
 class IntroSliders extends StatefulWidget {
   const IntroSliders(

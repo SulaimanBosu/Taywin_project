@@ -19,8 +19,6 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:taywin_project/widget/camera.dart';
-import 'package:taywin_project/widget/camera2.dart';
-import 'package:taywin_project/widget/camera3.dart';
 import 'package:taywin_project/widget/home.dart';
 
 class MeasurementResults extends StatefulWidget {
